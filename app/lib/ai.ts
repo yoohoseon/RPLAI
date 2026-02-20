@@ -45,7 +45,7 @@ const personaSchema = z.object({
     story: z.string().describe("A short summary of the brand's background story or mission narrative"),
     philosophy: z.string().describe("The brand's core philosophy or mission statement in one sentence"),
     voice: z.string().describe("Description of how the brand speaks to its audience"),
-    slogan: z.string().describe("A catchy generated or existing slogan for the brand"),
+    slogan: z.string().describe("A catchy slogan for the brand. If you create a new one instead of finding an official one, append '(AI 제작)' to the very end."),
 });
 
 const brandAnalysisSchema = z.object({
@@ -130,7 +130,7 @@ export async function generateBrandAnalysis(
       3. A Strategic Framework (SWOT Analysis).
       4. A 3-Phase Action Plan to improve brand performance.
       5. Representative Voice of Customer (VoC) sentiments (simulated based on typical market feedback).
-      6. Brand Persona Definition: Extract the brand's "Soul" including Personality archetype, Tone, Keywords, Unique Selling Proposition (USP), Brand Story/Narrative, Philosophy, Voice, and a catchy Slogan.
+      6. Brand Persona Definition: Extract the brand's "Soul" including Personality archetype, Tone, Keywords, Unique Selling Proposition (USP), Brand Story/Narrative, Philosophy, Voice, and a catchy Slogan. (IMPORTANT: If you cannot find an official slogan and must generate a new one, you MUST append '(AI 제작)' at the end of the slogan string).
 
       IMPORTANT: Use the Google Search tool to find the most recent and accurate information about this brand.
       Ensure the tone is professional, strategic, and actionable.

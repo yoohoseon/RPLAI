@@ -74,10 +74,11 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
         actions: { phase: string; title: string; description: string; timeline: string }[];
         sentiments: { category: string; text: string; source: string }[];
         extendedStrategy?: any;
+        savedContents?: { id: string, type: string, topic: string, content: string, date: string }[];
         persona?: { personality: string; tone: string[]; keywords: string[]; usp: string; story: string; philosophy: string; voice: string; slogan: string };
     }
 
-    const { kpis, insight, strategy, actions, sentiments, extendedStrategy } = analysisData as AnalysisData;
+    const { kpis, insight, strategy, actions, sentiments, extendedStrategy, savedContents } = analysisData as AnalysisData;
 
     return (
         <div id="analysis-report" className="container mx-auto py-10 px-4 space-y-12 animate-in fade-in duration-700">
@@ -240,12 +241,21 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
                 category={category || ''}
                 target={target || ''}
                 competitors={competitors || ''}
-                content={JSON.stringify({ kpis, insight, strategy, actions, sentiments, extendedStrategy: analysisData.extendedStrategy })}
+                content={JSON.stringify({
+                    kpis,
+                    insight,
+                    strategy,
+                    actions,
+                    sentiments,
+                    extendedStrategy: analysisData.extendedStrategy,
+                    savedContents: analysisData.savedContents,
+                    persona: analysisData.persona
+                })}
             />
 
             {/* 0.5 Content Generator - Moved to Bottom (Stage 2) */}
             {savedAnalysisId && analysisData.persona && (
-                <ContentGenerator analysisId={savedAnalysisId} brandName={brandKor} />
+                <ContentGenerator analysisId={savedAnalysisId} brandName={brandKor} initialSavedContents={savedContents || []} />
             )}
         </div>
     );

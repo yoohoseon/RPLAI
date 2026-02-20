@@ -155,6 +155,14 @@ export async function generateBrandContent(analysisId: string, type: string, top
         typePrompt = "SEO Blog Post. Structured with H2, H3. Informative and valuable.";
     } else if (type === 'newsletter') {
         typePrompt = "Email Newsletter. Personal, direct, and click-worthy subject line included.";
+    } else if (type === 'youtube_shorts') {
+        typePrompt = "YouTube Shorts Script format (Visual/Audio columns or Hook-Body-CTA). Hook viewers in first 3s, fast-paced, ending with CTA.";
+    } else if (type === 'tiktok') {
+        typePrompt = "TikTok Video Concept & Script. Trend-aware, highly visual description, engaging hook, short punchy text.";
+    } else if (type === 'threads') {
+        typePrompt = "Threads Text Post. Conversational, witty, engaging question or thought-provoking statement to trigger replies.";
+    } else if (type === 'linkedin') {
+        typePrompt = "LinkedIn Post. Professional yet engaging, story-driven, structured with line breaks, insights, ending with an open question.";
     }
 
     const prompt = `
@@ -241,42 +249,132 @@ export async function generateImagePrompt(analysisId: string, context: string) {
 export async function getBrandVisuals(expertBrandName: string) {
     if (!expertBrandName) return [];
 
-    // Use Gemini with Google Search Grounding to find images
-    // This is more stable than scraping libraries
+    // Pollinations AI server is currently facing Argo Tunnel errors (1033).
+    // To ensure 100% reliability with NO broken images, we use a robust photo placeholder (loremflickr)
+    // combined with AI-extracted aesthetic keywords for the brand.
     try {
         const prompt = `
-        Find 4 high-quality public image URLs that represent the visual style of the brand "${expertBrandName}".
-        Focus on their official Instagram or website photography.
-        Return ONLY a raw JSON array of strings (URLs). No markdown.
-        Example: ["https://example.com/img1.jpg", "https://example.com/img2.jpg"]
+        You are a Visual Director for the brand "${expertBrandName}".
+        Provide exactly 4 distinct, single-word English keywords that represent the core visual aesthetic of this brand (e.g., "minimal", "luxury", "beauty", "neon", "nature", "urban", "modern").
+        Return ONLY a raw JSON array of 4 string words. No markdown.
         `;
 
         const result = await generateText({
             model: google('models/gemini-2.5-flash'),
-            tools: {
-                googleSearch: google.tools.googleSearch({}),
-            },
             prompt: prompt,
         });
 
-        // Parse JSON from text
-        const cleanText = result.text.replace(/```json\n?|\n?```/g, '').trim();
+        let keywords = [];
         try {
-            const urls = JSON.parse(cleanText);
-            if (Array.isArray(urls)) {
-                return urls.slice(0, 4);
-            }
+            const cleanText = result.text.replace(/```json\n?|\n?```/g, '').trim();
+            keywords = JSON.parse(cleanText);
+            if (!Array.isArray(keywords)) throw new Error("Not an array");
+
+            // Clean keywords (single word, no special chars)
+            keywords = keywords.map(k => k.toString().split(' ')[0].toLowerCase().replace(/[^a-z]/g, ''));
         } catch (e) {
-            console.warn("Failed to parse image URLs from Gemini, trying reg-ex fallback");
-            // Fallback regex to find https://... .jpg|.png
-            const urlRegex = /https?:\/\/[^\s"']+\.(?:jpg|jpeg|png|webp)/gi;
-            const matches = result.text.match(urlRegex);
-            return matches ? matches.slice(0, 4) : [];
+            console.warn("Failed to parse keyword array, using robust fallback");
+            keywords = ["aesthetic", "design", "creative", "style"];
         }
 
-        return [];
+        // Map to loremflickr based on the keyword. 
+        // Even if a keyword has no exact match, loremflickr guarantees a fallback image instead of a 404/1033 error.
+        const seed = Math.floor(Math.random() * 10000);
+        const urls = keywords.slice(0, 4).map((k: string, idx: number) =>
+            `https://loremflickr.com/400/400/${k},mood?lock=${seed + idx}`
+        );
+
+        return urls;
     } catch (error) {
-        console.error("Visual Search Failed via Gemini:", error);
+        console.error("Visual Search Failed:", error);
         return [];
+    }
+}
+
+export async function refineBrandContent(analysisId: string, currentContent: string, instruction: string) {
+    if (!analysisId) throw new Error("Analysis ID is required");
+
+    const analysis = await prisma.brandAnalysis.findUnique({
+        where: { id: analysisId },
+    });
+
+    if (!analysis) throw new Error("Analysis not found");
+
+    const content = JSON.parse(analysis.content);
+    const persona = content.persona;
+
+    const prompt = `
+    You are the Digital Twin of the brand "${analysis.brandKor}".
+    ACTIVATE BRAND PERSONA:
+    - Archetype/Personality: "${persona?.personality || 'N/A'}"
+    - Tone: ${persona?.tone?.join(', ') || ''}
+    - USP: "${persona?.usp || 'N/A'}"
+    - Story/Philosophy: "${persona?.philosophy || ''} ${persona?.story || ''}"
+    - Voice: "${persona?.voice || ''}"
+
+    CURRENT CONTENT:
+    """
+    ${currentContent}
+    """
+
+    USER INSTRUCTION FOR REVISION (Feedback Loop):
+    "${instruction}"
+
+    TASK:
+    Rewrite the CURRENT CONTENT based on the USER INSTRUCTION above.
+    Keep the brand's defined Tone & Voice intact.
+    Write in KOREAN. Output ONLY the rewritten text.
+    `;
+
+    try {
+        const result = await generateText({
+            model: google('models/gemini-2.5-flash'),
+            prompt: prompt,
+        });
+        return result.text;
+    } catch (error) {
+        console.error("Refine Content Failed:", error);
+        throw new Error("Refine Content Failed");
+    }
+}
+
+export async function saveGeneratedContent(analysisId: string, item: { type: string, topic: string, content: string }) {
+    if (!analysisId) throw new Error("Analysis ID is required");
+
+    try {
+        const analysis = await prisma.brandAnalysis.findUnique({
+            where: { id: analysisId },
+        });
+
+        if (!analysis) throw new Error("Analysis not found");
+
+        const currentContent = JSON.parse(analysis.content);
+        const savedContents = currentContent.savedContents || [];
+
+        const newItem = {
+            id: Date.now().toString(),
+            date: new Date().toISOString(),
+            ...item
+        };
+
+        savedContents.unshift(newItem); // Add to the top of the list
+
+        const updatedContent = {
+            ...currentContent,
+            savedContents
+        };
+
+        await prisma.brandAnalysis.update({
+            where: { id: analysisId },
+            data: {
+                content: JSON.stringify(updatedContent)
+            }
+        });
+
+        revalidatePath('/main/analysis');
+        return savedContents;
+    } catch (error) {
+        console.error("Failed to save content snippet:", error);
+        throw error;
     }
 }
