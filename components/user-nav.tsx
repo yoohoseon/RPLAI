@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -42,11 +44,15 @@ export function UserNav({ user }: { user: any }) {
                     <DropdownMenuGroup>
                         {(user.role === 'MASTER' || user.role === 'TEAM_LEADER') && (
                             <DropdownMenuItem asChild>
-                                <a href="/dashboard">Team Settings</a>
+                                <Link href="/dashboard" className="cursor-pointer">
+                                    Team Settings
+                                </Link>
                             </DropdownMenuItem>
                         )}
                         <DropdownMenuItem asChild>
-                            <a href="/main/history">Analysis History</a>
+                            <Link href="/main/history" className="cursor-pointer">
+                                Analysis History
+                            </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem onSelect={() => setShowChangePassword(true)}>
                             Change Password

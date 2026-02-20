@@ -88,7 +88,13 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                                                 {format(analysis.createdAt, 'HH:mm')}
                                             </span>
                                         </TableCell>
-                                        <TableCell className="font-bold">{analysis.brand}</TableCell>
+                                        <TableCell className="font-bold">
+                                            {analysis.brandKor}
+                                            <br />
+                                            <span className="text-xs text-muted-foreground font-normal">
+                                                {analysis.brandEng}
+                                            </span>
+                                        </TableCell>
                                         <TableCell>
                                             <Badge variant="secondary" className="font-normal">
                                                 {analysis.category}
@@ -106,7 +112,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                                         <TableCell className="text-right">
                                             {/* Future: Link to detail view, passing content or ID */}
                                             {/* For now, just button placeholder or link to retry with params */}
-                                            <Link href={`/main/analysis?brand=${analysis.brand}&category=${analysis.category}&target=${analysis.target}&competitors=${analysis.competitors}&url=${analysis.url}`}>
+                                            <Link href={`/main/analysis?brandKor=${analysis.brandKor}&brandEng=${analysis.brandEng}&category=${analysis.category}&target=${analysis.target}&competitors=${analysis.competitors}&url=${analysis.url}`}>
                                                 <Button variant="outline" size="sm" className="gap-2">
                                                     View
                                                     <ArrowRight className="h-4 w-4" />

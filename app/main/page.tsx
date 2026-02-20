@@ -1,4 +1,10 @@
-
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 export default function MainPage() {
     return (
@@ -37,33 +43,67 @@ export default function MainPage() {
                         </div>
 
                         <form action="/main/analysis" method="GET" className="space-y-6">
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium leading-none">AI Model</label>
+                                <Select name="model" defaultValue="gemini-2.0-flash">
+                                    <SelectTrigger className="w-full h-12 rounded-lg border border-input bg-background/50 px-4 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all">
+                                        <SelectValue placeholder="Select AI Model" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="gemini-2.0-flash">Gemini 2.0 Flash (Recommended)</SelectItem>
+                                        <SelectItem value="gpt-4o" disabled>GPT-4o (Coming Soon)</SelectItem>
+                                        <SelectItem value="claude-3-5-sonnet" disabled>Claude 3.5 Sonnet (Coming Soon)</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
                             <div className="grid md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <label htmlFor="brand" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Brand Name</label>
+                                    <label htmlFor="brandKor" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                        Brand Name (Korean) <span className="text-red-500">*</span>
+                                    </label>
                                     <input
-                                        id="brand"
-                                        name="brand"
+                                        id="brandKor"
+                                        name="brandKor"
                                         type="text"
                                         required
-                                        placeholder="e.g. Nike"
+                                        placeholder="e.g. 골드넥스"
                                         className="flex h-12 w-full rounded-lg border border-input bg-background/50 px-4 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label htmlFor="url" className="text-sm font-medium leading-none">Website URL</label>
+                                    <label htmlFor="brandEng" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                        Brand Name (English) <span className="text-red-500">*</span>
+                                    </label>
                                     <input
-                                        id="url"
-                                        name="url"
-                                        type="url"
+                                        id="brandEng"
+                                        name="brandEng"
+                                        type="text"
                                         required
-                                        placeholder="https://example.com"
-                                        className="flex h-12 w-full rounded-lg border border-input bg-background/50 px-4 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all"
+                                        placeholder="e.g. Goldenax"
+                                        className="flex h-12 w-full rounded-lg border border-input bg-background/50 px-4 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all"
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <label htmlFor="category" className="text-sm font-medium leading-none">Industry / Category</label>
+                                <label htmlFor="url" className="text-sm font-medium leading-none">
+                                    Website URL <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    id="url"
+                                    name="url"
+                                    type="url"
+                                    required
+                                    placeholder="https://example.com"
+                                    className="flex h-12 w-full rounded-lg border border-input bg-background/50 px-4 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all"
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <label htmlFor="category" className="text-sm font-medium leading-none">
+                                    Industry / Category <span className="text-red-500">*</span>
+                                </label>
                                 <input
                                     id="category"
                                     name="category"
@@ -76,7 +116,9 @@ export default function MainPage() {
 
                             <div className="grid md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <label htmlFor="target" className="text-sm font-medium leading-none">Target Audience</label>
+                                    <label htmlFor="target" className="text-sm font-medium leading-none">
+                                        Target Audience <span className="text-red-500">*</span>
+                                    </label>
                                     <input
                                         id="target"
                                         name="target"
@@ -87,7 +129,9 @@ export default function MainPage() {
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label htmlFor="competitors" className="text-sm font-medium leading-none">Key Competitors</label>
+                                    <label htmlFor="competitors" className="text-sm font-medium leading-none">
+                                        Key Competitors <span className="text-red-500">*</span>
+                                    </label>
                                     <input
                                         id="competitors"
                                         name="competitors"
@@ -97,6 +141,91 @@ export default function MainPage() {
                                         className="flex h-12 w-full rounded-lg border border-input bg-background/50 px-4 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all"
                                     />
                                 </div>
+                            </div>
+
+                            <div className="pt-2 border-t">
+                                <details className="group">
+                                    <summary className="flex items-center justify-between cursor-pointer list-none py-3 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+                                        <span className="uppercase tracking-wider">Social Media Channels (Optional)</span>
+                                        <span className="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus group-open:hidden"><path d="M5 12h14" /><path d="M12 5v14" /></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-minus hidden group-open:block"><path d="M5 12h14" /></svg>
+                                        </span>
+                                    </summary>
+
+                                    <div className="grid md:grid-cols-2 gap-4 pt-2 animate-in slide-in-from-top-2 duration-300">
+                                        <div className="space-y-2">
+                                            <label htmlFor="instagram" className="text-xs font-medium leading-none text-muted-foreground">Instagram</label>
+                                            <input
+                                                id="instagram"
+                                                name="instagram"
+                                                type="url"
+                                                placeholder="https://instagram.com/..."
+                                                className="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label htmlFor="twitter" className="text-xs font-medium leading-none text-muted-foreground">Twitter / X</label>
+                                            <input
+                                                id="twitter"
+                                                name="twitter"
+                                                type="url"
+                                                placeholder="https://twitter.com/..."
+                                                className="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label htmlFor="youtube" className="text-xs font-medium leading-none text-muted-foreground">YouTube</label>
+                                            <input
+                                                id="youtube"
+                                                name="youtube"
+                                                type="url"
+                                                placeholder="https://youtube.com/..."
+                                                className="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label htmlFor="facebook" className="text-xs font-medium leading-none text-muted-foreground">Facebook</label>
+                                            <input
+                                                id="facebook"
+                                                name="facebook"
+                                                type="url"
+                                                placeholder="https://facebook.com/..."
+                                                className="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label htmlFor="linkedin" className="text-xs font-medium leading-none text-muted-foreground">LinkedIn</label>
+                                            <input
+                                                id="linkedin"
+                                                name="linkedin"
+                                                type="url"
+                                                placeholder="https://linkedin.com/in/..."
+                                                className="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label htmlFor="tiktok" className="text-xs font-medium leading-none text-muted-foreground">TikTok</label>
+                                            <input
+                                                id="tiktok"
+                                                name="tiktok"
+                                                type="url"
+                                                placeholder="https://tiktok.com/@..."
+                                                className="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label htmlFor="naver_blog" className="text-xs font-medium leading-none text-muted-foreground">Naver Blog</label>
+                                            <input
+                                                id="naver_blog"
+                                                name="naver_blog"
+                                                type="url"
+                                                placeholder="https://blog.naver.com/..."
+                                                className="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all"
+                                            />
+                                        </div>
+                                    </div>
+                                </details>
                             </div>
 
                             <button

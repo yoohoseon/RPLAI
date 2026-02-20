@@ -37,39 +37,52 @@ const sentimentSchema = z.object({
     source: z.string().describe("Source of the quote (e.g., Twitter, Review)"),
 });
 
+const personaSchema = z.object({
+    tone: z.array(z.string()).describe("3 adjectives describing the brand's tone of voice (e.g., Witty, Professional)"),
+    keywords: z.array(z.string()).describe("5 core keywords representing the brand identity"),
+    philosophy: z.string().describe("The brand's core philosophy or mission statement in one sentence"),
+    voice: z.string().describe("Description of how the brand speaks to its audience"),
+});
+
 const brandAnalysisSchema = z.object({
     kpis: z.array(kpiSchema).describe("List of 4 key performance indicators"),
     insight: insightSchema.describe("Brand perception gap analysis"),
     strategy: z.array(strategicPointSchema).describe("SWOT analysis strategy points"),
     actions: z.array(actionStepSchema).describe("3-phase action plan"),
     sentiments: z.array(sentimentSchema).describe("Representative customer sentiments (2 positive, 2 negative)"),
+    persona: personaSchema.describe("The defined brand persona and digital soul"),
 });
 
 export async function generateBrandAnalysis(
-    brand: string,
+    brandKor: string,
+    brandEng: string,
     category: string,
     target: string,
     competitors: string,
     url?: string,
+    socialUrls?: {
+        instagram?: string,
+        twitter?: string,
+        youtube?: string,
+        facebook?: string,
+        linkedin?: string,
+        tiktok?: string,
+        naver_blog?: string
+    },
     userId?: string // Optional userId for caching
 ) {
     try {
-        // 1. Check Cache (Database) if userId is provided or general cache strategy
-        // NOTE: For now, we only cache if we can associate it with a user or if we decide to make it global.
-        // The schema has userId as mandatory for BrandAnalysis.
-        // If userId is NOT provided, we might fail to save, or we should handle it.
-        // Let's assume we proceed without saving if no userId, OR we check if there is ANY analysis for this config (if we remove userId constraint or search differently).
-        // Current constraint: userId is needed to SAVE. But to READ, do we need userId?
-        // If we want to share analysis across users, we can remove userId from where clause.
-        // For now, let's look for ANY existing analysis for this brand configuration to save quota.
-
+        // 1. Check Cache (Database)
+        // Note: We are not consistently checking socialUrls for cache hit to allow flexibility, 
+        // or we can just ignore it for cache lookup to find previous analysis of same brand/category.
+        // For strictness, we should check relevant fields.
         const existingAnalysis = await prisma.brandAnalysis.findFirst({
             where: {
-                brand,
+                brandKor,
+                brandEng,
                 category,
                 target,
                 competitors,
-                // url: url || undefined // Optional check?
             },
             orderBy: { createdAt: 'desc' }
         });
@@ -77,17 +90,14 @@ export async function generateBrandAnalysis(
         if (existingAnalysis) {
             try {
                 const parsedContent = JSON.parse(existingAnalysis.content);
-                // Simple validation: check if 'kpis' or 'insight' exists
                 if (parsedContent && parsedContent.kpis && parsedContent.kpis.length > 0) {
-                    console.log(`[AI] Returning cached analysis for ${brand}`);
+                    console.log(`[AI] Returning cached analysis for ${brandKor} (${brandEng})`);
                     return parsedContent;
                 } else {
-                    console.warn(`[AI] Cached analysis for ${brand} is invalid/empty. Re-generating.`);
-                    // Optionally delete the invalid record here, or just overwrite it later (if upsert).
-                    // For now, let's just proceed to generation.
+                    console.warn(`[AI] Cached analysis for ${brandKor} is invalid/empty. Re-generating.`);
                 }
             } catch (e) {
-                console.error(`[AI] Failed to parse cached analysis for ${brand}`, e);
+                console.error(`[AI] Failed to parse cached analysis for ${brandKor}`, e);
             }
         }
 
@@ -98,10 +108,17 @@ export async function generateBrandAnalysis(
         }
 
         const prompt = `
-      Analyze the brand "${brand}" in the "${category}" industry.
+      Analyze the brand "${brandKor}" (English Name: "${brandEng}") in the "${category}" industry.
       Target Audience: ${target}
       Key Competitors: ${competitors}
       ${url ? `Official Website: ${url}` : ''}
+      ${socialUrls?.instagram ? `Instagram: ${socialUrls.instagram}` : ''}
+      ${socialUrls?.twitter ? `Twitter/X: ${socialUrls.twitter}` : ''}
+      ${socialUrls?.youtube ? `YouTube: ${socialUrls.youtube}` : ''}
+      ${socialUrls?.facebook ? `Facebook: ${socialUrls.facebook}` : ''}
+      ${socialUrls?.linkedin ? `LinkedIn: ${socialUrls.linkedin}` : ''}
+      ${socialUrls?.tiktok ? `TikTok: ${socialUrls.tiktok}` : ''}
+      ${socialUrls?.naver_blog ? `Naver Blog: ${socialUrls.naver_blog}` : ''}
 
       Provide a comprehensive brand analysis including:
       1. 4 Key KPIs relevant to this brand's health.
@@ -109,10 +126,12 @@ export async function generateBrandAnalysis(
       3. A Strategic Framework (SWOT Analysis).
       4. A 3-Phase Action Plan to improve brand performance.
       5. Representative Voice of Customer (VoC) sentiments (simulated based on typical market feedback).
+      6. Brand Persona Definition: Extract the brand's "Soul" (Tone, Keywords, Philosophy, Voice).
 
       IMPORTANT: Use the Google Search tool to find the most recent and accurate information about this brand.
       Ensure the tone is professional, strategic, and actionable.
-      Language: Korean (Translate all output to Korean).
+      Language: Korean (Translate ALL content values to Korean. Do NOT use English for descriptions or points).
+      If a KPI value is not available, use "측정 미달" instead of "측정 필요".
 
       Output ONLY a valid JSON object matching this schema:
       {
@@ -120,18 +139,47 @@ export async function generateBrandAnalysis(
         "insight": { "intent": string, "perception": string, "gap": string },
         "strategy": [{ "category": string, "points": string[] }],
         "actions": [{ "phase": string, "title": string, "description": string, "timeline": string }],
-        "sentiments": [{ "category": "positive"|"negative", "text": string, "source": string }]
+        "sentiments": [{ "category": "positive"|"negative", "text": string, "source": string }],
+        "persona": { "tone": string[], "keywords": string[], "philosophy": string, "voice": string }
       }
     `;
 
-        // Using 'generateText' to support tools (Grounding)
-        const { text } = await generateText({
-            model: google('models/gemini-2.5-flash'),
-            tools: {
-                googleSearch: google.tools.googleSearch({}),
-            },
-            prompt: prompt,
-        });
+
+        // Custom retry logic with exponential backoff
+        // User requested to increase retry interval gemini-2.5-flash
+        let text = '';
+        const maxRetries = 3;
+        let currentDelay = 3000; // Start with 3 seconds
+
+        for (let attempt = 0; attempt <= maxRetries; attempt++) {
+            try {
+                const result = await generateText({
+                    model: google('models/gemini-2.5-flash'),
+                    tools: {
+                        googleSearch: google.tools.googleSearch({}),
+                    },
+                    prompt: prompt,
+                    maxRetries: 0, // Disable internal SDK retry to control it manually
+                });
+                text = result.text;
+                break; // Success
+            } catch (error: any) {
+                if (attempt === maxRetries) {
+                    console.error(`[AI] Final attempt failed after ${maxRetries} retries.`);
+                    throw error;
+                }
+
+                const isRateLimit = error.message?.includes('429') || error.message?.includes('quota') || error.message?.includes('Too Many Requests');
+
+                // If rate limit, maybe wait longer?
+                if (isRateLimit) currentDelay += 2000;
+
+                console.warn(`[AI] Attempt ${attempt + 1} failed. Retrying in ${currentDelay}ms... Error: ${error.message}`);
+                await new Promise(resolve => setTimeout(resolve, currentDelay));
+                currentDelay *= 1.5; // Exponential backoff
+            }
+        }
+
 
         // Parse JSON from text (handling potential markdown code blocks)
         let cleanText = text.replace(/```json\n?|\n?```/g, '').trim();
@@ -147,27 +195,22 @@ export async function generateBrandAnalysis(
         // Only save if object is valid
         if (userId && object && object.kpis && object.kpis.length > 0) {
             try {
-                // Check if record exists specifically for upsert, or just let create fail if ID reused? 
-                // schema doesn't have unique constraint on params. 
-                // But we want to avoid duplicates or bad data.
-                // Best to delete old one if we found it was invalid?
-                // For simplicity, just create new one.
-
                 await prisma.brandAnalysis.create({
                     data: {
-                        brand,
+                        brandKor,
+                        brandEng,
                         category,
                         target,
                         competitors,
                         url: url || '',
+                        socialUrls: socialUrls ? JSON.stringify(socialUrls) : undefined,
                         content: JSON.stringify(object),
                         userId: userId
                     }
                 });
-                console.log(`[AI] Saved analysis for ${brand} to DB`);
+                console.log(`[AI] Saved analysis for ${brandKor} to DB`);
             } catch (dbError) {
                 console.error("[AI] Failed to save analysis to DB:", dbError);
-                // Don't fail the whole request just because save failed
             }
         }
 
@@ -181,7 +224,7 @@ export async function generateBrandAnalysis(
         }
 
         // Return Mock Data as Fallback
-        return getMockAnalysisData(brand, category);
+        return getMockAnalysisData(brandKor, category);
     }
 }
 
@@ -214,6 +257,12 @@ function getMockAnalysisData(brand: string, category: string) {
             { category: 'positive', text: "Best customer service I've experienced.", source: 'Review' },
             { category: 'negative', text: "Too expensive for what you get.", source: 'Reddit' },
             { category: 'negative', text: "Shipping took way too long.", source: 'Forum' }
-        ]
+        ],
+        persona: {
+            tone: ["Professional", "Innovative", "Reliable"],
+            keywords: ["Quality", "Trust", "Future", "Smart", "Global"],
+            philosophy: "Building a better future through continuous innovation.",
+            voice: "A confident and expert voice that guides the customer."
+        }
     };
 }

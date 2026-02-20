@@ -1,21 +1,36 @@
+import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { auth } from '@/auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TeamCreateDialog } from '@/components/team-create-dialog';
 import { UserCreateDialog } from '@/components/user-create-dialog';
+import { UserPasswordResetDialog } from '@/components/user-password-reset-dialog';
 import prisma from '@/lib/prisma';
 
 export default async function DashboardPage() {
     const session = await auth();
 
-    if (!session?.user) {
-        return <div>Not authenticated</div>;
+    if (!session?.user?.id) {
+        redirect('/login');
     }
 
     // Fetch current user to get fresh team info
     const currentUser = await prisma.user.findUnique({
         where: { id: session.user.id },
-        include: { team: { include: { members: true } } }
+        include: {
+            team: {
+                include: {
+                    members: {
+                        include: {
+                            _count: {
+                                select: { analyses: true }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     });
 
     return (
@@ -33,14 +48,49 @@ export default async function DashboardPage() {
                             </CardHeader>
                             <CardContent>
                                 <ul className="space-y-2 mb-4">
-                                    {(await prisma.team.findMany({ take: 10, orderBy: { createdAt: 'desc' } })).map((team) => (
-                                        <li key={team.id} className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm border border-slate-100">
-                                            <div>
-                                                <div className="font-semibold">{team.name}</div>
-                                                <div className="text-sm text-gray-500">{team.description}</div>
-                                            </div>
-                                        </li>
-                                    ))}
+                                    {(await prisma.team.findMany({
+                                        take: 10,
+                                        orderBy: { createdAt: 'desc' },
+                                        include: {
+                                            members: {
+                                                include: {
+                                                    _count: {
+                                                        select: { analyses: true }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    })).map((team) => {
+                                        const leader = team.members.find(m => m.role === 'TEAM_LEADER');
+                                        const totalAnalyses = team.members.reduce((sum, member) => sum + member._count.analyses, 0);
+                                        const memberCount = team.members.length;
+
+                                        return (
+                                            <li key={team.id} className="bg-white rounded-lg shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                                                <Link href={`/dashboard/teams/${team.id}`} className="block p-3">
+                                                    <div className="flex justify-between items-start">
+                                                        <div>
+                                                            <div className="font-semibold text-lg text-slate-900 group-hover:text-blue-600">{team.name}</div>
+                                                            <div className="text-sm text-gray-500 mb-1">{team.description || 'No description provided.'}</div>
+                                                        </div>
+                                                        <div className="flex gap-3 text-xs font-medium">
+                                                            <div className="bg-purple-50 text-purple-700 px-2 py-1 rounded border border-purple-100">
+                                                                Members: {memberCount}
+                                                            </div>
+                                                            <div className="bg-indigo-50 text-indigo-700 px-2 py-1 rounded border border-indigo-100">
+                                                                Histories: {totalAnalyses}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {leader && (
+                                                        <div className="text-xs text-blue-600 mt-1 flex items-center gap-1">
+                                                            <span className="font-semibold">Leader:</span> {leader.email}
+                                                        </div>
+                                                    )}
+                                                </Link>
+                                            </li>
+                                        )
+                                    })}
                                 </ul>
                                 <Button className="w-full" variant="outline" asChild>
                                     <a href="/dashboard/teams">View All Teams</a>
@@ -89,7 +139,34 @@ export default async function DashboardPage() {
                                 />
                             </CardHeader>
                             <CardContent>
-                                <p className="text-gray-500 mb-4">{currentUser.team.description}</p>
+                                <p className="text-gray-500 mb-6">{currentUser.team.description}</p>
+
+                                <div className="grid grid-cols-2 gap-4 mb-6">
+                                    <div className="bg-white p-4 rounded-lg border border-slate-100 shadow-sm text-center">
+                                        <div className="text-2xl font-bold text-slate-800">
+                                            {currentUser.team.members.length}
+                                        </div>
+                                        <div className="text-xs text-slate-500 uppercase tracking-wide font-semibold mt-1">
+                                            Team Members
+                                        </div>
+                                    </div>
+                                    <Link href="/main/history" className="bg-white p-4 rounded-lg border border-slate-100 shadow-sm text-center hover:shadow-md transition-shadow group block">
+                                        <div className="text-2xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
+                                            {currentUser.team.members.reduce((sum, m) => sum + m._count.analyses, 0)}
+                                        </div>
+                                        <div className="text-xs text-slate-500 uppercase tracking-wide font-semibold mt-1 group-hover:text-blue-600 transition-colors">
+                                            Total Histories
+                                        </div>
+                                    </Link>
+                                </div>
+
+                                <div className="mb-6 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                                    <span className="text-xs font-bold text-blue-800 uppercase tracking-wide">Team Leader</span>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <div className="font-medium text-sm text-blue-900">{currentUser.name || 'Admin'}</div>
+                                        <div className="text-xs text-blue-600">({currentUser.email})</div>
+                                    </div>
+                                </div>
                                 <h3 className="font-semibold mb-2">Team Members</h3>
                                 <ul className="space-y-2 mb-4">
                                     {currentUser.team.members.filter(m => m.id !== currentUser.id).length === 0 ? (
@@ -102,7 +179,10 @@ export default async function DashboardPage() {
                                                     <span className="text-xs text-gray-400">{member.email}</span>
                                                 </div>
                                                 <div className="flex flex-col items-end gap-1">
-                                                    <span className="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-medium">{member.role}</span>
+                                                    <div className="flex items-center gap-1">
+                                                        <span className="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-medium">{member.role}</span>
+                                                        <UserPasswordResetDialog userId={member.id} userName={member.name || 'User'} />
+                                                    </div>
                                                 </div>
                                             </li>
                                         ))

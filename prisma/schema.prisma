@@ -25,7 +25,9 @@ model User {
 
 model BrandAnalysis {
   id          String   @id @default(cuid())
-  brand       String
+  brandKor    String
+  brandEng    String
+  socialUrls  String?
   url         String
   category    String
   target      String

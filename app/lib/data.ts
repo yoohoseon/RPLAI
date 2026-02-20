@@ -28,7 +28,10 @@ export async function fetchBrandAnalyses(
 
         // 2. Search Filters
         if (filters?.brand) {
-            where.brand = { contains: filters.brand };
+            where.OR = [
+                { brandKor: { contains: filters.brand } },
+                { brandEng: { contains: filters.brand } }
+            ];
         }
 
         if (filters?.userName) {

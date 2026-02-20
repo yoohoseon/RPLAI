@@ -21,8 +21,9 @@ export default async function TeamsPage({
         return <div>Unauthorized</div>;
     }
 
-    const query = searchParams?.query || '';
-    const currentPage = Number(searchParams?.page) || 1;
+    const params = await searchParams;
+    const query = params?.query || '';
+    const currentPage = Number(params?.page) || 1;
     const itemsPerPage = 10;
 
     const where = query

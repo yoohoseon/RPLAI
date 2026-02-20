@@ -394,3 +394,45 @@ export async function saveAnalysis(prevState: any, formData: FormData) {
         return { message: 'Failed to save analysis: ' + (e.message || e) };
     }
 }
+
+export async function resetUserPassword(prevState: any, formData: FormData) {
+    const session = await auth();
+    // Allow MASTER and TEAM_LEADER to reset passwords (with logic)
+    // For now, check MASTER as per current requirement/page access
+    if (!session?.user || (session.user.role !== 'MASTER' && session.user.role !== 'TEAM_LEADER')) {
+        return { message: 'Unauthorized' };
+    }
+
+    const userId = formData.get('userId') as string;
+    const newPassword = formData.get('newPassword') as string;
+
+    if (!userId || !newPassword) {
+        return { message: 'Missing required fields' };
+    }
+
+    try {
+        // Optional: Check if TEAM_LEADER is managing their own team member
+        if (session.user.role === 'TEAM_LEADER') {
+            const currentUser = await prisma.user.findUnique({ where: { id: session.user.id } });
+            const targetUser = await prisma.user.findUnique({ where: { id: userId } });
+
+            if (!currentUser?.teamId || targetUser?.teamId !== currentUser.teamId) {
+                return { message: 'You can only manage your own team members.' };
+            }
+        }
+
+        const bcrypt = require('bcryptjs');
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        await prisma.user.update({
+            where: { id: userId },
+            data: { password: hashedPassword },
+        });
+
+        revalidatePath('/dashboard/teams');
+        revalidatePath('/dashboard/users');
+        return { message: 'Password reset successfully', success: true };
+    } catch (e) {
+        return { message: 'Failed to reset password' };
+    }
+}

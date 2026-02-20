@@ -8,6 +8,7 @@ import { TeamAddMemberDialog } from '@/components/team-add-member-dialog';
 import { TeamRemoveMemberDialog } from '@/components/team-remove-member-dialog';
 import { TeamAssignLeaderDialog } from '@/components/team-assign-leader-dialog';
 import Link from 'next/link';
+import { UserPasswordResetDialog } from '@/components/user-password-reset-dialog';
 
 export default async function TeamDetailsPage({
     params,
@@ -15,15 +16,42 @@ export default async function TeamDetailsPage({
     params: Promise<{ id: string }>;
 }) {
     const session = await auth();
-    if (session?.user.role !== 'MASTER') {
+    if (!session?.user) {
         return <div>Unauthorized</div>;
     }
 
     const { id } = await params;
 
+    // Check permissions
+    if (session.user.role !== 'MASTER') {
+        // If not MASTER, must be TEAM_LEADER of this specific team
+        if (session.user.role !== 'TEAM_LEADER') {
+            return <div>Unauthorized</div>;
+        }
+
+        // We need to verify if the user is the leader of THIS team
+        // We can do this by fetching the user or relying on session if we trust it (better to fetch)
+        const currentUser = await prisma.user.findUnique({
+            where: { id: session.user.id },
+            select: { teamId: true }
+        });
+
+        if (currentUser?.teamId !== id) {
+            return <div>Unauthorized</div>;
+        }
+    }
+
     const team = await prisma.team.findUnique({
         where: { id },
-        include: { members: true },
+        include: {
+            members: {
+                include: {
+                    analyses: {
+                        orderBy: { createdAt: 'desc' }
+                    }
+                }
+            }
+        },
     });
 
     if (!team) {
@@ -31,7 +59,7 @@ export default async function TeamDetailsPage({
     }
 
     const users = await prisma.user.findMany({
-        select: { id: true, name: true, email: true, role: true }
+        select: { id: true, name: true, email: true, role: true, teamId: true }
     });
 
     const leader = team.members.find(m => m.role === 'TEAM_LEADER');
@@ -95,6 +123,7 @@ export default async function TeamDetailsPage({
                                         <div className="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full">
                                             {member.role}
                                         </div>
+                                        <UserPasswordResetDialog userId={member.id} userName={member.name || 'User'} />
                                         <TeamRemoveMemberDialog userId={member.id} teamId={team.id} userName={member.name || 'Unnamed'} />
                                     </div>
                                 </li>
@@ -103,6 +132,49 @@ export default async function TeamDetailsPage({
                                 <div className="text-sm text-gray-500 text-center py-4">No members in this team.</div>
                             )}
                         </ul>
+                    </CardContent>
+                </Card>
+            </div>
+
+            <div className="mt-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Team Analysis History</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="rounded-md border">
+                            <table className="w-full text-sm text-left">
+                                <thead className="bg-gray-50 text-gray-700 uppercase">
+                                    <tr>
+                                        <th className="px-6 py-3">Brand</th>
+                                        <th className="px-6 py-3">Category</th>
+                                        <th className="px-6 py-3">Author</th>
+                                        <th className="px-6 py-3">Created At</th>
+                                        <th className="px-6 py-3 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {team.members.flatMap(m => m.analyses.map(a => ({ ...a, authorName: m.name }))).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((analysis) => (
+                                        <tr key={analysis.id} className="bg-white border-b hover:bg-gray-50">
+                                            <td className="px-6 py-4 font-medium text-gray-900">{analysis.brandKor || analysis.brand}</td>
+                                            <td className="px-6 py-4">{analysis.category}</td>
+                                            <td className="px-6 py-4">{analysis.authorName}</td>
+                                            <td className="px-6 py-4">{new Date(analysis.createdAt).toLocaleDateString()}</td>
+                                            <td className="px-6 py-4 text-right">
+                                                <Button variant="ghost" size="sm" asChild>
+                                                    <Link href={`/main/analysis?id=${analysis.id}`}>View</Link>
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {team.members.every(m => m.analyses.length === 0) && (
+                                        <tr>
+                                            <td colSpan={5} className="px-6 py-4 text-center text-gray-500">No analysis history found for this team.</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
                     </CardContent>
                 </Card>
             </div>

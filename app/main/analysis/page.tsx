@@ -1,6 +1,9 @@
 import AnalysisActions from '@/components/analysis/analysis-actions';
+import BrandPersona from '@/components/analysis/brand-persona';
+import ContentGenerator from '@/components/analysis/content-generator';
 import { generateBrandAnalysis } from '@/app/lib/ai';
 import { auth } from '@/auth';
+import prisma from '@/lib/prisma';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,11 +15,22 @@ interface AnalysisPageProps {
 
 export default async function AnalysisPage(props: AnalysisPageProps) {
     const searchParams = await props.searchParams;
-    const brand = (searchParams.brand as string) || 'Brand';
+    const brandKor = (searchParams.brandKor as string) || 'Brand';
+    const brandEng = (searchParams.brandEng as string) || '';
     const url = searchParams.url as string | undefined;
     const category = (searchParams.category as string) || 'General';
     const competitors = (searchParams.competitors as string) || 'None';
     const target = (searchParams.target as string) || 'General';
+
+    const socialUrls = {
+        instagram: searchParams.instagram as string | undefined,
+        twitter: searchParams.twitter as string | undefined,
+        youtube: searchParams.youtube as string | undefined,
+        facebook: searchParams.facebook as string | undefined,
+        linkedin: searchParams.linkedin as string | undefined,
+        tiktok: searchParams.tiktok as string | undefined,
+        naver_blog: searchParams.naver_blog as string | undefined,
+    };
 
     // Get current user session for caching
     const session = await auth();
@@ -27,7 +41,7 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
     let isError = false;
 
     try {
-        analysisData = await generateBrandAnalysis(brand, category, target, competitors, url, userId);
+        analysisData = await generateBrandAnalysis(brandKor, brandEng, category, target, competitors, url, socialUrls, userId);
     } catch (e) {
         console.error("Analysis Generation Failed", e);
         isError = true;
@@ -45,14 +59,32 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
         );
     }
 
-    const { kpis, insight, strategy, actions, sentiments } = analysisData;
+    // Find the ID of the analysis we just generated/retrieved
+    const savedRecord = await prisma.brandAnalysis.findFirst({
+        where: { brandKor, brandEng, category, target, competitors },
+        orderBy: { createdAt: 'desc' },
+        select: { id: true }
+    });
+    const savedAnalysisId = savedRecord?.id || '';
+
+    interface AnalysisData {
+        kpis: { label: string; value: string; trend: string; change: string; description: string }[];
+        insight: { intent: string; perception: string; gap: string };
+        strategy: { category: string; points: string[] }[];
+        actions: { phase: string; title: string; description: string; timeline: string }[];
+        sentiments: { category: string; text: string; source: string }[];
+        extendedStrategy?: any;
+        persona?: { tone: string[]; keywords: string[]; philosophy: string; voice: string };
+    }
+
+    const { kpis, insight, strategy, actions, sentiments, extendedStrategy } = analysisData as AnalysisData;
 
     return (
         <div id="analysis-report" className="container mx-auto py-10 px-4 space-y-12 animate-in fade-in duration-700">
             {/* Header */}
             <div className="space-y-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">{brand} Analysis</h1>
+                    <h1 className="text-3xl font-bold tracking-tight">{brandKor} <span className="text-muted-foreground text-xl font-medium ml-2">{brandEng}</span></h1>
                     <p className="text-muted-foreground">Comprehensive AI-driven brand performance report</p>
                 </div>
 
@@ -73,6 +105,11 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
                     </div>
                 )}
             </div>
+
+            {/* 0. Brand DNA (Persona) - Newly Added */}
+            <BrandPersona persona={analysisData.persona} analysisId={savedAnalysisId} />
+
+
 
             {/* 1. KPI Dashboard */}
             <section className="space-y-4">
@@ -197,13 +234,19 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
             </section>
 
             <AnalysisActions
-                brand={brand}
+                analysisId={savedAnalysisId}
+                brand={brandKor}
                 url={url || ''}
                 category={category || ''}
                 target={target || ''}
                 competitors={competitors || ''}
-                content={JSON.stringify({ kpis, insight, strategy, actions, sentiments })}
+                content={JSON.stringify({ kpis, insight, strategy, actions, sentiments, extendedStrategy: analysisData.extendedStrategy })}
             />
+
+            {/* 0.5 Content Generator - Moved to Bottom (Stage 2) */}
+            {savedAnalysisId && analysisData.persona && (
+                <ContentGenerator analysisId={savedAnalysisId} brandName={brandKor} />
+            )}
         </div>
     );
 }
