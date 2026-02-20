@@ -38,10 +38,14 @@ const sentimentSchema = z.object({
 });
 
 const personaSchema = z.object({
+    personality: z.string().describe("The brand's character as if it were a person (e.g., The Rebel, The Sage)"),
     tone: z.array(z.string()).describe("3 adjectives describing the brand's tone of voice (e.g., Witty, Professional)"),
     keywords: z.array(z.string()).describe("5 core keywords representing the brand identity"),
+    usp: z.string().describe("Unique Selling Proposition (What makes it different)"),
+    story: z.string().describe("A short summary of the brand's background story or mission narrative"),
     philosophy: z.string().describe("The brand's core philosophy or mission statement in one sentence"),
     voice: z.string().describe("Description of how the brand speaks to its audience"),
+    slogan: z.string().describe("A catchy generated or existing slogan for the brand"),
 });
 
 const brandAnalysisSchema = z.object({
@@ -126,7 +130,7 @@ export async function generateBrandAnalysis(
       3. A Strategic Framework (SWOT Analysis).
       4. A 3-Phase Action Plan to improve brand performance.
       5. Representative Voice of Customer (VoC) sentiments (simulated based on typical market feedback).
-      6. Brand Persona Definition: Extract the brand's "Soul" (Tone, Keywords, Philosophy, Voice).
+      6. Brand Persona Definition: Extract the brand's "Soul" including Personality archetype, Tone, Keywords, Unique Selling Proposition (USP), Brand Story/Narrative, Philosophy, Voice, and a catchy Slogan.
 
       IMPORTANT: Use the Google Search tool to find the most recent and accurate information about this brand.
       Ensure the tone is professional, strategic, and actionable.
@@ -140,7 +144,7 @@ export async function generateBrandAnalysis(
         "strategy": [{ "category": string, "points": string[] }],
         "actions": [{ "phase": string, "title": string, "description": string, "timeline": string }],
         "sentiments": [{ "category": "positive"|"negative", "text": string, "source": string }],
-        "persona": { "tone": string[], "keywords": string[], "philosophy": string, "voice": string }
+        "persona": { "personality": string, "tone": string[], "keywords": string[], "usp": string, "story": string, "philosophy": string, "voice": string, "slogan": string }
       }
     `;
 
@@ -259,10 +263,14 @@ function getMockAnalysisData(brand: string, category: string) {
             { category: 'negative', text: "Shipping took way too long.", source: 'Forum' }
         ],
         persona: {
+            personality: "The Innovator",
             tone: ["Professional", "Innovative", "Reliable"],
             keywords: ["Quality", "Trust", "Future", "Smart", "Global"],
+            usp: "Providing enterprise-grade AI solutions with seamless integration.",
+            story: "Born from a need for smarter marketing, we strive to make AI accessible for all businesses.",
             philosophy: "Building a better future through continuous innovation.",
-            voice: "A confident and expert voice that guides the customer."
+            voice: "A confident and expert voice that guides the customer.",
+            slogan: "Innovation that connects the future."
         }
     };
 }

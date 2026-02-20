@@ -74,7 +74,7 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
         actions: { phase: string; title: string; description: string; timeline: string }[];
         sentiments: { category: string; text: string; source: string }[];
         extendedStrategy?: any;
-        persona?: { tone: string[]; keywords: string[]; philosophy: string; voice: string };
+        persona?: { personality: string; tone: string[]; keywords: string[]; usp: string; story: string; philosophy: string; voice: string; slogan: string };
     }
 
     const { kpis, insight, strategy, actions, sentiments, extendedStrategy } = analysisData as AnalysisData;

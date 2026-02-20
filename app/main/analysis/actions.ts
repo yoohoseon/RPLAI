@@ -160,10 +160,13 @@ export async function generateBrandContent(analysisId: string, type: string, top
     const prompt = `
     You are the Digital Twin of the brand "${analysis.brandKor}".
     ACTIVATE BRAND PERSONA:
-    - Tone: ${persona.tone.join(', ')}
-    - Keywords: ${persona.keywords.join(', ')}
-    - Philosophy: "${persona.philosophy}"
-    - Voice: "${persona.voice}"
+    - Archetype/Personality: "${persona.personality || 'N/A'}"
+    - Tone: ${persona.tone?.join(', ') || ''}
+    - Keywords: ${persona.keywords?.join(', ') || ''}
+    - USP: "${persona.usp || 'N/A'}"
+    - Philosophy & Story: "${persona.philosophy || ''} ${persona.story || ''}"
+    - Voice: "${persona.voice || ''}"
+    - Slogan: "${persona.slogan || ''}"
 
     TASK:
     Write a ${typePrompt} about the topic: "${topic}".
@@ -202,10 +205,12 @@ export async function generateImagePrompt(analysisId: string, context: string) {
     const prompt = `
     You are an Expert Art Director for the brand "${analysis.brandKor}".
     
-    BRAND CONTEXT:
+    BRAND CONTEXT (Aesthetic & Soul):
+    - Archetype: "${persona?.personality || ''}"
     - Philosophy: "${persona?.philosophy || ''}"
-    - Keyword: "${persona?.keywords?.join(', ') || ''}"
-    - Tone: "${persona?.tone?.join(', ') || ''}"
+    - Keywords: "${persona?.keywords?.join(', ') || ''}"
+    - Visual Tone: "${persona?.tone?.join(', ') || ''}"
+    - Brand Story/Vibe: "${persona?.story || ''}"
 
     INPUT TEXT (Copy):
     "${context}"
