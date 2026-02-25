@@ -79,13 +79,13 @@ export function BrandRegistrationForm() {
 
     return (
         <>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-8">
                 <input type="hidden" name="model" value="gemini-2.0-flash" />
 
                 <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                        <label htmlFor="brandKor" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            브랜드명 (국문) <span className="text-red-500">*</span>
+                    <div className="space-y-3">
+                        <label htmlFor="brandKor" className="text-[15px] font-bold text-[#191F28] px-1">
+                            브랜드명 (국문) <span className="text-[#EE2924]">*</span>
                         </label>
                         <input
                             id="brandKor"
@@ -95,12 +95,12 @@ export function BrandRegistrationForm() {
                             placeholder="예: 골드넥스"
                             value={formData.brandKor}
                             onChange={handleChange}
-                            className="flex h-12 w-full rounded-lg border border-input bg-background/50 px-4 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all"
+                            className="flex h-14 w-full rounded-2xl border border-[#F2F4F6] bg-[#F9FAFB] px-5 text-[15px] font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#EE2924]/20 focus:border-[#EE2924] placeholder:text-[#ABB3BB]"
                         />
                     </div>
-                    <div className="space-y-2">
-                        <label htmlFor="brandEng" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            브랜드명 (영문) <span className="text-red-500">*</span>
+                    <div className="space-y-3">
+                        <label htmlFor="brandEng" className="text-[15px] font-bold text-[#191F28] px-1">
+                            브랜드명 (영문) <span className="text-[#EE2924]">*</span>
                         </label>
                         <input
                             id="brandEng"
@@ -110,14 +110,14 @@ export function BrandRegistrationForm() {
                             placeholder="예: Goldenax"
                             value={formData.brandEng}
                             onChange={handleChange}
-                            className="flex h-12 w-full rounded-lg border border-input bg-background/50 px-4 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all"
+                            className="flex h-14 w-full rounded-2xl border border-[#F2F4F6] bg-[#F9FAFB] px-5 text-[15px] font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#EE2924]/20 focus:border-[#EE2924] placeholder:text-[#ABB3BB]"
                         />
                     </div>
                 </div>
 
-                <div className="space-y-2">
-                    <label htmlFor="url" className="text-sm font-medium leading-none">
-                        웹사이트 링크 <span className="text-red-500">*</span>
+                <div className="space-y-3">
+                    <label htmlFor="url" className="text-[15px] font-bold text-[#191F28] px-1">
+                        웹사이트 링크 <span className="text-[#EE2924]">*</span>
                     </label>
                     <input
                         id="url"
@@ -127,73 +127,74 @@ export function BrandRegistrationForm() {
                         placeholder="https://example.com"
                         value={formData.url}
                         onChange={handleChange}
-                        className="flex h-12 w-full rounded-lg border border-input bg-background/50 px-4 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all"
+                        className="flex h-14 w-full rounded-2xl border border-[#F2F4F6] bg-[#F9FAFB] px-5 text-[15px] font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#EE2924]/20 focus:border-[#EE2924] placeholder:text-[#ABB3BB]"
                     />
                 </div>
 
-                <div className="space-y-2">
-                    <label htmlFor="category" className="text-sm font-medium leading-none">
-                        주요 업종 <span className="text-red-500">*</span>
+                <div className="space-y-3">
+                    <label htmlFor="category" className="text-[15px] font-bold text-[#191F28] px-1">
+                        주요 업종 <span className="text-[#EE2924]">*</span>
                     </label>
                     <input
                         id="category"
                         name="category"
                         type="text"
                         required
-                        placeholder="예: 코스메틱, 라이프스타일 큐레이션, F&B 프랜차이즈, IT 등"
+                        placeholder="예: 코스메틱, 라이프스타일 큐레이션, IT 기술 등"
                         value={formData.category}
                         onChange={handleChange}
-                        className="flex h-12 w-full rounded-lg border border-input bg-background/50 px-4 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all"
+                        className="flex h-14 w-full rounded-2xl border border-[#F2F4F6] bg-[#F9FAFB] px-5 text-[15px] font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#EE2924]/20 focus:border-[#EE2924] placeholder:text-[#ABB3BB]"
                     />
                 </div>
 
-                <div className="space-y-2">
-                    <label htmlFor="description" className="text-sm font-medium leading-none">
-                        브랜드 설명 (핵심 제품/서비스) <span className="text-red-500">*</span>
+                <div className="space-y-3">
+                    <label htmlFor="description" className="text-[15px] font-bold text-[#191F28] px-1">
+                        브랜드 설명 <span className="text-[#EE2924]">*</span>
                     </label>
-                    <p className="text-xs text-muted-foreground pb-1">브랜드가 제공하는 핵심 가치나 특징을 짧게 적어주세요.</p>
                     <textarea
                         id="description"
                         name="description"
                         required
-                        placeholder="예: 민감 피부용 비건 스킨케어, 15분 완성 프리미엄 밀키트, 성과 중심의 마케팅 솔루션 등"
+                        placeholder="브랜드가 제공하는 핵심 가치나 특징을 적어주세요."
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        className="flex min-h-[80px] w-full rounded-lg border border-input bg-background/50 px-4 py-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all resize-none"
+                        className="flex min-h-[100px] w-full rounded-2xl border border-[#F2F4F6] bg-[#F9FAFB] px-5 py-4 text-[15px] font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#EE2924]/20 focus:border-[#EE2924] placeholder:text-[#ABB3BB] resize-none"
                     />
                 </div>
 
-                <div className="space-y-2">
-                    <label htmlFor="instagram" className="text-sm font-medium leading-none">인스타그램</label>
-                    <input
-                        id="instagram"
-                        name="instagram"
-                        type="url"
-                        placeholder="https://instagram.com/..."
-                        value={formData.instagram}
-                        onChange={handleChange}
-                        className="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all"
-                    />
-                </div>
-                <div className="space-y-2">
-                    <label htmlFor="youtube" className="text-sm font-medium leading-none">유튜브</label>
-                    <input
-                        id="youtube"
-                        name="youtube"
-                        type="url"
-                        placeholder="https://youtube.com/..."
-                        value={formData.youtube}
-                        onChange={handleChange}
-                        className="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all"
-                    />
+                <div className="grid md:grid-cols-2 gap-6 pt-2">
+                    <div className="space-y-3">
+                        <label htmlFor="instagram" className="text-[15px] font-bold text-[#191F28] px-1">인스타그램</label>
+                        <input
+                            id="instagram"
+                            name="instagram"
+                            type="url"
+                            placeholder="https://instagram.com/..."
+                            value={formData.instagram}
+                            onChange={handleChange}
+                            className="flex h-12 w-full rounded-2xl border border-[#F2F4F6] bg-[#F9FAFB] px-5 text-[14px] font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#EE2924]/20 focus:border-[#EE2924] placeholder:text-[#ABB3BB]"
+                        />
+                    </div>
+                    <div className="space-y-3">
+                        <label htmlFor="youtube" className="text-[15px] font-bold text-[#191F28] px-1">유튜브</label>
+                        <input
+                            id="youtube"
+                            name="youtube"
+                            type="url"
+                            placeholder="https://youtube.com/..."
+                            value={formData.youtube}
+                            onChange={handleChange}
+                            className="flex h-12 w-full rounded-2xl border border-[#F2F4F6] bg-[#F9FAFB] px-5 text-[14px] font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#EE2924]/20 focus:border-[#EE2924] placeholder:text-[#ABB3BB]"
+                        />
+                    </div>
                 </div>
 
                 <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full inline-flex items-center justify-center rounded-lg text-base font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-[1.01] active:scale-[0.99] cursor-pointer h-14 shadow-lg hover:shadow-xl mt-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    className="w-full inline-flex items-center justify-center rounded-2xl text-lg font-bold transition-all disabled:opacity-50 h-16 shadow-lg mt-6 bg-[#EE2924] text-white hover:bg-[#D11F1B] shadow-[#EE2924]/20 active:scale-[0.98] cursor-pointer"
                 >
-                    {isLoading ? <span className="flex items-center gap-2"><Loader2 className="w-5 h-5 animate-spin" /> 분석 중...</span> : "분석 시작"}
+                    {isLoading ? <span className="flex items-center gap-2"><Loader2 className="w-5 h-5 animate-spin" /> 분석 중...</span> : "브랜드 분석 시작하기"}
                 </button>
             </form>
 
@@ -215,13 +216,13 @@ export function BrandRegistrationForm() {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-3 mt-6 sm:space-x-0">
-                        <AlertDialogCancel onClick={() => setShowDialog(false)} className="mt-0 w-full sm:w-auto text-muted-foreground">
+                        <AlertDialogCancel onClick={() => setShowDialog(false)} className="mt-0 w-full sm:w-auto h-12 rounded-xl text-[#8B95A1] border-[#F2F4F6] hover:bg-[#F9FAFB] font-bold">
                             취소
                         </AlertDialogCancel>
-                        <Button variant="outline" onClick={handleGenerateNew} className="mt-0 w-full sm:w-auto text-muted-foreground">
+                        <Button variant="outline" onClick={handleGenerateNew} className="mt-0 w-full sm:w-auto h-12 rounded-xl text-[#4E5968] border-[#F2F4F6] hover:bg-[#F9FAFB] font-bold">
                             새로 분석하기
                         </Button>
-                        <AlertDialogAction onClick={handleViewExisting} className="w-full sm:w-auto bg-gray-900 text-white dark:bg-white dark:text-gray-900 border border-transparent shadow-sm">
+                        <AlertDialogAction onClick={handleViewExisting} className="w-full sm:w-auto h-12 rounded-xl bg-[#EE2924] text-white hover:bg-[#D11F1B] font-bold shadow-lg shadow-[#EE2924]/10 border-none transition-all">
                             기존 결과 보기
                         </AlertDialogAction>
                     </AlertDialogFooter>

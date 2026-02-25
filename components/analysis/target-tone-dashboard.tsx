@@ -201,205 +201,173 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
     return (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
             {/* Left side: Target & Tone */}
-            <section className="space-y-8 relative lg:col-span-5">
+            <section className="space-y-6 relative lg:col-span-5">
                 <div className="flex items-center justify-between mb-2 gap-4 flex-wrap">
-                    <div className="flex items-center gap-4">
-                        <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground">Target & Tone</h2>
+                    <div className="flex items-center gap-3">
+                        <div className="w-1.5 h-6 bg-[#EE2924] rounded-full" />
+                        <h2 className="text-2xl font-bold tracking-tight text-[#191F28]">Target & Tone</h2>
                     </div>
-                    {isModified && (
-                        <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={handleReset}
-                            className="bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 hover:bg-violet-200 dark:hover:bg-violet-900/50 shadow-sm rounded-full px-4"
-                        >
-                            <RotateCcw className="w-4 h-4 mr-2" />
-                            AI 추천값 초기화
-                        </Button>
-                    )}
                 </div>
-                <Card className="overflow-hidden border-border/50 bg-white/40 dark:bg-slate-950/40 backdrop-blur-xl hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 rounded-3xl h-full">
-                    <CardContent className="p-8 space-y-12">
+                <Card className="overflow-hidden border-[#F2F4F6] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-500 rounded-[32px] h-full">
+                    <CardContent className="p-10 space-y-12">
                         <TooltipProvider delayDuration={200}>
                             {/* Slider 1: Lifestyle */}
-                            <div className="space-y-4">
-                                <div className="flex justify-between items-end border-b border-border/40 pb-2 mb-2">
-                                    <span className="text-violet-600 dark:text-violet-400 font-extrabold text-lg tracking-wider flex items-center gap-1.5">
+                            <div className="space-y-6">
+                                <div className="flex justify-between items-end border-b border-[#F2F4F6] pb-4 mb-2">
+                                    <span className="text-[#191F28] font-bold text-lg tracking-tight flex items-center gap-2">
                                         라이프스타일
                                         {originalValues.lifestyleExplanation && (
                                             <Tooltip>
                                                 <TooltipTrigger>
-                                                    <Info className="w-4 h-4 text-primary cursor-help" />
+                                                    <Info className="w-4 h-4 text-[#ABB3BB] hover:text-[#EE2924] cursor-help transition-colors" />
                                                 </TooltipTrigger>
-                                                <TooltipContent side="top" sideOffset={8} className="max-w-[340px] p-3 shadow-xl rounded-xl">
-                                                    <p className="text-xs font-medium leading-relaxed break-keep">
-                                                        <span className="text-primary font-bold mr-1">AI의 분석:</span>
+                                                <TooltipContent side="top" sideOffset={8} className="max-w-[340px] p-4 border-[#F2F4F6] shadow-xl rounded-[20px]">
+                                                    <p className="text-[13px] font-medium leading-relaxed break-keep text-[#4E5968]">
+                                                        <span className="text-[#EE2924] font-bold mr-1">AI 분석 결과:</span>
                                                         {originalValues.lifestyleExplanation}
                                                     </p>
                                                 </TooltipContent>
                                             </Tooltip>
                                         )}
                                     </span>
+                                    <div className="text-[14px] font-bold text-[#EE2924] bg-[#EE2924]/5 px-3 py-1 rounded-lg">
+                                        {lifestyle}%
+                                    </div>
                                 </div>
-                                <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-muted-foreground/80 mb-1 px-1">
-                                    <Tooltip>
-                                        <TooltipTrigger className="cursor-help flex items-center gap-1 decoration-dashed underline-offset-4 hover:underline">
-                                            안정 / 실속
-                                        </TooltipTrigger>
-                                        <TooltipContent side="top" sideOffset={6} className="max-w-[280px] p-2.5 rounded-lg shadow-md">
-                                            <p className="text-[11px] font-medium leading-relaxed break-keep">실용성과 가성비를 추구하는 안정적 가치관</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                    <Tooltip>
-                                        <TooltipTrigger className="cursor-help flex items-center gap-1 decoration-dashed underline-offset-4 hover:underline">
-                                            성취 / 도전
-                                        </TooltipTrigger>
-                                        <TooltipContent side="top" sideOffset={6} className="max-w-[280px] p-2.5 rounded-lg shadow-md">
-                                            <p className="text-[11px] font-medium leading-relaxed break-keep">새로운 경험과 개인의 성공을 중시하는 도전적 성향</p>
-                                        </TooltipContent>
-                                    </Tooltip>
+                                <div className="flex justify-between items-center text-[12px] font-bold uppercase tracking-wider text-[#8B95A1] mb-1 px-1">
+                                    <span className="flex items-center gap-1.5">안정 / 실속</span>
+                                    <span className="flex items-center gap-1.5">성취 / 도전</span>
                                 </div>
                                 <Slider
                                     value={[lifestyle]}
                                     onValueChange={(vals) => setLifestyle(vals[0])}
                                     max={100}
                                     step={1}
-                                    className="w-full"
+                                    className="w-full [--primary:#EE2924]"
                                 />
                             </div>
 
                             {/* Slider 2: Knowledge */}
-                            <div className="space-y-4">
-                                <div className="flex justify-between items-end border-b border-border/40 pb-2 mb-2">
-                                    <span className="text-violet-600 dark:text-violet-400 font-extrabold text-lg tracking-wider flex items-center gap-1.5">
+                            <div className="space-y-6">
+                                <div className="flex justify-between items-end border-b border-[#F2F4F6] pb-4 mb-2">
+                                    <span className="text-[#191F28] font-bold text-lg tracking-tight flex items-center gap-2">
                                         지식 / 관여도
                                         {originalValues.knowledgeExplanation && (
                                             <Tooltip>
                                                 <TooltipTrigger>
-                                                    <Info className="w-4 h-4 text-primary cursor-help" />
+                                                    <Info className="w-4 h-4 text-[#ABB3BB] hover:text-[#EE2924] cursor-help transition-colors" />
                                                 </TooltipTrigger>
-                                                <TooltipContent side="top" sideOffset={8} className="max-w-[340px] p-3 shadow-xl rounded-xl">
-                                                    <p className="text-xs font-medium leading-relaxed break-keep">
-                                                        <span className="text-primary font-bold mr-1">AI의 분석:</span>
+                                                <TooltipContent side="top" sideOffset={8} className="max-w-[340px] p-4 border-[#F2F4F6] shadow-xl rounded-[20px]">
+                                                    <p className="text-[13px] font-medium leading-relaxed break-keep text-[#4E5968]">
+                                                        <span className="text-[#EE2924] font-bold mr-1">AI 분석 결과:</span>
                                                         {originalValues.knowledgeExplanation}
                                                     </p>
                                                 </TooltipContent>
                                             </Tooltip>
                                         )}
                                     </span>
+                                    <div className="text-[14px] font-bold text-[#EE2924] bg-[#EE2924]/5 px-3 py-1 rounded-lg">
+                                        {knowledge}%
+                                    </div>
                                 </div>
-                                <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-muted-foreground/80 mb-1 px-1">
-                                    <Tooltip>
-                                        <TooltipTrigger className="cursor-help flex items-center gap-1 decoration-dashed underline-offset-4 hover:underline">
-                                            대중 / 입문
-                                        </TooltipTrigger>
-                                        <TooltipContent side="top" sideOffset={6} className="max-w-[280px] p-2.5 rounded-lg shadow-md">
-                                            <p className="text-[11px] font-medium leading-relaxed break-keep">직관적이고 쉬운 접근을 선호하는 대중적 시각</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                    <Tooltip>
-                                        <TooltipTrigger className="cursor-help flex items-center gap-1 decoration-dashed underline-offset-4 hover:underline">
-                                            전문가 / 매니아
-                                        </TooltipTrigger>
-                                        <TooltipContent side="top" sideOffset={6} className="max-w-[280px] p-2.5 rounded-lg shadow-md">
-                                            <p className="text-[11px] font-medium leading-relaxed break-keep">디테일과 원리를 꼼꼼히 따지는 고관여 고객층</p>
-                                        </TooltipContent>
-                                    </Tooltip>
+                                <div className="flex justify-between items-center text-[12px] font-bold uppercase tracking-wider text-[#8B95A1] mb-1 px-1">
+                                    <span className="flex items-center gap-1.5">대중 / 입문</span>
+                                    <span className="flex items-center gap-1.5">전문가 / 매니아</span>
                                 </div>
                                 <Slider
                                     value={[knowledge]}
                                     onValueChange={(vals) => setKnowledge(vals[0])}
                                     max={100}
                                     step={1}
-                                    className="w-full"
+                                    className="w-full [--primary:#EE2924]"
                                 />
                             </div>
 
                             {/* Slider 3: Communication */}
-                            <div className="space-y-4">
-                                <div className="flex justify-between items-end border-b border-border/40 pb-2 mb-2">
-                                    <span className="text-violet-600 dark:text-violet-400 font-extrabold text-lg tracking-wider flex items-center gap-1.5">
+                            <div className="space-y-6">
+                                <div className="flex justify-between items-end border-b border-[#F2F4F6] pb-4 mb-2">
+                                    <span className="text-[#191F28] font-bold text-lg tracking-tight flex items-center gap-2">
                                         소통 관계
                                         {originalValues.communicationExplanation && (
                                             <Tooltip>
                                                 <TooltipTrigger>
-                                                    <Info className="w-4 h-4 text-primary cursor-help" />
+                                                    <Info className="w-4 h-4 text-[#ABB3BB] hover:text-[#EE2924] cursor-help transition-colors" />
                                                 </TooltipTrigger>
-                                                <TooltipContent side="top" sideOffset={8} className="max-w-[340px] p-3 shadow-xl rounded-xl">
-                                                    <p className="text-xs font-medium leading-relaxed break-keep">
-                                                        <span className="text-primary font-bold mr-1">AI의 분석:</span>
+                                                <TooltipContent side="top" sideOffset={8} className="max-w-[340px] p-4 border-[#F2F4F6] shadow-xl rounded-[20px]">
+                                                    <p className="text-[13px] font-medium leading-relaxed break-keep text-[#4E5968]">
+                                                        <span className="text-[#EE2924] font-bold mr-1">AI 분석 결과:</span>
                                                         {originalValues.communicationExplanation}
                                                     </p>
                                                 </TooltipContent>
                                             </Tooltip>
                                         )}
                                     </span>
+                                    <div className="text-[14px] font-bold text-[#EE2924] bg-[#EE2924]/5 px-3 py-1 rounded-lg">
+                                        {communication}%
+                                    </div>
                                 </div>
-                                <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-muted-foreground/80 mb-1 px-1">
-                                    <Tooltip>
-                                        <TooltipTrigger className="cursor-help flex items-center gap-1 decoration-dashed underline-offset-4 hover:underline">
-                                            친근한
-                                        </TooltipTrigger>
-                                        <TooltipContent side="top" sideOffset={6} className="max-w-[280px] p-2.5 rounded-lg shadow-md">
-                                            <p className="text-[11px] font-medium leading-relaxed break-keep">친밀한 유대감을 형성하는 캐주얼하고 감성적인 소통</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                    <Tooltip>
-                                        <TooltipTrigger className="cursor-help flex items-center gap-1 decoration-dashed underline-offset-4 hover:underline">
-                                            신뢰받는
-                                        </TooltipTrigger>
-                                        <TooltipContent side="top" sideOffset={6} className="max-w-[280px] p-2.5 rounded-lg shadow-md">
-                                            <p className="text-[11px] font-medium leading-relaxed break-keep">논리와 권위를 바탕으로 확신을 주는 전문적인 소통</p>
-                                        </TooltipContent>
-                                    </Tooltip>
+                                <div className="flex justify-between items-center text-[12px] font-bold uppercase tracking-wider text-[#8B95A1] mb-1 px-1">
+                                    <span className="flex items-center gap-1.5">친근한 소통</span>
+                                    <span className="flex items-center gap-1.5">신뢰받는 소통</span>
                                 </div>
                                 <Slider
                                     value={[communication]}
                                     onValueChange={(vals) => setCommunication(vals[0])}
                                     max={100}
                                     step={1}
-                                    className="w-full"
+                                    className="w-full [--primary:#EE2924]"
                                 />
                             </div>
                         </TooltipProvider>
 
-                        {/* History Section (Now integrated below sliders) */}
+                        <div className="pt-4">
+                            {isModified && (
+                                <Button
+                                    variant="outline"
+                                    onClick={handleReset}
+                                    className="w-full h-14 rounded-2xl border-[#F2F4F6] text-[#4E5968] font-bold hover:bg-[#F9FAFB] hover:text-[#191F28] transition-all gap-2"
+                                >
+                                    <RotateCcw className="w-4 h-4" />
+                                    AI 추천값으로 되돌리기
+                                </Button>
+                            )}
+                        </div>
+
+                        {/* History Section */}
                         {conceptHistory && conceptHistory.length > 0 && (
-                            <div className="pt-8 mt-4 border-t border-border/40">
-                                <h3 className="font-extrabold text-sm text-foreground mb-4 flex items-center gap-2">
-                                    <History className="w-4 h-4 text-primary" />
-                                    이전 분석 히스토리
+                            <div className="pt-10 border-t border-[#F2F4F6]">
+                                <h3 className="font-bold text-[15px] text-[#191F28] mb-5 flex items-center gap-2">
+                                    <History className="w-4 h-4 text-[#EE2924]" />
+                                    최근 분석 히스토리
                                 </h3>
-                                <div className="space-y-3 max-h-[220px] overflow-y-auto pr-2 custom-scrollbar">
+                                <div className="space-y-3 max-h-[250px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-[#F2F4F6]">
                                     {conceptHistory.map((item, idx) => (
                                         <div
                                             key={item.id || idx}
-                                            className="flex justify-between items-center bg-background/50 border border-border/40 p-3 rounded-2xl hover:bg-background/80 hover:border-primary/30 transition-all cursor-pointer group shadow-sm"
+                                            className="flex justify-between items-center bg-[#F9FAFB] border border-[#F2F4F6] p-4 rounded-2xl hover:bg-[#F2F4F6] hover:border-[#EE2924]/20 transition-all cursor-pointer group shadow-sm"
                                             onClick={() => handleRestoreHistory(item)}
                                         >
-                                            <div className="flex flex-col gap-1.5">
-                                                <p className="text-xs font-semibold text-muted-foreground">
+                                            <div className="flex flex-col gap-2">
+                                                <p className="text-[12px] font-bold text-[#8B95A1]">
                                                     {new Date(item.timestamp).toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                                                 </p>
                                                 <div className="flex gap-1.5 text-[10px] font-bold">
-                                                    <span className="bg-primary/5 text-primary/80 border border-primary/10 px-2 py-0.5 rounded-md">라이프 {item.targetAndTone.lifestyle}</span>
-                                                    <span className="bg-primary/5 text-primary/80 border border-primary/10 px-2 py-0.5 rounded-md">지식 {item.targetAndTone.knowledge}</span>
-                                                    <span className="bg-primary/5 text-primary/80 border border-primary/10 px-2 py-0.5 rounded-md">소통 {item.targetAndTone.communication}</span>
+                                                    <span className="bg-white text-[#4E5968] border border-[#F2F4F6] px-2 py-0.5 rounded-md">L {item.targetAndTone.lifestyle}</span>
+                                                    <span className="bg-white text-[#4E5968] border border-[#F2F4F6] px-2 py-0.5 rounded-md">K {item.targetAndTone.knowledge}</span>
+                                                    <span className="bg-white text-[#4E5968] border border-[#F2F4F6] px-2 py-0.5 rounded-md">C {item.targetAndTone.communication}</span>
                                                 </div>
                                             </div>
                                             <div className="flex gap-1">
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
-                                                    className="w-8 h-8 rounded-full opacity-50 group-hover:opacity-100 hover:bg-rose-100 hover:text-rose-600 dark:hover:bg-rose-900/40 dark:hover:text-rose-400 transition-all z-10 cursor-pointer"
+                                                    className="w-9 h-9 rounded-full opacity-50 group-hover:opacity-100 hover:bg-rose-50 hover:text-rose-600 transition-all"
                                                     onClick={(e) => handleDeleteHistoryItem(e, item.id)}
                                                     disabled={isDeletingHistory[item.id]}
                                                 >
-                                                    {isDeletingHistory[item.id] ? <Loader2 className="w-4 h-4 animate-spin text-rose-500 cursor-wait" /> : <Trash2 className="w-4 h-4" />}
+                                                    {isDeletingHistory[item.id] ? <Loader2 className="w-4 h-4 animate-spin text-rose-500" /> : <Trash2 className="w-4 h-4" />}
                                                 </Button>
-                                                <Button variant="ghost" size="icon" className="w-8 h-8 rounded-full opacity-50 group-hover:opacity-100 group-hover:bg-primary/10 transition-all cursor-pointer">
-                                                    <ArrowRight className="w-4 h-4 text-primary" />
-                                                </Button>
+                                                <ArrowRight className="w-5 h-5 text-[#ABB3BB] group-hover:text-[#EE2924] transition-colors self-center mr-1" />
                                             </div>
                                         </div>
                                     ))}
@@ -411,42 +379,48 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
             </section>
 
             {/* Right side: Concept & Key Message */}
-            <section className="space-y-8 relative flex flex-col lg:col-span-7">
-                <div className="flex items-center justify-between mb-2 gap-4 flex-wrap min-h-[36px]">
-                    <div className="flex items-center gap-4">
-                        <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground">Concept & Key Message</h2>
+            <section className="space-y-6 relative flex flex-col lg:col-span-7">
+                <div className="flex items-center justify-between mb-2 gap-4 flex-wrap">
+                    <div className="flex items-center gap-3">
+                        <div className="w-1.5 h-6 bg-[#EE2924] rounded-full" />
+                        <h2 className="text-2xl font-bold tracking-tight text-[#191F28]">Concept & Key Message</h2>
                     </div>
-                    <Button
-                        onClick={handleGenerateConcepts}
-                        disabled={isLoadingConcepts}
-                        className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm rounded-full px-5"
-                    >
-                        {isLoadingConcepts ? <Loader2 className="animate-spin w-4 h-4 mr-2" /> : <Wand2 className="w-4 h-4 mr-2" />}
-                        {isLoadingConcepts ? 'AI 분석 & DB 저장 중...' : (concepts ? '다시 분석하기' : 'AI 분석하기')}
-                    </Button>
                 </div>
 
-                <Card className={`overflow-hidden border-border/50 bg-white/40 dark:bg-slate-950/40 backdrop-blur-xl hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 rounded-3xl flex-1 flex flex-col ${!concepts ? 'items-center justify-center border-dashed' : ''} p-8 min-h-[350px]`}>
+                <Card className={`overflow-hidden border-[#F2F4F6] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-500 rounded-[32px] flex-1 flex flex-col ${!concepts ? 'items-center justify-center border-dashed' : ''} p-10 min-h-[350px]`}>
                     {!concepts ? (
                         <>
                             {isLoadingConcepts ? (
-                                <div className="flex flex-col items-center justify-center space-y-4 text-center animate-in fade-in duration-500">
+                                <div className="flex flex-col items-center justify-center space-y-6 text-center animate-in fade-in duration-500">
                                     <div className="relative">
-                                        <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
-                                        <Sparkles className="w-12 h-12 text-primary relative animate-bounce" />
+                                        <div className="absolute inset-0 bg-[#EE2924]/10 rounded-full blur-2xl animate-pulse"></div>
+                                        <Rocket className="w-16 h-16 text-[#EE2924] relative animate-bounce" />
                                     </div>
-                                    <p className="text-primary font-bold text-lg">AI가 맞춤형 컨셉을 분석하고 DB에 저장 중입니다...</p>
-                                    <p className="text-muted-foreground text-sm">약 5~10초 정도 소요될 수 있습니다.</p>
+                                    <div className="space-y-2">
+                                        <p className="text-[#191F28] font-bold text-xl">AI가 맞춤형 컨셉을 분석하고 있습니다</p>
+                                        <p className="text-[#8B95A1] font-medium text-[15px]">브랜드의 정체성에 딱 맞는 전략을 구성하는 중이에요.</p>
+                                    </div>
                                 </div>
                             ) : (
-                                <div className="flex flex-col items-center justify-center text-center opacity-70">
-                                    <MessageSquare className="w-12 h-12 text-muted-foreground mb-4" />
-                                    <p className="text-muted-foreground font-medium mb-1">
-                                        현재 타겟과 톤앤매너에 맞는 컨셉 및 키 메시지를 분석해보세요.
-                                    </p>
-                                    <p className="text-xs text-muted-foreground/70">
-                                        우측 상단의 'AI 분석하기' 버튼을 클릭하여 시작하세요.
-                                    </p>
+                                <div className="flex flex-col items-center justify-center text-center py-12">
+                                    <div className="w-24 h-24 rounded-full bg-[#F9FAFB] flex items-center justify-center mb-6">
+                                        <Sparkles className="w-10 h-10 text-[#ABB3BB]" />
+                                    </div>
+                                    <div className="space-y-3 mb-8">
+                                        <p className="text-[#191F28] font-bold text-lg">
+                                            아직 분석된 컨셉이 없습니다
+                                        </p>
+                                        <p className="text-[15px] text-[#4E5968] font-medium max-w-[320px] break-keep">
+                                            왼쪽의 타겟 정보를 바탕으로 AI에게 최적의 광고 컨셉과 메시지를 제안받아보세요.
+                                        </p>
+                                    </div>
+                                    <Button
+                                        onClick={handleGenerateConcepts}
+                                        className="bg-[#EE2924] text-white hover:bg-[#D11F1B] h-16 px-10 rounded-2xl font-bold text-lg shadow-lg shadow-[#EE2924]/20 transition-all active:scale-[0.98] group"
+                                    >
+                                        AI 분석 시작하기
+                                        <ArrowRightCircle className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                    </Button>
                                 </div>
                             )}
                         </>
@@ -454,117 +428,132 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                         <Tabs defaultValue="concept-0" className={`w-full relative transition-all duration-500 ${isLoadingConcepts ? 'opacity-40 pointer-events-none' : 'opacity-100 animate-in slide-in-from-bottom-4 fade-in'}`}>
                             {isLoadingConcepts && (
                                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
-                                    <div className="bg-background/80 backdrop-blur-sm p-4 rounded-2xl shadow-lg border border-border/50 flex flex-col items-center">
-                                        <Loader2 className="w-8 h-8 text-primary animate-spin mb-2" />
-                                        <p className="text-sm font-bold text-foreground">새로운 컨셉 분석 및 DB 저장 중...</p>
+                                    <div className="bg-white/90 backdrop-blur-sm p-6 rounded-3xl shadow-2xl border border-[#F2F4F6] flex flex-col items-center">
+                                        <Loader2 className="w-10 h-10 text-[#EE2924] animate-spin mb-3" />
+                                        <p className="text-[15px] font-bold text-[#191F28]">새로운 컨셉 분석 중...</p>
                                     </div>
                                 </div>
                             )}
 
-                            <TabsList className="w-full h-auto flex flex-wrap gap-2 justify-start bg-transparent p-0 mb-6">
-                                {concepts?.map((concept, idx) => (
-                                    <TabsTrigger
-                                        key={idx}
-                                        value={`concept-${idx}`}
-                                        className="h-10 px-4 rounded-full border border-border/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary shadow-sm transition-all"
-                                    >
-                                        {concept.conceptName}
-                                    </TabsTrigger>
-                                ))}
-                            </TabsList>
+                            <div className="flex items-center justify-between gap-4 mb-8">
+                                <TabsList className="h-auto flex flex-wrap gap-2 justify-start bg-transparent p-0">
+                                    {concepts?.map((concept, idx) => (
+                                        <TabsTrigger
+                                            key={idx}
+                                            value={`concept-${idx}`}
+                                            className="h-11 px-6 rounded-xl border border-[#F2F4F6] text-[#4E5968] font-bold data-[state=active]:bg-[#EE2924] data-[state=active]:text-white data-[state=active]:border-[#EE2924] shadow-sm transition-all"
+                                        >
+                                            {concept.conceptName}
+                                        </TabsTrigger>
+                                    ))}
+                                </TabsList>
+                                <Button
+                                    onClick={handleGenerateConcepts}
+                                    variant="outline"
+                                    className="h-11 rounded-xl border-[#F2F4F6] text-[#EE2924] font-bold hover:bg-[#F9FAFB] shrink-0"
+                                >
+                                    <RotateCcw className="w-4 h-4 mr-2" />
+                                    다시 분석
+                                </Button>
+                            </div>
 
                             {concepts?.map((concept, idx) => {
                                 const currentVisibleCount = visibleCounts[idx] || 1;
                                 const isAllVisible = currentVisibleCount >= concept.keyMessages.length;
 
                                 return (
-                                    <TabsContent key={idx} value={`concept-${idx}`} className="space-y-6 mt-0 focus-visible:outline-none focus-visible:ring-0">
-                                        <div className="flex items-start justify-between gap-3 border-b border-border/40 pb-4 group relative pr-12 min-h-[70px]">
+                                    <TabsContent key={idx} value={`concept-${idx}`} className="space-y-8 mt-0 focus-visible:outline-none focus-visible:ring-0">
+                                        <div className="bg-[#F9FAFB] rounded-[24px] p-8 border border-[#F2F4F6] group relative pr-12 min-h-[90px] transition-all">
                                             {editingConcept === idx ? (
-                                                <div className="flex flex-col w-full gap-2 mt-1">
+                                                <div className="flex flex-col w-full gap-3">
                                                     <input
                                                         value={editConceptName}
                                                         onChange={e => setEditConceptName(e.target.value)}
-                                                        className="font-extrabold text-xl text-foreground tracking-tight bg-background border border-input rounded-md px-3 py-1.5 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                                        className="font-bold text-xl text-[#191F28] tracking-tight bg-white border border-[#F2F4F6] rounded-xl px-4 py-2 w-full focus:ring-2 focus:ring-[#EE2924]/20 focus:outline-none"
                                                         placeholder="컨셉명"
                                                         autoFocus
                                                     />
                                                     <textarea
                                                         value={editConceptDesc}
                                                         onChange={e => setEditConceptDesc(e.target.value)}
-                                                        className="text-sm text-foreground font-medium leading-relaxed bg-background border border-input rounded-md px-3 py-2 w-full min-h-[60px] resize-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                                        className="text-[15px] text-[#4E5968] font-medium leading-relaxed bg-white border border-[#F2F4F6] rounded-xl px-4 py-3 w-full min-h-[80px] resize-none focus:ring-2 focus:ring-[#EE2924]/20 focus:outline-none"
                                                         placeholder="컨셉 설명"
                                                     />
                                                 </div>
                                             ) : (
-                                                <div className="flex flex-col mt-1">
-                                                    <h3 className="font-extrabold text-xl text-foreground tracking-tight">{concept.conceptName}</h3>
-                                                    <p className="text-sm text-muted-foreground font-medium leading-relaxed mt-1">{concept.description}</p>
+                                                <div className="flex flex-col">
+                                                    <h3 className="font-bold text-xl text-[#191F28] tracking-tight">{concept.conceptName}</h3>
+                                                    <p className="text-[15px] text-[#4E5968] font-medium leading-relaxed mt-2 italic break-keep pr-4">
+                                                        &ldquo;{concept.description}&rdquo;
+                                                    </p>
                                                 </div>
                                             )}
 
                                             {editingConcept === idx ? (
-                                                <div className="flex flex-col gap-1 absolute top-1 right-0">
-                                                    <Button size="icon" variant="ghost" className="h-7 w-7 text-green-600 hover:text-green-700 hover:bg-green-100" onClick={handleConceptEditSave} disabled={isSavingConcept}>
-                                                        {isSavingConcept ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
+                                                <div className="flex flex-col gap-2 absolute top-4 right-4">
+                                                    <Button size="icon" variant="ghost" className="h-9 w-9 text-green-600 hover:bg-green-50 rounded-xl" onClick={handleConceptEditSave} disabled={isSavingConcept}>
+                                                        {isSavingConcept ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-5 w-5" />}
                                                     </Button>
-                                                    <Button size="icon" variant="ghost" className="h-7 w-7 text-rose-600 hover:text-rose-700 hover:bg-rose-100" onClick={handleConceptEditCancel} disabled={isSavingConcept}>
-                                                        <X className="h-3 w-3" />
+                                                    <Button size="icon" variant="ghost" className="h-9 w-9 text-rose-600 hover:bg-rose-50 rounded-xl" onClick={handleConceptEditCancel} disabled={isSavingConcept}>
+                                                        <X className="h-5 w-5" />
                                                     </Button>
                                                 </div>
                                             ) : (
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
-                                                    className="absolute top-1 right-0 transition-opacity h-8 w-8 bg-background/80 backdrop-blur-sm hover:bg-background shadow-sm"
+                                                    className="absolute top-4 right-4 h-10 w-10 bg-white/50 border border-[#F2F4F6] hover:bg-white rounded-xl shadow-sm text-[#ABB3BB] hover:text-[#EE2924] opacity-0 group-hover:opacity-100 transition-all"
                                                     onClick={() => handleConceptEditStart(idx, concept.conceptName, concept.description)}
                                                 >
-                                                    <Edit2 className="h-4 w-4 text-muted-foreground" />
+                                                    <Edit2 className="h-4 w-4" />
                                                 </Button>
                                             )}
                                         </div>
 
-                                        <div className="space-y-3">
+                                        <div className="space-y-4">
+                                            <h4 className="text-[13px] font-bold text-[#8B95A1] uppercase tracking-widest pl-2">추천 핵심 메시지</h4>
                                             {concept.keyMessages.slice(0, currentVisibleCount).map((msg: string, msgIdx: number) => {
                                                 const isEditing = editingMsg?.conceptIdx === idx && editingMsg?.msgIdx === msgIdx;
 
                                                 return (
-                                                    <div key={msgIdx} className="group relative bg-slate-100/50 dark:bg-slate-900/50 rounded-2xl p-4 border border-border/30 text-[15px] font-medium text-foreground leading-relaxed animate-in slide-in-from-bottom-2 fade-in min-h-[60px] flex items-center pr-12">
+                                                    <div key={msgIdx} className="group relative bg-white rounded-2xl p-6 border border-[#F2F4F6] shadow-sm hover:shadow-md hover:border-[#EE2924]/20 transition-all min-h-[70px] flex items-center pr-16 animate-in slide-in-from-bottom-2 fade-in">
                                                         {isEditing ? (
-                                                            <div className="flex w-full gap-2 items-start">
+                                                            <div className="flex w-full gap-3 items-start">
                                                                 <textarea
                                                                     value={editValue}
                                                                     onChange={(e) => setEditValue(e.target.value)}
-                                                                    className="flex min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                                                                    className="flex min-h-[70px] w-full rounded-xl border border-[#F2F4F6] bg-white px-4 py-3 text-[15px] font-bold focus:ring-2 focus:ring-[#EE2924]/20 focus:outline-none resize-none"
                                                                     autoFocus
                                                                 />
-                                                                <div className="flex flex-col gap-1">
-                                                                    <Button size="icon" variant="ghost" className="h-7 w-7 text-green-600 hover:text-green-700 hover:bg-green-100" onClick={handleEditSave} disabled={isSavingEdit}>
-                                                                        {isSavingEdit ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
+                                                                <div className="flex flex-col gap-2">
+                                                                    <Button size="icon" variant="ghost" className="h-9 w-9 text-green-600 hover:bg-green-50 rounded-xl" onClick={handleEditSave} disabled={isSavingEdit}>
+                                                                        {isSavingEdit ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-5 w-5" />}
                                                                     </Button>
-                                                                    <Button size="icon" variant="ghost" className="h-7 w-7 text-rose-600 hover:text-rose-700 hover:bg-rose-100" onClick={handleEditCancel} disabled={isSavingEdit}>
-                                                                        <X className="h-3 w-3" />
+                                                                    <Button size="icon" variant="ghost" className="h-9 w-9 text-rose-600 hover:bg-rose-50 rounded-xl" onClick={handleEditCancel} disabled={isSavingEdit}>
+                                                                        <X className="h-5 w-5" />
                                                                     </Button>
                                                                 </div>
                                                             </div>
                                                         ) : (
                                                             <>
-                                                                <span>"{msg}"</span>
-                                                                <div className="absolute top-1/2 -translate-y-1/2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                <p className="text-[16px] font-bold text-[#191F28] leading-relaxed break-keep">
+                                                                    &ldquo;{msg}&rdquo;
+                                                                </p>
+                                                                <div className="absolute top-1/2 -translate-y-1/2 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                                                                     <DropdownMenu>
                                                                         <DropdownMenuTrigger asChild>
-                                                                            <Button variant="ghost" size="icon" className="h-8 w-8 bg-background/80 backdrop-blur-sm hover:bg-background shadow-sm text-muted-foreground">
-                                                                                <MoreHorizontal className="h-4 w-4" />
-                                                                                <span className="sr-only">액션 메뉴</span>
+                                                                            <Button variant="ghost" size="icon" className="h-10 w-10 bg-[#F9FAFB] hover:bg-[#F2F4F6] rounded-xl text-[#8B95A1]">
+                                                                                <MoreHorizontal className="h-5 w-5" />
+                                                                                <span className="sr-only">액션</span>
                                                                             </Button>
                                                                         </DropdownMenuTrigger>
-                                                                        <DropdownMenuContent align="end" className="w-[180px] rounded-xl p-2 font-medium">
-                                                                            <DropdownMenuItem onClick={() => handleSelectMessage(concept.conceptName, msg)} className="text-primary focus:text-primary focus:bg-primary/10 cursor-pointer rounded-lg py-2.5">
-                                                                                <Rocket className="mr-2 h-4 w-4" />
-                                                                                <span>콘텐츠 전략 수립</span>
+                                                                        <DropdownMenuContent align="end" className="w-[190px] rounded-2xl p-2 border-[#F2F4F6] shadow-2xl">
+                                                                            <DropdownMenuItem onClick={() => handleSelectMessage(concept.conceptName, msg)} className="flex items-center gap-2.5 text-[#EE2924] font-bold focus:bg-[#EE2924]/5 focus:text-[#EE2924] cursor-pointer rounded-xl py-3 px-3">
+                                                                                <ArrowRightCircle className="h-5 w-5" />
+                                                                                <span>콘텐츠 기획하기</span>
                                                                             </DropdownMenuItem>
-                                                                            <DropdownMenuItem onClick={() => handleEditStart(idx, msgIdx, msg)} className="cursor-pointer rounded-lg py-2.5">
-                                                                                {isSavingEdit && editingMsg?.conceptIdx === idx && editingMsg?.msgIdx === msgIdx ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <PenLine className="mr-2 h-4 w-4 text-muted-foreground" />}
+                                                                            <DropdownMenuItem onClick={() => handleEditStart(idx, msgIdx, msg)} className="flex items-center gap-2.5 text-[#4E5968] font-bold cursor-pointer rounded-xl py-3 px-3">
+                                                                                <PenLine className="h-5 w-5 text-[#ABB3BB]" />
                                                                                 <span>텍스트 수정</span>
                                                                             </DropdownMenuItem>
                                                                         </DropdownMenuContent>
@@ -580,20 +569,19 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                                                 <div className="pt-2">
                                                     <Button
                                                         variant="ghost"
-                                                        size="sm"
                                                         onClick={() => handleShowMore(idx)}
                                                         disabled={isLoadingMore[idx]}
-                                                        className="w-full text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-xl border border-dashed border-border/50 py-5 transition-all"
+                                                        className="w-full h-16 text-[#8B95A1] font-bold hover:text-[#EE2924] hover:bg-[#EE2924]/5 rounded-2xl border-2 border-dashed border-[#F2F4F6] transition-all"
                                                     >
                                                         {isLoadingMore[idx] ? (
                                                             <>
-                                                                <Loader2 className="animate-spin w-4 h-4 mr-2" />
-                                                                AI 생성 중...
+                                                                <Loader2 className="animate-spin w-5 h-5 mr-3" />
+                                                                메시지 생성 중...
                                                             </>
                                                         ) : (
                                                             <>
-                                                                <ChevronDown className="w-4 h-4 mr-2" />
-                                                                더 보기
+                                                                <ChevronDown className="w-5 h-5 mr-3" />
+                                                                더 많은 메시지 추천받기
                                                             </>
                                                         )}
                                                     </Button>

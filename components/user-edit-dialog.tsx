@@ -7,7 +7,6 @@ import {
     Dialog,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -21,7 +20,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Pencil } from 'lucide-react';
+import { Pencil, Loader2, UserCircle } from 'lucide-react';
 
 type Team = {
     id: string;
@@ -40,7 +39,7 @@ export function UserEditDialog({ user, teams }: { user: User; teams: Team[] }) {
     const [open, setOpen] = useState(false);
     const [state, dispatch, isPending] = useActionState(updateUser, null);
     const [role, setRole] = useState(user.role);
-    const [teamId, setTeamId] = useState(user.teamId || '');
+    const [teamId, setTeamId] = useState(user.teamId || 'none');
 
     if (state?.success && open) {
         setOpen(false);
@@ -49,88 +48,96 @@ export function UserEditDialog({ user, teams }: { user: User; teams: Team[] }) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="ghost" size="icon">
-                    <Pencil className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="w-9 h-9 text-[#8B95A1] hover:text-[#EE2924] hover:bg-[#EE2924]/5 rounded-xl transition-all" title="사용자 정보 수정">
+                    <Pencil className="h-4.5 w-4.5" />
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                    <DialogTitle>Edit User</DialogTitle>
-                    <DialogDescription>
-                        Edit user details. Leave password blank to keep current password.
-                    </DialogDescription>
-                </DialogHeader>
-                <form action={dispatch}>
-                    <input type="hidden" name="userId" value={user.id} />
-                    <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
-                                Name
-                            </Label>
-                            <Input
-                                id="name"
-                                name="name"
-                                defaultValue={user.name || ''}
-                                className="col-span-3"
-                                required
-                            />
+            <DialogContent className="sm:max-w-[520px] p-0 overflow-hidden border-[#F2F4F6] rounded-[32px] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+                <div className="p-10">
+                    <DialogHeader className="mb-8">
+                        <div className="w-14 h-14 bg-[#EE2924]/5 rounded-2xl flex items-center justify-center mb-6">
+                            <UserCircle className="w-7 h-7 text-[#EE2924]" />
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="email" className="text-right">
-                                Email
-                            </Label>
-                            <Input
-                                id="email"
-                                name="email"
-                                type="email"
-                                defaultValue={user.email || ''}
-                                className="col-span-3"
-                                required
-                            />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="password" className="text-right">
-                                Password
-                            </Label>
-                            <Input
-                                id="password"
-                                name="password"
-                                type="password"
-                                placeholder="(unchanged)"
-                                className="col-span-3"
-                            />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="role" className="text-right">
-                                Role
-                            </Label>
-                            <div className="col-span-3">
-                                <Select name="role" value={role} onValueChange={setRole}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select a role" />
+                        <DialogTitle className="text-[22px] font-bold text-[#191F28] tracking-tight">사용자 정보 수정</DialogTitle>
+                        <DialogDescription className="text-[15px] font-medium text-[#4E5968] leading-relaxed mt-2">
+                            사용자의 이름, 이메일, 권한 및 소속 팀을 변경합니다.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <form action={dispatch} className="space-y-6">
+                        <input type="hidden" name="userId" value={user.id} />
+                        <div className="space-y-5">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2.5">
+                                    <Label htmlFor="name" className="text-[14px] font-bold text-[#8B95A1] ml-1">
+                                        이름
+                                    </Label>
+                                    <Input
+                                        id="name"
+                                        name="name"
+                                        defaultValue={user.name || ''}
+                                        placeholder="이름 입력"
+                                        className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20"
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-2.5">
+                                    <Label htmlFor="email" className="text-[14px] font-bold text-[#8B95A1] ml-1">
+                                        이메일
+                                    </Label>
+                                    <Input
+                                        id="email"
+                                        name="email"
+                                        type="email"
+                                        defaultValue={user.email || ''}
+                                        placeholder="이메일 입력"
+                                        className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-2.5">
+                                <Label htmlFor="password" className="text-[14px] font-bold text-[#8B95A1] ml-1">
+                                    비밀번호 변경 (필요 시)
+                                </Label>
+                                <Input
+                                    id="password"
+                                    name="password"
+                                    type="password"
+                                    placeholder="변경하지 않으려면 공란으로 두세요"
+                                    className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20 placeholder:text-[#ABB3BB]"
+                                />
+                            </div>
+
+                            <div className="space-y-2.5">
+                                <Label htmlFor="role" className="text-[14px] font-bold text-[#8B95A1] ml-1">
+                                    권한 설정
+                                </Label>
+                                <Select value={role} onValueChange={setRole}>
+                                    <SelectTrigger className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20">
+                                        <SelectValue placeholder="권한 선택" />
                                     </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="MASTER">Master</SelectItem>
-                                        <SelectItem value="TEAM_LEADER">Team Leader</SelectItem>
-                                        <SelectItem value="TEAM_MEMBER">Team Member</SelectItem>
+                                    <SelectContent className="rounded-2xl border-[#F2F4F6] shadow-xl">
+                                        <SelectItem value="MASTER" className="rounded-xl font-medium py-3 text-purple-600">Master</SelectItem>
+                                        <SelectItem value="TEAM_LEADER" className="rounded-xl font-medium py-3 text-[#EE2924]">Team Leader</SelectItem>
+                                        <SelectItem value="TEAM_MEMBER" className="rounded-xl font-medium py-3">Team Member</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <input type="hidden" name="role" value={role} />
                             </div>
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="team" className="text-right">
-                                Team
-                            </Label>
-                            <div className="col-span-3">
-                                <Select name="teamId" value={teamId} onValueChange={setTeamId}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select a team (optional)" />
+
+                            <div className="space-y-2.5">
+                                <Label htmlFor="team" className="text-[14px] font-bold text-[#8B95A1] ml-1">
+                                    소속 팀 설정
+                                </Label>
+                                <Select value={teamId} onValueChange={setTeamId}>
+                                    <SelectTrigger className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20">
+                                        <SelectValue placeholder="팀 선택" />
                                     </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="none">None</SelectItem>
+                                    <SelectContent className="rounded-2xl border-[#F2F4F6] shadow-xl">
+                                        <SelectItem value="none" className="rounded-xl font-medium py-3 text-[#ABB3BB]">선택 안 함</SelectItem>
                                         {teams.map((team) => (
-                                            <SelectItem key={team.id} value={team.id}>
+                                            <SelectItem key={team.id} value={team.id} className="rounded-xl font-medium py-3">
                                                 {team.name}
                                             </SelectItem>
                                         ))}
@@ -138,17 +145,31 @@ export function UserEditDialog({ user, teams }: { user: User; teams: Team[] }) {
                                 </Select>
                                 <input type="hidden" name="teamId" value={teamId === 'none' ? '' : teamId} />
                             </div>
+
+                            {state?.message && (
+                                <div className="text-[13px] font-bold px-4 py-3 rounded-xl text-center bg-rose-50 text-rose-500">
+                                    {state.message}
+                                </div>
+                            )}
                         </div>
-                        {state?.message && (
-                            <div className="text-sm text-red-500 font-medium col-span-4 text-center">
-                                {state.message}
-                            </div>
-                        )}
-                    </div>
-                    <DialogFooter>
-                        <Button type="submit" disabled={isPending}>{isPending ? 'Saving...' : 'Save Changes'}</Button>
-                    </DialogFooter>
-                </form>
+                        <div className="pt-4">
+                            <Button
+                                type="submit"
+                                disabled={isPending}
+                                className="w-full h-16 rounded-[20px] bg-[#EE2924] hover:bg-[#D11F1B] text-white font-bold text-[17px] shadow-lg shadow-[#EE2924]/10 active:scale-[0.98] transition-all"
+                            >
+                                {isPending ? (
+                                    <>
+                                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                                        저장하는 중...
+                                    </>
+                                ) : (
+                                    '사용자 정보 저장 완료'
+                                )}
+                            </Button>
+                        </div>
+                    </form>
+                </div>
             </DialogContent>
         </Dialog>
     );

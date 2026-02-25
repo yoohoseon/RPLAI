@@ -65,111 +65,147 @@ export default async function TeamDetailsPage({
     const leader = team.members.find(m => m.role === 'TEAM_LEADER');
 
     return (
-        <div className="p-8">
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold">{team.name}</h1>
-                <Button variant="outline" asChild>
-                    <Link href="/dashboard/teams">Back to Teams</Link>
-                </Button>
-            </div>
+        <div className="min-h-screen bg-[#F9FAFB] font-sans">
+            <div className="container mx-auto py-12 px-6 max-w-7xl space-y-10 animate-in fade-in duration-700">
+                {/* Header */}
+                <div className="flex items-end justify-between border-b border-[#F2F4F6] pb-8">
+                    <div className="space-y-2">
+                        <div className="text-[14px] font-bold text-[#EE2924] uppercase tracking-wider mb-1">팀 상세 정보</div>
+                        <h1 className="text-3xl font-bold tracking-tight text-[#191F28]">{team.name}</h1>
+                    </div>
+                    <Button variant="outline" className="rounded-2xl border-[#F2F4F6] text-[#4E5968] font-bold h-12 px-6 hover:bg-white transition-all shadow-sm" asChild>
+                        <Link href="/dashboard/teams">팀 목록으로 돌아가기</Link>
+                    </Button>
+                </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between">
-                        <CardTitle>Team Information</CardTitle>
-                        <div className="flex gap-2">
-                            <TeamEditDialog team={team} users={users} />
-                            <TeamDeleteDialog teamId={team.id} teamName={team.name} />
-                        </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div>
-                            <div className="font-semibold mb-1">Description</div>
-                            <div className="text-sm text-gray-500">{team.description || 'No description provided.'}</div>
-                        </div>
-                        <div>
-                            <div className="font-semibold mb-1">Created At</div>
-                            <div className="text-sm text-gray-500">{team.createdAt.toLocaleDateString()}</div>
-                        </div>
-                        <div>
-                            <div className="font-semibold mb-1">Team Leader</div>
-                            {leader ? (
-                                <div className="flex items-center gap-2">
-                                    <div className="font-medium">{leader.name}</div>
-                                    <div className="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">TEAM_LEADER</div>
-                                    <TeamRemoveMemberDialog userId={leader.id} teamId={team.id} userName={leader.name || 'Leader'} />
+                <div className="grid gap-8 md:grid-cols-2 items-start">
+                    {/* Team Info Card */}
+                    <Card className="bg-white border-[#F2F4F6] rounded-[32px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden">
+                        <CardHeader className="flex flex-row items-center justify-between p-8 pb-4">
+                            <CardTitle className="text-xl font-bold text-[#191F28]">팀 정보</CardTitle>
+                            <div className="flex gap-2">
+                                <TeamEditDialog team={team} users={users} />
+                                <TeamDeleteDialog teamId={team.id} teamName={team.name} />
+                            </div>
+                        </CardHeader>
+                        <CardContent className="p-8 pt-4 space-y-8">
+                            <div className="space-y-3">
+                                <div className="text-[14px] font-bold text-[#8B95A1] uppercase tracking-wide">팀 설명</div>
+                                <div className="text-[16px] font-medium text-[#4E5968] leading-relaxed break-keep">
+                                    {team.description || '팀 설명이 없습니다.'}
                                 </div>
-                            ) : (
-                                <TeamAssignLeaderDialog teamId={team.id} users={users.filter(u => u.teamId === team.id || !u.teamId)} />
-                            )}
-                        </div>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between">
-                        <CardTitle>Team Members ({team.members.filter(m => m.role !== 'TEAM_LEADER').length})</CardTitle>
-                        <TeamAddMemberDialog teamId={team.id} users={users.filter(u => u.teamId !== team.id && u.role !== 'MASTER')} />
-                    </CardHeader>
-                    <CardContent>
-                        <ul className="space-y-4">
-                            {team.members.filter(m => m.role !== 'TEAM_LEADER').map((member) => (
-                                <li key={member.id} className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
-                                    <div>
-                                        <div className="font-medium text-sm">{member.name}</div>
-                                        <div className="text-xs text-gray-400">{member.email}</div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <div className="text-[13px] font-bold text-[#8B95A1] uppercase tracking-wide">생성일</div>
+                                    <div className="text-[15px] font-semibold text-[#191F28]">
+                                        {team.createdAt.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <div className="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full">
-                                            {member.role}
+                                </div>
+                                <div className="space-y-2">
+                                    <div className="text-[13px] font-bold text-[#8B95A1] uppercase tracking-wide">전체 분석 기록</div>
+                                    <div className="text-[15px] font-bold text-[#EE2924]">
+                                        {team.members.reduce((sum, m) => sum + m.analyses.length, 0)}건
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="pt-6 border-t border-[#F2F4F6] space-y-4">
+                                <div className="text-[14px] font-bold text-[#8B95A1] uppercase tracking-wide">팀 리더</div>
+                                {leader ? (
+                                    <div className="flex items-center justify-between bg-[#F9FAFB] p-5 rounded-2xl border border-[#F2F4F6]">
+                                        <div className="flex flex-col gap-1">
+                                            <div className="font-bold text-[16px] text-[#191F28]">{leader.name}</div>
+                                            <div className="text-[13px] font-medium text-[#8B95A1]">{leader.email}</div>
                                         </div>
-                                        <UserPasswordResetDialog userId={member.id} userName={member.name || 'User'} />
-                                        <TeamRemoveMemberDialog userId={member.id} teamId={team.id} userName={member.name || 'Unnamed'} />
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-[11px] bg-[#EE2924]/10 text-[#EE2924] px-2.5 py-1 rounded-lg font-bold">LEADER</span>
+                                            <TeamRemoveMemberDialog userId={leader.id} teamId={team.id} userName={leader.name || '리더'} />
+                                        </div>
                                     </div>
-                                </li>
-                            ))}
-                            {team.members.filter(m => m.role !== 'TEAM_LEADER').length === 0 && (
-                                <div className="text-sm text-gray-500 text-center py-4">No members in this team.</div>
-                            )}
-                        </ul>
-                    </CardContent>
-                </Card>
-            </div>
+                                ) : (
+                                    <TeamAssignLeaderDialog teamId={team.id} users={users.filter(u => u.teamId === team.id || !u.teamId)} />
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
 
-            <div className="mt-6">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Team Analysis History</CardTitle>
+                    {/* Team Members Card */}
+                    <Card className="bg-white border-[#F2F4F6] rounded-[32px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden">
+                        <CardHeader className="flex flex-row items-center justify-between p-8 pb-4">
+                            <CardTitle className="text-xl font-bold text-[#191F28]">
+                                팀 멤버 <span className="text-[#EE2924] ml-1">{team.members.filter(m => m.role !== 'TEAM_LEADER').length}</span>
+                            </CardTitle>
+                            <TeamAddMemberDialog teamId={team.id} users={users.filter(u => u.teamId !== team.id && u.role !== 'MASTER')} />
+                        </CardHeader>
+                        <CardContent className="p-8 pt-4">
+                            <ul className="space-y-3">
+                                {team.members.filter(m => m.role !== 'TEAM_LEADER').map((member) => (
+                                    <li key={member.id} className="flex justify-between items-center bg-[#F9FAFB] p-5 rounded-2xl border border-[#F2F4F6] hover:bg-white transition-all group">
+                                        <div className="flex flex-col gap-1">
+                                            <div className="font-bold text-[16px] text-[#191F28]">{member.name}</div>
+                                            <div className="text-[13px] font-medium text-[#8B95A1]">{member.email}</div>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-[11px] bg-white text-[#4E5968] px-2.5 py-1 rounded-lg border border-[#F2F4F6] font-bold">{member.role}</span>
+                                            <UserPasswordResetDialog userId={member.id} userName={member.name || '사용자'} />
+                                            <TeamRemoveMemberDialog userId={member.id} teamId={team.id} userName={member.name || '사용자'} />
+                                        </div>
+                                    </li>
+                                ))}
+                                {team.members.filter(m => m.role !== 'TEAM_LEADER').length === 0 && (
+                                    <div className="text-[15px] font-medium text-[#ABB3BB] text-center py-12 bg-[#F9FAFB] rounded-2xl border border-[#F2F4F6] border-dashed">
+                                        이 팀에 등록된 멤버가 없습니다.
+                                    </div>
+                                )}
+                            </ul>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* Analysis History */}
+                <Card className="bg-white border-[#F2F4F6] rounded-[32px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden mt-8">
+                    <CardHeader className="p-8 pb-4">
+                        <CardTitle className="text-xl font-bold text-[#191F28]">팀 브랜드 분석 히스토리</CardTitle>
                     </CardHeader>
-                    <CardContent>
-                        <div className="rounded-md border">
-                            <table className="w-full text-sm text-left">
-                                <thead className="bg-gray-50 text-gray-700 uppercase">
-                                    <tr>
-                                        <th className="px-6 py-3">Brand</th>
-                                        <th className="px-6 py-3">Category</th>
-                                        <th className="px-6 py-3">Author</th>
-                                        <th className="px-6 py-3">Created At</th>
-                                        <th className="px-6 py-3 text-right">Action</th>
+                    <CardContent className="p-0">
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="bg-[#F9FAFB] border-y border-[#F2F4F6]">
+                                        <th className="px-8 py-5 text-[14px] font-bold text-[#8B95A1] uppercase tracking-wider">브랜드</th>
+                                        <th className="px-8 py-5 text-[14px] font-bold text-[#8B95A1] uppercase tracking-wider">카테고리</th>
+                                        <th className="px-8 py-5 text-[14px] font-bold text-[#8B95A1] uppercase tracking-wider">작성자</th>
+                                        <th className="px-8 py-5 text-[14px] font-bold text-[#8B95A1] uppercase tracking-wider">분석일</th>
+                                        <th className="px-8 py-5 text-[14px] font-bold text-[#8B95A1] uppercase tracking-wider text-right">상세보기</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {team.members.flatMap(m => m.analyses.map(a => ({ ...a, authorName: m.name }))).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((analysis) => (
-                                        <tr key={analysis.id} className="bg-white border-b hover:bg-gray-50">
-                                            <td className="px-6 py-4 font-medium text-gray-900">{analysis.brandKor || analysis.brand}</td>
-                                            <td className="px-6 py-4">{analysis.category}</td>
-                                            <td className="px-6 py-4">{analysis.authorName}</td>
-                                            <td className="px-6 py-4">{new Date(analysis.createdAt).toLocaleDateString()}</td>
-                                            <td className="px-6 py-4 text-right">
-                                                <Button variant="ghost" size="sm" asChild>
-                                                    <Link href={`/main/analysis?id=${analysis.id}`}>View</Link>
+                                        <tr key={analysis.id} className="bg-white border-b border-[#F2F4F6] hover:bg-[#F9FAFB] transition-colors group">
+                                            <td className="px-8 py-6 font-bold text-[16px] text-[#191F28]">
+                                                {analysis.brandKor || analysis.brandEng}
+                                            </td>
+                                            <td className="px-8 py-6 text-[15px] font-medium text-[#4E5968]">
+                                                {analysis.category}
+                                            </td>
+                                            <td className="px-8 py-6 text-[15px] font-medium text-[#4E5968]">
+                                                {analysis.authorName}
+                                            </td>
+                                            <td className="px-8 py-6 text-[14px] font-medium text-[#8B95A1]">
+                                                {new Date(analysis.createdAt).toLocaleDateString('ko-KR')}
+                                            </td>
+                                            <td className="px-8 py-6 text-right">
+                                                <Button variant="ghost" className="h-10 px-4 rounded-xl text-[#EE2924] font-bold hover:bg-[#EE2924]/5 transition-all" asChild>
+                                                    <Link href={`/main/analysis?id=${analysis.id}`}>상세보기</Link>
                                                 </Button>
                                             </td>
                                         </tr>
                                     ))}
                                     {team.members.every(m => m.analyses.length === 0) && (
                                         <tr>
-                                            <td colSpan={5} className="px-6 py-4 text-center text-gray-500">No analysis history found for this team.</td>
+                                            <td colSpan={5} className="px-8 py-20 text-center text-[#ABB3BB] font-medium text-[15px]">
+                                                팀 내에 생성된 분석 히스토리가 없습니다.
+                                            </td>
                                         </tr>
                                     )}
                                 </tbody>
@@ -178,6 +214,6 @@ export default async function TeamDetailsPage({
                     </CardContent>
                 </Card>
             </div>
-        </div>
+        </div >
     );
 }

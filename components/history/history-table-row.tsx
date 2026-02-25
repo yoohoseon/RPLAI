@@ -14,33 +14,35 @@ export function HistoryTableRow({ analysis }: { analysis: any }) {
     };
 
     return (
-        <TableRow onClick={handleRowClick} className="cursor-pointer hover:bg-muted/50 transition-colors group">
-            <TableCell className="font-medium">
-                {format(analysis.createdAt, 'yyyy-MM-dd')}
-                <br />
-                <span className="text-xs text-muted-foreground">
+        <TableRow onClick={handleRowClick} className="cursor-pointer hover:bg-[#F9FAFB] transition-colors group h-20 border-b border-[#F2F4F6]">
+            <TableCell className="px-8 font-medium">
+                <div className="text-[15px] text-[#191F28] font-bold">
+                    {format(analysis.createdAt, 'yyyy-MM-dd')}
+                </div>
+                <div className="text-[13px] text-[#8B95A1] font-medium">
                     {format(analysis.createdAt, 'HH:mm')}
-                </span>
-            </TableCell>
-            <TableCell className="font-bold">
-                {analysis.brandKor}
-                <br />
-                <span className="text-xs text-muted-foreground font-normal">
-                    {analysis.brandEng}
-                </span>
+                </div>
             </TableCell>
             <TableCell>
-                <Badge variant="secondary" className="font-normal">
+                <div className="text-[16px] text-[#191F28] font-bold">
+                    {analysis.brandKor}
+                </div>
+                <div className="text-[13px] text-[#8B95A1] font-medium leading-tight">
+                    {analysis.brandEng}
+                </div>
+            </TableCell>
+            <TableCell>
+                <span className="inline-flex items-center px-3 py-1 rounded-lg bg-[#F2F4F6] text-[#4E5968] text-[13px] font-bold">
                     {analysis.category}
-                </Badge>
+                </span>
             </TableCell>
             <TableCell>
                 <div className="flex flex-col">
-                    <span className="text-sm">{analysis.user.name}</span>
-                    <span className="text-xs text-muted-foreground">{analysis.user.email}</span>
+                    <span className="text-[15px] text-[#191F28] font-bold">{analysis.user.name}</span>
+                    <span className="text-[13px] text-[#8B95A1] font-medium">{analysis.user.email}</span>
                 </div>
             </TableCell>
-            <TableCell className="text-right">
+            <TableCell className="text-right px-8">
                 <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
                     <DeleteBrandButton analysisId={analysis.id} />
                 </div>

@@ -61,34 +61,34 @@ export default function AnalysisActions({ analysisId, brand, url, category, targ
 
                     <div className="bg-white dark:bg-slate-900 rounded-xl border shadow-sm overflow-hidden">
                         <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x border-b">
-                            <div className="p-6 bg-blue-50/10 hover:bg-blue-50/20 transition-colors">
+                            <div className="p-6 bg-red-50/10 hover:bg-red-50/20 transition-colors">
                                 <div className="flex items-center gap-3 mb-4">
-                                    <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-xl">🚀</div>
+                                    <div className="h-10 w-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-xl">🚀</div>
                                     <div>
-                                        <h3 className="font-bold text-lg text-blue-700 dark:text-blue-400">Strength Leverage</h3>
+                                        <h3 className="font-bold text-lg text-red-700 dark:text-red-400">Strength Leverage</h3>
                                         <p className="text-sm text-muted-foreground">Maximize your advantages</p>
                                     </div>
                                 </div>
                                 <div className="space-y-4">
-                                    <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                                        <h4 className="font-semibold text-sm mb-2 text-blue-900 dark:text-blue-200">Strategic Focus</h4>
-                                        <p className="text-sm text-blue-800 dark:text-blue-300">{extended.strengthsPlan.strategy}</p>
+                                    <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
+                                        <h4 className="font-semibold text-sm mb-2 text-red-900 dark:text-red-200">Strategic Focus</h4>
+                                        <p className="text-sm text-red-800 dark:text-red-300">{extended.strengthsPlan.strategy}</p>
                                     </div>
                                     <div>
                                         <h4 className="font-semibold text-sm mb-3 text-slate-700 dark:text-slate-300">Actionable Content Ideas</h4>
                                         <div className="space-y-3">
                                             {extended.strengthsPlan.contentPlan?.map((item: any, i: number) => (
-                                                <div key={i} className="flex flex-col gap-1 p-3 bg-white/50 dark:bg-black/20 rounded border border-blue-100 dark:border-blue-900/30">
+                                                <div key={i} className="flex flex-col gap-1 p-3 bg-white/50 dark:bg-black/20 rounded border border-red-100 dark:border-red-900/30">
                                                     <div className="flex justify-between items-start">
-                                                        <span className="font-medium text-sm text-blue-900 dark:text-blue-200">{item.title}</span>
-                                                        <span className="text-[10px] uppercase font-bold tracking-wider text-blue-500 bg-blue-50 dark:bg-blue-950 px-1.5 py-0.5 rounded">{item.format}</span>
+                                                        <span className="font-medium text-sm text-red-900 dark:text-red-200">{item.title}</span>
+                                                        <span className="text-[10px] uppercase font-bold tracking-wider text-red-500 bg-red-50 dark:bg-red-950 px-1.5 py-0.5 rounded">{item.format}</span>
                                                     </div>
                                                     <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{item.description}</p>
                                                 </div>
                                             ))}
                                             {extended.strengthsPlan.contentIdeas?.map((idea: string, i: number) => (
                                                 <div key={i} className="flex gap-2 text-sm text-slate-600 dark:text-slate-400 items-start">
-                                                    <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-blue-400 flex-shrink-0"></span>
+                                                    <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-red-400 flex-shrink-0"></span>
                                                     <span>{idea}</span>
                                                 </div>
                                             ))}
@@ -141,7 +141,7 @@ export default function AnalysisActions({ analysisId, brand, url, category, targ
                         <h3 className="font-semibold">Need Deeper Insights?</h3>
                         <p className="text-sm text-muted-foreground">Generate a detailed content strategy based on this analysis.</p>
                     </div>
-                    <Button onClick={handleGenerateStrategy} disabled={isGenerating} size="lg" className="gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0">
+                    <Button onClick={handleGenerateStrategy} disabled={isGenerating} size="lg" className="gap-2 bg-gradient-to-r from-red-500 to-purple-600 hover:from-red-600 hover:to-purple-700 text-white border-0">
                         {isGenerating ? (
                             <>
                                 <Loader2 className="h-4 w-4 animate-spin" />

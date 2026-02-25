@@ -86,17 +86,17 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
 
     if (isError || !analysisData) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
-                <div className="container max-w-lg mx-auto p-10 text-center bg-white dark:bg-black rounded-3xl shadow-2xl border border-border/50 backdrop-blur-xl">
-                    <div className="w-20 h-20 bg-rose-500/10 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <AlertTriangle className="w-10 h-10" />
+            <div className="min-h-screen flex items-center justify-center bg-[#F9FAFB]">
+                <div className="container max-w-lg mx-auto p-12 text-center bg-white rounded-[32px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-[#F2F4F6]">
+                    <div className="w-24 h-24 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-8">
+                        <AlertTriangle className="w-12 h-12" />
                     </div>
-                    <h1 className="text-3xl font-bold mb-4">Analysis Failed</h1>
-                    <p className="text-muted-foreground mb-8 text-lg">
-                        Sorry, we couldn't generate the analysis at this time. Please check your API key or try again later.
+                    <h1 className="text-3xl font-bold mb-4 text-[#191F28]">분석에 실패했습니다</h1>
+                    <p className="text-[#4E5968] mb-10 text-lg font-medium break-keep">
+                        브랜드 분석 데이터를 생성하는 도중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.
                     </p>
-                    <a href="/main" className="inline-flex items-center justify-center px-8 py-3 bg-primary text-primary-foreground font-semibold rounded-full hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 text-sm uppercase tracking-wider">
-                        Return to Dashboard
+                    <a href="/main" className="inline-flex items-center justify-center px-10 py-4 bg-[#EE2924] text-white font-bold rounded-2xl hover:bg-[#D11F1B] transition-all shadow-lg shadow-[#EE2924]/10 active:scale-95 text-[16px]">
+                        대시보드로 돌아가기
                     </a>
                 </div>
             </div>
@@ -121,51 +121,31 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
     const { kpis, insight, strategy, actions, sentiments, extendedStrategy, savedContents, targetAndTone, originalTargetAndTone, concepts, conceptHistory } = analysisData as AnalysisData;
 
     return (
-        <div id="analysis-report" className="relative min-h-screen pb-32 selection:bg-primary/20 font-sans">
-            {/* Ambient Background */}
-            <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-background to-background -z-10 pointer-events-none" />
-            <div className="fixed top-0 right-0 w-[500px] h-[500px] bg-purple-500/5 dark:bg-purple-500/10 rounded-full blur-[120px] -z-10 pointer-events-none" />
-
+        <div id="analysis-report" className="relative min-h-screen pb-32 font-sans bg-[#F9FAFB]">
             {/* 1. Sticky Header Hero section */}
-            <div className="sticky top-0 z-50 w-full bg-white/70 dark:bg-slate-950/70 backdrop-blur-2xl border-b border-border/50 shadow-sm transition-all">
-                <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="sticky top-0 z-50 w-full bg-white border-b border-[#F2F4F6] transition-all">
+                <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="flex items-baseline gap-3">
-                        <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground truncate max-w-[200px] sm:max-w-none">
-                            {brandKor}
+                        <h1 className="text-2xl font-bold tracking-tight text-[#191F28] truncate max-w-[200px] sm:max-w-none">
+                            {brandKor} <span className="text-[#4E5968] text-lg font-medium tracking-normal ml-2">{brandEng}</span>
                         </h1>
-                        {url ? (
-                            <a
-                                href={url.startsWith('http') ? url : `https://${url}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="group flex items-center gap-1.5 text-sm sm:text-base font-semibold text-muted-foreground hover:text-primary transition-colors truncate hidden sm:inline-flex bg-muted/30 hover:bg-primary/10 px-2 py-0.5 rounded-md"
-                                title="웹사이트 방문"
-                            >
-                                {brandEng}
-                                <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                            </a>
-                        ) : (
-                            <span className="text-sm sm:text-base font-semibold text-muted-foreground truncate hidden sm:inline-block px-2 py-0.5">
-                                {brandEng}
-                            </span>
-                        )}
                     </div>
 
                     <div className="flex items-center gap-4">
                         {/* Progress UI */}
-                        <nav className="flex items-center space-x-2 text-sm font-medium mr-4">
-                            <span className="flex items-center text-primary bg-primary/10 px-3 py-1 rounded-full">
-                                <CheckCircle2 className="w-4 h-4 mr-1" />
+                        <nav className="flex items-center space-x-3 text-sm font-bold">
+                            <span className="flex items-center text-[#EE2924] bg-[#EE2924]/10 px-4 py-1.5 rounded-full gap-1.5">
+                                <CheckCircle2 className="w-4 h-4" />
                                 브랜드 분석
                             </span>
-                            <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
-                            <span className="flex items-center text-muted-foreground opacity-50">
-                                <PenTool className="w-4 h-4 mr-1" />
+                            <ChevronRight className="w-4 h-4 text-[#ABB3BB]" />
+                            <span className="flex items-center text-[#ABB3BB] gap-1.5">
+                                <PenTool className="w-4 h-4" />
                                 콘텐츠 전략 수립
                             </span>
-                            <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
-                            <span className="flex items-center text-muted-foreground opacity-50">
-                                <LayoutTemplate className="w-4 h-4 mr-1" />
+                            <ChevronRight className="w-4 h-4 text-[#ABB3BB]" />
+                            <span className="flex items-center text-[#ABB3BB] gap-1.5">
+                                <LayoutTemplate className="w-4 h-4" />
                                 콘텐츠 생성
                             </span>
                         </nav>

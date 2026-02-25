@@ -31,37 +31,39 @@ export function UserNav({ user }: { user: any }) {
                         </Avatar>
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                    <DropdownMenuLabel className="font-normal">
-                        <div className="flex flex-col space-y-1">
-                            <p className="text-sm font-medium leading-none">{user.name}</p>
-                            <p className="text-xs leading-none text-muted-foreground">
+                <DropdownMenuContent className="w-64 p-2 rounded-[24px] border-[#F2F4F6] shadow-[0_8px_30px_rgba(0,0,0,0.08)]" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal p-4">
+                        <div className="flex flex-col space-y-2">
+                            <p className="text-[16px] font-bold text-[#191F28] leading-none">{user.name}</p>
+                            <p className="text-[13px] font-medium text-[#8B95A1] leading-none">
                                 {user.email}
                             </p>
                         </div>
                     </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuGroup>
+                    <DropdownMenuSeparator className="bg-[#F2F4F6] mx-2" />
+                    <DropdownMenuGroup className="p-1">
                         {(user.role === 'MASTER' || user.role === 'TEAM_LEADER') && (
-                            <DropdownMenuItem asChild>
-                                <Link href="/dashboard" className="cursor-pointer">
-                                    Team Settings
+                            <DropdownMenuItem asChild className="rounded-xl h-11 px-3 focus:bg-[#EE2924]/5 focus:text-[#EE2924] font-medium transition-all cursor-pointer">
+                                <Link href="/dashboard">
+                                    팀 관리 설정
                                 </Link>
                             </DropdownMenuItem>
                         )}
-                        <DropdownMenuItem asChild>
-                            <Link href="/main/history" className="cursor-pointer">
-                                Analysis History
+                        <DropdownMenuItem asChild className="rounded-xl h-11 px-3 focus:bg-[#EE2924]/5 focus:text-[#EE2924] font-medium transition-all cursor-pointer">
+                            <Link href="/main/history">
+                                분석 내역 확인
                             </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => setShowChangePassword(true)}>
-                            Change Password
+                        <DropdownMenuItem onSelect={() => setShowChangePassword(true)} className="rounded-xl h-11 px-3 focus:bg-[#EE2924]/5 focus:text-[#EE2924] font-medium transition-all cursor-pointer">
+                            비밀번호 변경
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onSelect={() => signOut()}>
-                        Log out
-                    </DropdownMenuItem>
+                    <DropdownMenuSeparator className="bg-[#F2F4F6] mx-2" />
+                    <DropdownMenuGroup className="p-1">
+                        <DropdownMenuItem onSelect={() => signOut()} className="rounded-xl h-11 px-3 focus:bg-rose-50 focus:text-rose-500 font-bold transition-all cursor-pointer">
+                            로그아웃
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
                 </DropdownMenuContent>
             </DropdownMenu>
             <ChangePasswordDialog open={showChangePassword} onOpenChange={setShowChangePassword} />

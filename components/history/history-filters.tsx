@@ -37,14 +37,12 @@ export default function HistoryFilters({ teams }: HistoryFiltersProps) {
         if (userName) params.set('userName', userName);
         else params.delete('userName');
 
-        // For Team Name, strict match or contains? 
         if (teamName && teamName !== 'all') params.set('teamName', teamName);
         else params.delete('teamName');
 
         if (sort && sort !== 'date-desc') params.set('sort', sort);
         else params.delete('sort');
 
-        // Reset page to 1 when searching
         params.set('page', '1');
 
         replace(`${pathname}?${params.toString()}`);
@@ -57,72 +55,85 @@ export default function HistoryFilters({ teams }: HistoryFiltersProps) {
     };
 
     return (
-        <div className="flex flex-col sm:flex-row gap-4 mb-6 items-end">
-            <div className="flex flex-col gap-2 w-full sm:w-auto">
-                <label className="text-sm font-medium">Brand</label>
-                <Input
-                    placeholder="Filter by Brand"
-                    value={brand}
-                    onChange={(e) => setBrand(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    className="w-full sm:w-[200px]"
-                />
-            </div>
+        <div className="bg-white p-8 rounded-[32px] border border-[#F2F4F6] shadow-[0_8px_30px_rgba(0,0,0,0.04)] mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 items-end">
+                <div className="space-y-2.5">
+                    <label className="text-[14px] font-bold text-[#8B95A1] ml-1 flex items-center gap-1.5">
+                        브랜드
+                    </label>
+                    <Input
+                        placeholder="브랜드명 입력"
+                        value={brand}
+                        onChange={(e) => setBrand(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        className="h-12 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-4 text-[15px] font-bold focus:ring-[#EE2924]/20 transition-all"
+                    />
+                </div>
 
-            <div className="flex flex-col gap-2 w-full sm:w-auto">
-                <label className="text-sm font-medium">User Name</label>
-                <Input
-                    placeholder="Filter by User Name"
-                    value={userName}
-                    onChange={(e) => setUserName(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    className="w-full sm:w-[200px]"
-                    autoComplete="off"
-                />
-            </div>
+                <div className="space-y-2.5">
+                    <label className="text-[14px] font-bold text-[#8B95A1] ml-1 flex items-center gap-1.5">
+                        작성자
+                    </label>
+                    <Input
+                        placeholder="이름 입력"
+                        value={userName}
+                        onChange={(e) => setUserName(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        className="h-12 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-4 text-[15px] font-bold focus:ring-[#EE2924]/20 transition-all"
+                        autoComplete="off"
+                    />
+                </div>
 
-            <div className="flex flex-col gap-2 w-full sm:w-auto">
-                <label className="text-sm font-medium">Team Name</label>
-                <Select
-                    value={teamName || 'all'}
-                    onValueChange={(value) => setTeamName(value === 'all' ? '' : value)}
+                <div className="space-y-2.5">
+                    <label className="text-[14px] font-bold text-[#8B95A1] ml-1 flex items-center gap-1.5">
+                        소속 팀
+                    </label>
+                    <Select
+                        value={teamName || 'all'}
+                        onValueChange={(value) => setTeamName(value === 'all' ? '' : value)}
+                    >
+                        <SelectTrigger className="h-12 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-4 text-[15px] font-bold focus:ring-[#EE2924]/20 transition-all">
+                            <SelectValue placeholder="모든 팀" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-2xl border-[#F2F4F6] shadow-xl">
+                            <SelectItem value="all" className="rounded-xl font-medium py-3">모든 팀</SelectItem>
+                            {teams.map((team) => (
+                                <SelectItem key={team.id} value={team.name} className="rounded-xl font-medium py-3">
+                                    {team.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div className="space-y-2.5">
+                    <label className="text-[14px] font-bold text-[#8B95A1] ml-1 flex items-center gap-1.5">
+                        정렬 옵션
+                    </label>
+                    <Select
+                        value={sort}
+                        onValueChange={(value) => setSort(value)}
+                    >
+                        <SelectTrigger className="h-12 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-4 text-[15px] font-bold focus:ring-[#EE2924]/20 transition-all">
+                            <SelectValue placeholder="정렬 방식" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-2xl border-[#F2F4F6] shadow-xl">
+                            <SelectItem value="date-desc" className="rounded-xl font-medium py-3">최신순</SelectItem>
+                            <SelectItem value="date-asc" className="rounded-xl font-medium py-3">과거순</SelectItem>
+                            <SelectItem value="brand-asc" className="rounded-xl font-medium py-3">브랜드명 (가나다)</SelectItem>
+                            <SelectItem value="brand-desc" className="rounded-xl font-medium py-3">브랜드명 (역순)</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <Button
+                    onClick={handleSearch}
+                    className="h-12 bg-[#EE2924] hover:bg-[#D11F1B] text-white rounded-2xl font-bold text-[15px] shadow-lg shadow-[#EE2924]/10 active:scale-[0.98] transition-all"
                 >
-                    <SelectTrigger className="w-full sm:w-[200px]">
-                        <SelectValue placeholder="Select Team" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="all">All Teams</SelectItem>
-                        {teams.map((team) => (
-                            <SelectItem key={team.id} value={team.name}>
-                                {team.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+                    <Search className="mr-2 h-4 w-4" />
+                    조회하기
+                </Button>
             </div>
-
-            <div className="flex flex-col gap-2 w-full sm:w-auto">
-                <label className="text-sm font-medium">정렬 옵션</label>
-                <Select
-                    value={sort}
-                    onValueChange={(value) => setSort(value)}
-                >
-                    <SelectTrigger className="w-full sm:w-[150px]">
-                        <SelectValue placeholder="정렬 방식" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="date-desc">최신순</SelectItem>
-                        <SelectItem value="date-asc">과거순</SelectItem>
-                        <SelectItem value="brand-asc">브랜드명 (가나다)</SelectItem>
-                        <SelectItem value="brand-desc">브랜드명 (역순)</SelectItem>
-                    </SelectContent>
-                </Select>
-            </div>
-
-            <Button onClick={handleSearch} className="w-full sm:w-auto">
-                <Search className="mr-2 h-4 w-4" />
-                Search
-            </Button>
         </div>
     );
 }

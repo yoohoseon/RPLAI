@@ -85,17 +85,17 @@ export function StrategyDashboard({ concept, message, availableConcepts, analysi
                 <div className="flex flex-col h-full gap-4">
 
                     {/* Unified Parameters Card */}
-                    <h3 className="text-xl font-bold tracking-tight text-foreground px-2 flex items-center gap-2">
-                        <LayoutTemplate className="w-5 h-5 text-muted-foreground" />
-                        콘텐츠 기획
-                    </h3>
-                    <Card className="rounded-3xl border-border/40 bg-white/40 dark:bg-slate-950/40 backdrop-blur-md flex flex-col min-h-[550px] transition-all overflow-hidden h-full shadow-sm">
+                    <div className="flex items-center gap-2 px-2">
+                        <LayoutTemplate className="w-5 h-5 text-[#EE2924]" />
+                        <h3 className="text-xl font-bold tracking-tight text-[#191F28]">콘텐츠 기획</h3>
+                    </div>
+                    <Card className="rounded-[32px] border-[#F2F4F6] bg-white flex flex-col min-h-[550px] transition-all overflow-hidden h-full shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
                         {/* Top: Selected Concept Info (Always visible) */}
-                        <div className="p-6 border-b border-border/40 bg-white/60 dark:bg-slate-950/60 relative">
+                        <div className="p-8 border-b border-[#F2F4F6] bg-white relative">
                             {availableConcepts && availableConcepts.length > 1 ? (
-                                <div className="mb-4">
-                                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block px-1">
-                                        Concept Category
+                                <div className="mb-6">
+                                    <span className="text-[13px] font-bold text-[#8B95A1] uppercase tracking-wider mb-3 block px-1">
+                                        분석 컨셉 카테고리
                                     </span>
                                     <Select
                                         value={selectedIdx.toString()}
@@ -104,12 +104,12 @@ export function StrategyDashboard({ concept, message, availableConcepts, analysi
                                             setSelectedMsgIdx(0); // Reset message index when concept changes
                                         }}
                                     >
-                                        <SelectTrigger className="w-full h-12 bg-white dark:bg-slate-950 border-border/50 rounded-xl focus:ring-primary/20 text-base font-bold text-foreground">
+                                        <SelectTrigger className="w-full h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl focus:ring-[#EE2924]/20 text-[16px] font-bold text-[#191F28]">
                                             <SelectValue placeholder="컨셉을 선택하세요" />
                                         </SelectTrigger>
-                                        <SelectContent className="rounded-xl">
+                                        <SelectContent className="rounded-2xl border-[#F2F4F6] shadow-xl w-[var(--radix-select-trigger-width)]">
                                             {availableConcepts.map((item: ConceptItem, idx: number) => (
-                                                <SelectItem key={idx} value={idx.toString()} className="font-semibold text-base py-3">
+                                                <SelectItem key={idx} value={idx.toString()} className="font-bold text-[15px] py-3.5 px-10 focus:bg-[#F2F4F6] focus:text-[#EE2924] data-[state=checked]:text-[#EE2924]">
                                                     {item.concept}
                                                 </SelectItem>
                                             ))}
@@ -117,35 +117,35 @@ export function StrategyDashboard({ concept, message, availableConcepts, analysi
                                     </Select>
                                 </div>
                             ) : (
-                                <h3 className="text-xl font-extrabold tracking-tight text-foreground mb-4 px-1">
-                                    {activeConcept.concept}
+                                <h3 className="text-2xl font-bold tracking-tight text-[#191F28] mb-6 px-1 italic">
+                                    &ldquo;{activeConcept.concept}&rdquo;
                                 </h3>
                             )}
 
-                            <div className="bg-foreground/[0.03] rounded-xl p-4 flex flex-col gap-3 justify-start border border-border/40">
-                                <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                                    <MessageSquare className="w-3.5 h-3.5" />
-                                    Key Message
+                            <div className="bg-[#F9FAFB] rounded-[24px] p-6 flex flex-col gap-4 border border-[#F2F4F6]">
+                                <span className="text-[13px] font-bold text-[#EE2924] uppercase tracking-wider flex items-center gap-2">
+                                    <MessageSquare className="w-4 h-4" />
+                                    핵심 광고 메시지 (Key Message)
                                 </span>
                                 {activeConcept.messages && activeConcept.messages.length > 1 ? (
                                     <Select
                                         value={selectedMsgIdx.toString()}
                                         onValueChange={(val) => setSelectedMsgIdx(parseInt(val))}
                                     >
-                                        <SelectTrigger className="w-full h-auto min-h-12 py-3 bg-white dark:bg-slate-950 border-border/50 rounded-xl focus:ring-primary/20 text-sm font-medium leading-relaxed text-left text-foreground/90 whitespace-normal [&>span]:line-clamp-none">
+                                        <SelectTrigger className="w-full h-auto min-h-14 py-4 px-5 bg-white border-[#F2F4F6] rounded-2xl focus:ring-[#EE2924]/20 text-[15px] font-bold leading-relaxed text-left text-[#191F28] whitespace-normal [&>span]:line-clamp-none shadow-sm">
                                             <SelectValue placeholder="키 메시지를 선택하세요" />
                                         </SelectTrigger>
-                                        <SelectContent className="rounded-xl max-w-[400px]">
+                                        <SelectContent className="rounded-2xl border-[#F2F4F6] shadow-xl w-[var(--radix-select-trigger-width)]">
                                             {activeConcept.messages.map((msg: string, idx: number) => (
-                                                <SelectItem key={idx} value={idx.toString()} className="font-medium text-sm py-3 leading-relaxed break-keep [&>span]:whitespace-normal">
+                                                <SelectItem key={idx} value={idx.toString()} className="font-bold text-[14px] py-4 px-10 leading-relaxed whitespace-normal focus:bg-[#F2F4F6] focus:text-[#EE2924] data-[state=checked]:text-[#EE2924] data-[state=checked]:bg-[#EE2924]/5">
                                                     {msg}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
                                 ) : (
-                                    <p className="text-sm font-medium leading-relaxed text-foreground/90 py-1 px-1">
-                                        &quot;{activeConcept.messages?.[selectedMsgIdx] || activeConcept.message}&quot;
+                                    <p className="text-[16px] font-bold leading-relaxed text-[#191F28] py-1 px-1 break-keep">
+                                        &ldquo;{activeConcept.messages?.[selectedMsgIdx] || activeConcept.message}&rdquo;
                                     </p>
                                 )}
                             </div>
@@ -166,53 +166,56 @@ export function StrategyDashboard({ concept, message, availableConcepts, analysi
 
                 {/* Right Side: Saved Strategies History */}
                 <div className="flex flex-col h-full gap-4">
-                    <h3 className="text-xl font-bold tracking-tight text-foreground px-2 flex items-center gap-2">
-                        <Clock className="w-5 h-5 text-muted-foreground" />
-                        저장된 전략 히스토리
-                    </h3>
-                    <Card className="rounded-3xl border-border/40 bg-white/40 dark:bg-slate-950/40 backdrop-blur-md flex flex-col flex-1 transition-all overflow-hidden shadow-sm p-2">
+                    <div className="flex items-center gap-2 px-2">
+                        <Clock className="w-5 h-5 text-[#EE2924]" />
+                        <h3 className="text-xl font-bold tracking-tight text-[#191F28]">저장된 전략 히스토리</h3>
+                    </div>
+                    <Card className="rounded-[32px] border-[#F2F4F6] bg-white flex flex-col flex-1 transition-all overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.04)] p-4">
                         {filteredStrategies.length === 0 ? (
                             <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-                                <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center mb-6">
-                                    <Clock className="w-8 h-8 text-muted-foreground/50" />
+                                <div className="w-20 h-20 rounded-full bg-[#F9FAFB] flex items-center justify-center mb-6">
+                                    <Clock className="w-10 h-10 text-[#ABB3BB]" />
                                 </div>
-                                <h4 className="text-lg font-bold mb-2 text-foreground/80">저장된 기록이 없습니다.</h4>
-                                <p className="text-muted-foreground text-sm max-w-[250px]">
+                                <h4 className="text-xl font-bold mb-2 text-[#191F28]">저장된 기록이 없습니다.</h4>
+                                <p className="text-[#4E5968] font-medium text-[15px] max-w-[280px] break-keep">
                                     이 컨셉으로 첫 번째 콘텐츠 전략을 세팅하고 저장해보세요.
                                 </p>
                             </div>
                         ) : (
-                            <div className="flex flex-col gap-3 p-2 overflow-y-auto max-h-[700px] scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent">
+                            <div className="flex flex-col gap-4 p-2 overflow-y-auto max-h-[750px] scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent">
                                 {filteredStrategies.slice().reverse().map((strategy, idx: number) => {
                                     const themeOutput = strategy.themes && strategy.themes.length > 0 ? strategy.themes[0] : null;
                                     const titleStr = themeOutput ? `${themeOutput.themeName}${strategy.themes.length > 1 ? ` 외 ${strategy.themes.length - 1}건` : ''}` : '기획 앵글 정보 없음';
                                     const descriptionStr = themeOutput ? themeOutput.description : '';
 
                                     return (
-                                        <div key={strategy.id || idx} className="bg-white dark:bg-slate-950 border border-border/40 p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-border/80 transition-all flex flex-col gap-3">
+                                        <div key={strategy.id || idx} className="bg-white border border-[#F2F4F6] p-6 rounded-[24px] shadow-sm hover:shadow-md hover:border-[#EE2924]/30 transition-all flex flex-col gap-4">
                                             <div className="flex justify-between items-start gap-2">
-                                                <div>
-                                                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground bg-muted/50 px-2 py-0.5 rounded-full inline-block mb-2">
-                                                        {strategy.conceptName}
-                                                        <span className="mx-1.5 opacity-40">|</span>
-                                                        {strategy.timing}
-                                                    </span>
-                                                    <h4 className="text-base font-extrabold tracking-tight text-foreground">
+                                                <div className="space-y-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#EE2924] bg-[#EE2924]/5 px-2.5 py-1 rounded-lg inline-block">
+                                                            {strategy.conceptName}
+                                                        </span>
+                                                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#4E5968] bg-[#F2F4F6] px-2.5 py-1 rounded-lg inline-block">
+                                                            {strategy.timing}
+                                                        </span>
+                                                    </div>
+                                                    <h4 className="text-[17px] font-bold tracking-tight text-[#191F28]">
                                                         {titleStr}
                                                     </h4>
                                                 </div>
                                             </div>
-                                            <p className="text-sm font-medium text-foreground/70 line-clamp-2 leading-relaxed">
+                                            <p className="text-[14px] font-medium text-[#4E5968] line-clamp-2 leading-relaxed break-keep">
                                                 {descriptionStr}
                                             </p>
-                                            <div className="pt-2 flex items-center justify-between border-t border-border/40 mt-1">
-                                                <span className="text-[11px] font-medium text-muted-foreground">
+                                            <div className="pt-4 flex items-center justify-between border-t border-[#F2F4F6] mt-1">
+                                                <span className="text-[12px] font-bold text-[#ABB3BB]">
                                                     {strategy.createdAt ? new Date(strategy.createdAt).toLocaleDateString() : '최근 저장됨'}
                                                 </span>
                                                 <Link href={`/main/generation?analysisId=${analysisId}&strategyId=${strategy.id}`}>
-                                                    <Button size="sm" variant="ghost" className="text-xs font-bold px-3 hover:bg-primary hover:text-primary-foreground rounded-full transition-colors h-8">
-                                                        콘텐츠 생성 열기
-                                                        <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+                                                    <Button size="sm" className="bg-[#EE2924] text-white hover:bg-[#D11F1B] rounded-xl text-[13px] font-bold px-4 h-9 shadow-sm">
+                                                        업무 보드 열기
+                                                        <ArrowRight className="w-4 h-4 ml-2" />
                                                     </Button>
                                                 </Link>
                                             </div>

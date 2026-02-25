@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useState } from 'react';
 import { deleteTeam } from '@/app/lib/actions';
 import {
     AlertDialog,
@@ -14,22 +14,19 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
-import { Trash2 } from "lucide-react"
+import { Trash2, AlertTriangle, Loader2 } from "lucide-react"
 
 export function TeamDeleteDialog({ teamId, teamName }: { teamId: string, teamName: string }) {
     const [open, setOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
-    // Using manual fetch or server action wrapper if needed, 
-    // but here trying simplest approach with standard server action invocation pattern
-    // However, AlertDialogAction standard onClick doesn't support form submission easily without a form wrapping it.
-    // Let's use a form inside or a custom handle.
-
-    // Better pattern for delete actions in shadcn is usually a form or wrap in transition.
-
-    const deleteAction = async () => {
+    const deleteAction = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        setIsDeleting(true);
         const formData = new FormData();
         formData.append('teamId', teamId);
         const result = await deleteTeam(null, formData);
+        setIsDeleting(false);
         if (result.success) {
             setOpen(false);
         } else {
@@ -37,27 +34,47 @@ export function TeamDeleteDialog({ teamId, teamName }: { teamId: string, teamNam
         }
     }
 
-
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-700 hover:bg-red-50">
-                    <Trash2 className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="w-9 h-9 text-[#8B95A1] hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all" title="팀 삭제">
+                    <Trash2 className="h-4.5 w-4.5" />
                 </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete the team <b>{teamName}</b>.
-                        <br />
-                        (Note: You cannot delete a team if it has assigned members.)
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={deleteAction} className="bg-red-600 hover:bg-red-700">Delete</AlertDialogAction>
-                </AlertDialogFooter>
+            <AlertDialogContent className="sm:max-w-[480px] p-0 overflow-hidden border-[#F2F4F6] rounded-[32px] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+                <div className="p-10">
+                    <AlertDialogHeader className="mb-8">
+                        <div className="w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center mb-6">
+                            <AlertTriangle className="w-7 h-7 text-rose-500" />
+                        </div>
+                        <AlertDialogTitle className="text-[22px] font-bold text-[#191F28] tracking-tight">팀을 삭제하시겠습니까?</AlertDialogTitle>
+                        <AlertDialogDescription className="text-[15px] font-medium text-[#4E5968] leading-relaxed mt-2">
+                            <strong>{teamName}</strong> 팀 정보가 영구적으로 삭제됩니다.<br />
+                            <span className="text-rose-500 text-[13px] mt-2 block font-bold">* 소속된 팀원이 있는 경우 삭제할 수 없습니다.</span>
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="flex flex-col sm:flex-row gap-3 pt-4">
+                        <AlertDialogCancel asChild>
+                            <Button variant="ghost" className="flex-1 h-16 rounded-[20px] bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#4E5968] font-bold text-[17px] transition-all">
+                                취소
+                            </Button>
+                        </AlertDialogCancel>
+                        <Button
+                            onClick={deleteAction}
+                            disabled={isDeleting}
+                            className="flex-1 h-16 rounded-[20px] bg-rose-500 hover:bg-rose-600 text-white font-bold text-[17px] shadow-lg shadow-rose-500/10 active:scale-[0.98] transition-all"
+                        >
+                            {isDeleting ? (
+                                <>
+                                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                                    삭제 중...
+                                </>
+                            ) : (
+                                '삭제하기'
+                            )}
+                        </Button>
+                    </AlertDialogFooter>
+                </div>
             </AlertDialogContent>
         </AlertDialog>
     );

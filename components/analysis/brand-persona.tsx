@@ -154,7 +154,7 @@ export default function BrandPersona({ analysisId, persona: initialPersona }: Br
                                                 onChange={(e) => updateKeyword(i, e.target.value)}
                                                 className="h-7 w-24 text-xs bg-white dark:bg-slate-800"
                                             />
-                                            <button onClick={() => removeKeyword(i)} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover/tag:opacity-100 transition-opacity">
+                                            <button onClick={() => removeKeyword(i)} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover/tag:opacity-100 transition-opacity cursor-pointer">
                                                 <X className="h-2 w-2" />
                                             </button>
                                         </div>
@@ -182,7 +182,7 @@ export default function BrandPersona({ analysisId, persona: initialPersona }: Br
                                                 onChange={(e) => updateTone(i, e.target.value)}
                                                 className="h-7 w-24 text-xs bg-white dark:bg-slate-800"
                                             />
-                                            <button onClick={() => removeTone(i)} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover/tag:opacity-100 transition-opacity">
+                                            <button onClick={() => removeTone(i)} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover/tag:opacity-100 transition-opacity cursor-pointer">
                                                 <X className="h-2 w-2" />
                                             </button>
                                         </div>

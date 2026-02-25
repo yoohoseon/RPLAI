@@ -47,6 +47,15 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Prevent padding-right being added by Radix UI / shadcn when modal opens */
+body[data-scroll-locked] {
+  padding-right: 0px !important;
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -120,19 +129,27 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
+  button {
+    @apply cursor-pointer;
+  }
 }
+
 @layer utilities {
   @media print {
+
     /* Hide Everything by default */
     body * {
       visibility: hidden;
     }
 
     /* Unhide the report container and its children */
-    #analysis-report, #analysis-report * {
+    #analysis-report,
+    #analysis-report * {
       visibility: visible;
     }
 
@@ -147,7 +164,9 @@
     }
 
     /* Explicitly hide the header and other known fixed elements */
-    header, nav, .print\:hidden {
+    header,
+    nav,
+    .print\:hidden {
       display: none !important;
     }
 
@@ -159,13 +178,13 @@
 
     /* Ensure text colors are black for printing */
     body {
-        color: black !important;
-        background: white !important;
+      color: black !important;
+      background: white !important;
     }
-    
+
     /* Remove any background colors/images that might waste ink or look bad */
     * {
-        -webkit-print-color-adjust: exact !important;
+      -webkit-print-color-adjust: exact !important;
     }
   }
 
@@ -173,10 +192,12 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
-  
+
   /* Hide scrollbar for IE, Edge and Firefox */
   .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
 }

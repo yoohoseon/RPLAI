@@ -259,7 +259,7 @@ export default function ContentGenerator({ analysisId, brandName, initialSavedCo
                                 <DialogContent className="sm:max-w-[700px] max-h-[85vh] flex flex-col">
                                     <DialogHeader>
                                         <DialogTitle className="flex items-center gap-2">
-                                            <Bookmark className="h-5 w-5 text-blue-500" /> Saved Content Vault
+                                            <Bookmark className="h-5 w-5 text-red-500" /> Saved Content Vault
                                         </DialogTitle>
                                         <DialogDescription>
                                             View and manage your saved content snippets for {brandName}.
@@ -276,8 +276,8 @@ export default function ContentGenerator({ analysisId, brandName, initialSavedCo
                                                     <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden focus:outline-none flex flex-col w-full">
                                                         <div className="flex justify-between items-center w-full">
                                                             <div className="flex items-center gap-3 overflow-hidden">
-                                                                <span className="text-[10px] uppercase font-bold text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/40 px-2 py-1 rounded flex-shrink-0">{item.type.replace('_', ' ')}</span>
-                                                                <p className="text-sm font-semibold truncate group-open:text-blue-600 dark:group-open:text-blue-400 transition-colors" title={item.topic}>{item.topic}</p>
+                                                                <span className="text-[10px] uppercase font-bold text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/40 px-2 py-1 rounded flex-shrink-0">{item.type.replace('_', ' ')}</span>
+                                                                <p className="text-sm font-semibold truncate group-open:text-red-600 dark:group-open:text-red-400 transition-colors" title={item.topic}>{item.topic}</p>
                                                             </div>
                                                             <div className="flex items-center gap-2 flex-shrink-0 ml-2">
                                                                 <span className="text-xs text-muted-foreground">{new Date(item.date).toLocaleDateString()}</span>
@@ -355,7 +355,7 @@ export default function ContentGenerator({ analysisId, brandName, initialSavedCo
                                         <div className="flex items-center justify-between">
                                             <label className="text-xs font-semibold text-muted-foreground uppercase">Result</label>
                                             <div className="flex gap-2">
-                                                <Button variant="ghost" size="sm" onClick={handleSaveToList} disabled={isSaving} className="h-6 text-xs px-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/30">
+                                                <Button variant="ghost" size="sm" onClick={handleSaveToList} disabled={isSaving} className="h-6 text-xs px-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30">
                                                     {isSaving ? <Loader2 className="h-3 w-3 mr-1 animate-spin" /> : <Bookmark className="h-3 w-3 mr-1" />} Save
                                                 </Button>
                                                 <Button variant="ghost" size="sm" onClick={copyToClipboard} className="h-6 text-xs px-2">

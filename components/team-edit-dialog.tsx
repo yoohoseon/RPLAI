@@ -7,14 +7,13 @@ import {
     Dialog,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Pencil } from 'lucide-react';
+import { Pencil, Loader2 } from 'lucide-react';
 
 import {
     Select,
@@ -52,56 +51,61 @@ export function TeamEditDialog({ team, users }: { team: Team; users: User[] }) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="ghost" size="icon">
-                    <Pencil className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="w-9 h-9 text-[#8B95A1] hover:text-[#EE2924] hover:bg-[#EE2924]/5 rounded-xl transition-all" title="팀 정보 수정">
+                    <Pencil className="h-4.5 w-4.5" />
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[550px]">
-                <DialogHeader>
-                    <DialogTitle>Edit Team</DialogTitle>
-                    <DialogDescription>
-                        Edit team details and assign a team leader.
-                    </DialogDescription>
-                </DialogHeader>
-                <form action={dispatch}>
-                    <input type="hidden" name="teamId" value={team.id} />
-                    <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
-                                Name
-                            </Label>
-                            <Input
-                                id="name"
-                                name="name"
-                                defaultValue={team.name}
-                                className="col-span-3"
-                                required
-                            />
+            <DialogContent className="sm:max-w-[520px] p-0 overflow-hidden border-[#F2F4F6] rounded-[32px] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+                <div className="p-10">
+                    <DialogHeader className="mb-8">
+                        <div className="w-14 h-14 bg-[#EE2924]/5 rounded-2xl flex items-center justify-center mb-6">
+                            <Pencil className="w-7 h-7 text-[#EE2924]" />
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="description" className="text-right">
-                                Description
-                            </Label>
-                            <Input
-                                id="description"
-                                name="description"
-                                defaultValue={team.description || ''}
-                                className="col-span-3"
-                            />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="leader" className="text-right">
-                                Team Leader
-                            </Label>
-                            <div className="col-span-3">
+                        <DialogTitle className="text-[22px] font-bold text-[#191F28] tracking-tight">팀 정보 수정</DialogTitle>
+                        <DialogDescription className="text-[15px] font-medium text-[#4E5968] leading-relaxed mt-2">
+                            팀의 기본 설정 및 리더를 변경할 수 있습니다.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <form action={dispatch} className="space-y-6">
+                        <input type="hidden" name="teamId" value={team.id} />
+                        <div className="space-y-5">
+                            <div className="space-y-2.5">
+                                <Label htmlFor="name" className="text-[14px] font-bold text-[#8B95A1] ml-1">
+                                    팀 이름
+                                </Label>
+                                <Input
+                                    id="name"
+                                    name="name"
+                                    defaultValue={team.name}
+                                    placeholder="팀 이름 입력"
+                                    className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20"
+                                    required
+                                />
+                            </div>
+                            <div className="space-y-2.5">
+                                <Label htmlFor="description" className="text-[14px] font-bold text-[#8B95A1] ml-1">
+                                    팀 설명
+                                </Label>
+                                <Input
+                                    id="description"
+                                    name="description"
+                                    defaultValue={team.description || ''}
+                                    placeholder="팀 역할 등에 대한 설명"
+                                    className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20"
+                                />
+                            </div>
+                            <div className="space-y-2.5">
+                                <Label htmlFor="leader" className="text-[14px] font-bold text-[#8B95A1] ml-1">
+                                    팀 리더 지정
+                                </Label>
                                 <Select value={leaderId} onValueChange={setLeaderId}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select a team leader" />
+                                    <SelectTrigger className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20">
+                                        <SelectValue placeholder="리더 선택" />
                                     </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="none">No Leader</SelectItem>
+                                    <SelectContent className="rounded-2xl border-[#F2F4F6] shadow-xl">
+                                        <SelectItem value="none" className="rounded-xl font-medium py-3 text-[#ABB3BB]">리더 없음</SelectItem>
                                         {users.map((user) => (
-                                            <SelectItem key={user.id} value={user.id}>
+                                            <SelectItem key={user.id} value={user.id} className="rounded-xl font-medium py-3">
                                                 {user.name} ({user.email})
                                             </SelectItem>
                                         ))}
@@ -109,17 +113,30 @@ export function TeamEditDialog({ team, users }: { team: Team; users: User[] }) {
                                 </Select>
                                 <input type="hidden" name="leaderId" value={leaderId === 'none' ? '' : leaderId} />
                             </div>
+                            {state?.message && (
+                                <div className="text-[13px] font-bold px-4 py-3 rounded-xl text-center bg-rose-50 text-rose-500">
+                                    {state.message}
+                                </div>
+                            )}
                         </div>
-                        {state?.message && (
-                            <div className="text-sm text-red-500 font-medium col-span-4 text-center">
-                                {state.message}
-                            </div>
-                        )}
-                    </div>
-                    <DialogFooter>
-                        <Button type="submit" disabled={isPending}>{isPending ? 'Saving...' : 'Save Changes'}</Button>
-                    </DialogFooter>
-                </form>
+                        <div className="pt-4">
+                            <Button
+                                type="submit"
+                                disabled={isPending}
+                                className="w-full h-16 rounded-[20px] bg-[#EE2924] hover:bg-[#D11F1B] text-white font-bold text-[17px] shadow-lg shadow-[#EE2924]/10 active:scale-[0.98] transition-all"
+                            >
+                                {isPending ? (
+                                    <>
+                                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                                        저장하는 중...
+                                    </>
+                                ) : (
+                                    '팀 정보 저장 완료'
+                                )}
+                            </Button>
+                        </div>
+                    </form>
+                </div>
             </DialogContent>
         </Dialog>
     );

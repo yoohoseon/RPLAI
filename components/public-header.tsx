@@ -9,14 +9,14 @@ export default function PublicHeader() {
                     <Link href="/" className="hover:opacity-80 transition-opacity flex items-center">
                         <div className="relative w-24 h-8">
                             <Image
-                                src="/logo_bk.png"
+                                src="/rp_logo.png"
                                 alt="RPLAI"
                                 fill
                                 className="object-contain dark:hidden"
                                 priority
                             />
                             <Image
-                                src="/logo_wt.png"
+                                src="/rp_logo.png"
                                 alt="RPLAI"
                                 fill
                                 className="object-contain hidden dark:block"

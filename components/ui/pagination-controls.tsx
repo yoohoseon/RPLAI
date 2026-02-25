@@ -23,27 +23,29 @@ export default function PaginationControls({ totalPages, currentPage }: Paginati
     if (totalPages <= 1) return null;
 
     return (
-        <div className="flex items-center justify-center gap-2 mt-4">
+        <div className="flex items-center justify-center gap-3">
             <Button
                 variant="outline"
-                size="icon"
+                className="h-10 px-4 rounded-xl border-[#F2F4F6] bg-white text-[#4E5968] font-bold hover:bg-[#F9FAFB] disabled:opacity-30 disabled:bg-transparent transition-all gap-1"
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage <= 1}
             >
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className="w-4 h-4" />
+                이전
             </Button>
 
-            <span className="text-sm font-medium">
-                Page {currentPage} of {totalPages}
+            <span className="text-[14px] font-bold text-[#191F28] px-4 min-w-[100px] text-center">
+                <span className="text-[#EE2924]">{currentPage}</span> <span className="text-[#ABB3BB] mx-1">/</span> {totalPages}
             </span>
 
             <Button
                 variant="outline"
-                size="icon"
+                className="h-10 px-4 rounded-xl border-[#F2F4F6] bg-white text-[#4E5968] font-bold hover:bg-[#F9FAFB] disabled:opacity-30 disabled:bg-transparent transition-all gap-1"
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage >= totalPages}
             >
-                <ChevronRight className="h-4 w-4" />
+                다음
+                <ChevronRight className="w-4 h-4" />
             </Button>
         </div>
     );

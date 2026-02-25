@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { TeamCreateDialog } from '@/components/team-create-dialog';
 import { TeamEditDialog } from '@/components/team-edit-dialog';
 import { TeamDeleteDialog } from '@/components/team-delete-dialog';
+import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default async function TeamsPage({
     searchParams,
@@ -48,109 +49,130 @@ export default async function TeamsPage({
     });
 
     return (
-        <div className="p-8">
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold">Team Management</h1>
-                <Button variant="outline" asChild>
-                    <Link href="/dashboard">Back to Dashboard</Link>
-                </Button>
-            </div>
+        <div className="min-h-screen bg-[#F9FAFB] font-sans">
+            <div className="container mx-auto py-12 px-6 max-w-7xl space-y-10 animate-in fade-in duration-700">
+                {/* Header */}
+                <div className="flex items-end justify-between border-b border-[#F2F4F6] pb-8">
+                    <div className="space-y-2">
+                        <h1 className="text-3xl font-bold tracking-tight text-[#191F28]">팀 관리</h1>
+                        <p className="text-[17px] font-medium text-[#4E5968]">조직 내의 모든 팀을 조회하고 관리합니다.</p>
+                    </div>
+                    <Button variant="outline" className="rounded-2xl border-[#F2F4F6] text-[#4E5968] font-bold h-12 px-6 hover:bg-white transition-all shadow-sm" asChild>
+                        <Link href="/dashboard">대시보드로 돌아가기</Link>
+                    </Button>
+                </div>
 
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <div className="space-y-1.5">
-                        <CardTitle>All Teams</CardTitle>
-                        <div className="mt-4">
-                            <form className="flex gap-2">
+                <Card className="bg-white border-[#F2F4F6] rounded-[32px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden">
+                    <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-8 pb-4 gap-6">
+                        <div className="space-y-4 w-full sm:w-auto">
+                            <CardTitle className="text-xl font-bold text-[#191F28]">전체 팀 목록</CardTitle>
+                            <form className="relative flex items-center w-full max-w-md group">
+                                <div className="absolute left-4 text-[#8B95A1] group-focus-within:text-[#EE2924] transition-colors">
+                                    <Search className="w-5 h-5" />
+                                </div>
                                 <Input
                                     name="query"
-                                    placeholder="Search teams..."
+                                    placeholder="팀 이름 검색..."
                                     defaultValue={query}
-                                    className="max-w-sm"
+                                    className="h-13 w-full bg-[#F9FAFB] border-[#F2F4F6] rounded-[18px] pl-12 pr-24 text-[15px] font-bold focus:bg-white focus:ring-4 focus:ring-[#EE2924]/5 transition-all"
                                 />
-                                <Button type="submit">Search</Button>
+                                <Button type="submit" className="absolute right-1.5 h-10 px-5 bg-[#EE2924] hover:bg-[#D11F1B] text-white rounded-[14px] font-bold text-[14px] transition-all shadow-sm">
+                                    검색
+                                </Button>
                             </form>
                         </div>
-                    </div>
-                    <TeamCreateDialog />
-                </CardHeader>
-                <CardContent>
-                    <div className="rounded-md border">
-                        <table className="w-full text-sm text-left">
-                            <thead className="bg-gray-50 text-gray-700 uppercase">
-                                <tr>
-                                    <th className="px-6 py-3">Team Name</th>
-                                    <th className="px-6 py-3">Description</th>
-                                    <th className="px-6 py-3">Created At</th>
-                                    <th className="px-6 py-3 text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {teams.map((team) => (
-                                    <tr key={team.id} className="bg-white border-b hover:bg-gray-50">
-                                        <td className="px-6 py-4 font-medium text-gray-900">
-                                            <Link href={`/dashboard/teams/${team.id}`} className="hover:underline text-blue-600">
-                                                {team.name}
-                                            </Link>
-                                        </td>
-                                        <td className="px-6 py-4">{team.description}</td>
-                                        <td className="px-6 py-4">{team.createdAt.toLocaleDateString()}</td>
-                                        <td className="px-6 py-4 text-right">
-                                            <div className="flex justify-end gap-2">
-                                                <TeamEditDialog team={team} users={users} />
-                                                <TeamDeleteDialog teamId={team.id} teamName={team.name} />
-                                            </div>
-                                        </td>
+                        <TeamCreateDialog />
+                    </CardHeader>
+                    <CardContent className="p-0 mt-4">
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="bg-[#F9FAFB] border-y border-[#F2F4F6]">
+                                        <th className="px-8 py-5 text-[14px] font-bold text-[#8B95A1] uppercase tracking-wider">팀 이름</th>
+                                        <th className="px-8 py-5 text-[14px] font-bold text-[#8B95A1] uppercase tracking-wider">설명</th>
+                                        <th className="px-8 py-5 text-[14px] font-bold text-[#8B95A1] uppercase tracking-wider">생성일</th>
+                                        <th className="px-8 py-5 text-[14px] font-bold text-[#8B95A1] uppercase tracking-wider text-right">관리</th>
                                     </tr>
-                                ))}
-                                {teams.length === 0 && (
-                                    <tr>
-                                        <td colSpan={4} className="px-6 py-4 text-center text-gray-500">No teams found</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+                                <tbody>
+                                    {teams.map((team) => (
+                                        <tr key={team.id} className="bg-white border-b border-[#F2F4F6] hover:bg-[#F9FAFB] transition-colors group">
+                                            <td className="px-8 py-6">
+                                                <Link href={`/dashboard/teams/${team.id}`} className="font-bold text-[16px] text-[#EE2924] hover:underline whitespace-nowrap">
+                                                    {team.name}
+                                                </Link>
+                                            </td>
+                                            <td className="px-8 py-6 text-[15px] font-medium text-[#4E5968] break-keep min-w-[200px]">
+                                                {team.description || '팀 설명이 없습니다.'}
+                                            </td>
+                                            <td className="px-8 py-6 text-[14px] font-medium text-[#8B95A1] whitespace-nowrap">
+                                                {team.createdAt.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                            </td>
+                                            <td className="px-8 py-6 text-right">
+                                                <div className="flex justify-end gap-3">
+                                                    <TeamEditDialog team={team} users={users} />
+                                                    <TeamDeleteDialog teamId={team.id} teamName={team.name} />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {teams.length === 0 && (
+                                        <tr>
+                                            <td colSpan={4} className="px-8 py-20 text-center text-[#ABB3BB] font-medium text-[15px]">
+                                                검색 결과와 일치하는 팀이 없습니다.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
 
-                    <div className="flex justify-center mt-4 gap-2">
-                        <Button
-                            variant="outline"
-                            disabled={currentPage <= 1}
-                            asChild={currentPage > 1}
-                        >
-                            {currentPage > 1 ? (
-                                <Link href={`/dashboard/teams?query=${query}&page=${currentPage - 1}`}>Previous</Link>
-                            ) : (
-                                'Previous'
-                            )}
-                        </Button>
-                        <span className="flex items-center px-4">
-                            Page {currentPage} of {totalPages}
-                        </span>
-                        <Button
-                            variant="outline"
-                            disabled={currentPage >= totalPages}
-                            asChild={currentPage < totalPages}
-                        >
-                            {currentPage < totalPages ? (
-                                <Link href={`/dashboard/teams?query=${query}&page=${currentPage + 1}`}>Next</Link>
-                            ) : (
-                                'Next'
-                            )}
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card>
-
-            <Card className="mt-6 border-slate-200 bg-slate-50">
-                <CardHeader>
-                    <CardTitle>Team Member Management</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-sm text-gray-500 mb-4">Manage team members directly within each team's detail view (Coming Soon).</p>
-                    <Button>Add Team Member</Button>
-                </CardContent>
-            </Card>
+                        {totalPages > 1 && (
+                            <div className="flex justify-center items-center py-10 gap-3 border-t border-[#F2F4F6]">
+                                <Button
+                                    variant="outline"
+                                    className="h-10 px-4 rounded-xl border-[#F2F4F6] bg-white text-[#4E5968] font-bold hover:bg-[#F9FAFB] disabled:opacity-30 disabled:bg-transparent transition-all gap-1"
+                                    disabled={currentPage <= 1}
+                                    asChild={currentPage > 1}
+                                >
+                                    {currentPage > 1 ? (
+                                        <Link href={`/dashboard/teams?query=${query}&page=${currentPage - 1}`}>
+                                            <ChevronLeft className="w-4 h-4" />
+                                            이전
+                                        </Link>
+                                    ) : (
+                                        <>
+                                            <ChevronLeft className="w-4 h-4" />
+                                            이전
+                                        </>
+                                    )}
+                                </Button>
+                                <span className="text-[14px] font-bold text-[#191F28] px-4 min-w-[100px] text-center">
+                                    <span className="text-[#EE2924]">{currentPage}</span> <span className="text-[#ABB3BB] mx-1">/</span> {totalPages}
+                                </span>
+                                <Button
+                                    variant="outline"
+                                    className="h-10 px-4 rounded-xl border-[#F2F4F6] bg-white text-[#4E5968] font-bold hover:bg-[#F9FAFB] disabled:opacity-30 disabled:bg-transparent transition-all gap-1"
+                                    disabled={currentPage >= totalPages}
+                                    asChild={currentPage < totalPages}
+                                >
+                                    {currentPage < totalPages ? (
+                                        <Link href={`/dashboard/teams?query=${query}&page=${currentPage + 1}`}>
+                                            다음
+                                            <ChevronRight className="w-4 h-4" />
+                                        </Link>
+                                    ) : (
+                                        <>
+                                            다음
+                                            <ChevronRight className="w-4 h-4" />
+                                        </>
+                                    )}
+                                </Button>
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+            </div>
         </div>
     );
 }

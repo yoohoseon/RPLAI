@@ -46,53 +46,58 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
     const teams = await fetchTeams();
 
     return (
-        <div className="container mx-auto py-10 px-4 space-y-8 animate-in fade-in duration-700">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Analysis History</h1>
-                    <p className="text-muted-foreground">View past brand analysis reports.</p>
+        <div className="min-h-screen bg-[#F9FAFB] font-sans">
+            <div className="container mx-auto py-12 px-6 max-w-7xl space-y-10 animate-in fade-in duration-700">
+                <div className="flex items-end justify-between border-b border-[#F2F4F6] pb-8">
+                    <div className="space-y-2">
+                        <h1 className="text-3xl font-bold tracking-tight text-[#191F28]">분석 이력</h1>
+                        <p className="text-[17px] font-medium text-[#4E5968]">과거의 브랜드 분석 및 전략 수립 기록을 확인하세요.</p>
+                    </div>
+                    <Link href="/main">
+                        <Button className="bg-[#EE2924] text-white hover:bg-[#D11F1B] rounded-2xl px-6 h-12 font-bold shadow-lg shadow-[#EE2924]/10">
+                            새로운 분석 시작하기
+                        </Button>
+                    </Link>
                 </div>
-                <Link href="/main">
-                    <Button variant="outline">New Analysis</Button>
-                </Link>
-            </div>
 
-            <HistoryFilters teams={teams} />
+                <div className="space-y-6">
+                    <HistoryFilters teams={teams} />
 
-            <Card className="border-none shadow-sm bg-white dark:bg-slate-900">
-                <CardContent className="p-0">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-[150px]">Date</TableHead>
-                                <TableHead>Brand</TableHead>
-                                <TableHead>Category</TableHead>
-                                <TableHead>Created By</TableHead>
-                                <TableHead className="text-right"><span className="sr-only">Actions</span></TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {analyses.length === 0 ? (
-                                <TableRow>
-                                    <TableCell colSpan={5} className="text-center h-24 text-muted-foreground">
-                                        No analysis history found.
-                                    </TableCell>
+                    <div className="bg-white rounded-[2rem] border border-[#F2F4F6] shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden">
+                        <Table>
+                            <TableHeader className="bg-[#F9FAFB]">
+                                <TableRow className="hover:bg-transparent border-b border-[#F2F4F6]">
+                                    <TableHead className="w-[180px] text-[#8B95A1] font-bold h-14 px-8">분석 일시</TableHead>
+                                    <TableHead className="text-[#8B95A1] font-bold h-14">브랜드</TableHead>
+                                    <TableHead className="text-[#8B95A1] font-bold h-14">카테고리</TableHead>
+                                    <TableHead className="text-[#8B95A1] font-bold h-14">작성자</TableHead>
+                                    <TableHead className="text-right h-14 px-8"><span className="sr-only">Actions</span></TableHead>
                                 </TableRow>
-                            ) : (
-                                analyses.map((analysis) => (
-                                    <HistoryTableRow key={analysis.id} analysis={analysis} />
-                                ))
-                            )}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
+                            </TableHeader>
+                            <TableBody>
+                                {analyses.length === 0 ? (
+                                    <TableRow>
+                                        <TableCell colSpan={5} className="text-center h-48 text-[#ABB3BB] font-medium text-[15px]">
+                                            표시할 분석 이력이 없습니다.
+                                        </TableCell>
+                                    </TableRow>
+                                ) : (
+                                    analyses.map((analysis) => (
+                                        <HistoryTableRow key={analysis.id} analysis={analysis} />
+                                    ))
+                                )}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </div>
 
-            <div className="flex justify-end text-sm text-muted-foreground">
-                Total {totalCount} items
+                <div className="flex items-center justify-between pt-4 px-2">
+                    <div className="text-[15px] font-medium text-[#8B95A1]">
+                        전체 <span className="text-[#4E5968] font-bold">{totalCount}</span>개의 항목
+                    </div>
+                    <PaginationControls totalPages={totalPages} currentPage={currentPage} />
+                </div>
             </div>
-
-            <PaginationControls totalPages={totalPages} currentPage={currentPage} />
         </div>
     );
 }
