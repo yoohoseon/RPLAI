@@ -8,6 +8,14 @@ import prisma from '@/lib/prisma';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Slider } from "@/components/ui/slider";
+import {
+    TrendingUp, TrendingDown, Minus, Target, ArrowRight, Lightbulb,
+    Zap, ShieldCheck, Activity, AlertTriangle, Crosshair, Map, MessageSquare, ExternalLink,
+    CheckCircle2, ChevronRight, PenTool, LayoutTemplate
+} from 'lucide-react';
+import { TargetToneDashboard } from '@/components/analysis/target-tone-dashboard';
+import { DeleteBrandButton } from '@/components/analysis/delete-brand-button';
 
 interface AnalysisPageProps {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
@@ -15,22 +23,15 @@ interface AnalysisPageProps {
 
 export default async function AnalysisPage(props: AnalysisPageProps) {
     const searchParams = await props.searchParams;
-    const brandKor = (searchParams.brandKor as string) || 'Brand';
-    const brandEng = (searchParams.brandEng as string) || '';
-    const url = searchParams.url as string | undefined;
-    const category = (searchParams.category as string) || 'General';
-    const competitors = (searchParams.competitors as string) || 'None';
-    const target = (searchParams.target as string) || 'General';
+    const id = searchParams.id as string | undefined;
 
-    const socialUrls = {
-        instagram: searchParams.instagram as string | undefined,
-        twitter: searchParams.twitter as string | undefined,
-        youtube: searchParams.youtube as string | undefined,
-        facebook: searchParams.facebook as string | undefined,
-        linkedin: searchParams.linkedin as string | undefined,
-        tiktok: searchParams.tiktok as string | undefined,
-        naver_blog: searchParams.naver_blog as string | undefined,
-    };
+    let brandKor = (searchParams.brandKor as string) || 'Brand';
+    let brandEng = (searchParams.brandEng as string) || '';
+    let url = searchParams.url as string | undefined;
+    let category = (searchParams.category as string) || 'General';
+    let competitors = (searchParams.competitors as string) || 'None';
+    let target = (searchParams.target as string) || 'General';
+    let description = (searchParams.description as string) || '';
 
     // Get current user session for caching
     const session = await auth();
@@ -39,33 +40,68 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
     // Generate Analysis using AI
     let analysisData;
     let isError = false;
+    let savedAnalysisId = id || '';
 
     try {
-        analysisData = await generateBrandAnalysis(brandKor, brandEng, category, target, competitors, url, socialUrls, userId);
+        if (id) {
+            const existingRecord = await prisma.brandAnalysis.findUnique({
+                where: { id }
+            });
+            if (existingRecord) {
+                brandKor = existingRecord.brandKor;
+                brandEng = existingRecord.brandEng;
+                category = existingRecord.category;
+                target = existingRecord.target;
+                competitors = existingRecord.competitors;
+                url = existingRecord.url || undefined;
+                analysisData = JSON.parse(existingRecord.content);
+            } else {
+                isError = true;
+            }
+        } else {
+            const socialUrls = {
+                instagram: searchParams.instagram as string | undefined,
+                twitter: searchParams.twitter as string | undefined,
+                youtube: searchParams.youtube as string | undefined,
+                facebook: searchParams.facebook as string | undefined,
+                linkedin: searchParams.linkedin as string | undefined,
+                tiktok: searchParams.tiktok as string | undefined,
+                naver_blog: searchParams.naver_blog as string | undefined,
+            };
+
+            analysisData = await generateBrandAnalysis(brandKor, brandEng, category, target, competitors, url, socialUrls, userId, description);
+
+            // Find the ID of the analysis we just generated/retrieved
+            const savedRecord = await prisma.brandAnalysis.findFirst({
+                where: { brandKor, brandEng, category, target, competitors },
+                orderBy: { createdAt: 'desc' },
+                select: { id: true }
+            });
+            savedAnalysisId = savedRecord?.id || '';
+        }
     } catch (e) {
-        console.error("Analysis Generation Failed", e);
+        console.error("Analysis Generation/Fetch Failed", e);
         isError = true;
     }
 
     if (isError || !analysisData) {
         return (
-            <div className="container mx-auto py-20 px-4 text-center">
-                <h1 className="text-2xl font-bold mb-4">Analysis Generation Failed</h1>
-                <p className="text-muted-foreground mb-8">
-                    Sorry, we couldn't generate the analysis at this time. Please check your API key or try again later.
-                </p>
-                <a href="/main" className="text-primary hover:underline">Return to Dashboard</a>
+            <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+                <div className="container max-w-lg mx-auto p-10 text-center bg-white dark:bg-black rounded-3xl shadow-2xl border border-border/50 backdrop-blur-xl">
+                    <div className="w-20 h-20 bg-rose-500/10 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <AlertTriangle className="w-10 h-10" />
+                    </div>
+                    <h1 className="text-3xl font-bold mb-4">Analysis Failed</h1>
+                    <p className="text-muted-foreground mb-8 text-lg">
+                        Sorry, we couldn't generate the analysis at this time. Please check your API key or try again later.
+                    </p>
+                    <a href="/main" className="inline-flex items-center justify-center px-8 py-3 bg-primary text-primary-foreground font-semibold rounded-full hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 text-sm uppercase tracking-wider">
+                        Return to Dashboard
+                    </a>
+                </div>
             </div>
         );
     }
-
-    // Find the ID of the analysis we just generated/retrieved
-    const savedRecord = await prisma.brandAnalysis.findFirst({
-        where: { brandKor, brandEng, category, target, competitors },
-        orderBy: { createdAt: 'desc' },
-        select: { id: true }
-    });
-    const savedAnalysisId = savedRecord?.id || '';
 
     interface AnalysisData {
         kpis: { label: string; value: string; trend: string; change: string; description: string }[];
@@ -76,187 +112,85 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
         extendedStrategy?: any;
         savedContents?: { id: string, type: string, topic: string, content: string, date: string }[];
         persona?: { personality: string; tone: string[]; keywords: string[]; usp: string; story: string; philosophy: string; voice: string; slogan: string };
+        targetAndTone?: { lifestyle: number; knowledge: number; communication: number; lifestyleExplanation?: string; knowledgeExplanation?: string; communicationExplanation?: string; };
+        originalTargetAndTone?: { lifestyle: number; knowledge: number; communication: number; lifestyleExplanation?: string; knowledgeExplanation?: string; communicationExplanation?: string; };
+        concepts?: any[];
+        conceptHistory?: any[];
     }
 
-    const { kpis, insight, strategy, actions, sentiments, extendedStrategy, savedContents } = analysisData as AnalysisData;
+    const { kpis, insight, strategy, actions, sentiments, extendedStrategy, savedContents, targetAndTone, originalTargetAndTone, concepts, conceptHistory } = analysisData as AnalysisData;
 
     return (
-        <div id="analysis-report" className="container mx-auto py-10 px-4 space-y-12 animate-in fade-in duration-700">
-            {/* Header */}
-            <div className="space-y-4">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight">{brandKor} <span className="text-muted-foreground text-xl font-medium ml-2">{brandEng}</span></h1>
-                    <p className="text-muted-foreground">Comprehensive AI-driven brand performance report</p>
-                </div>
+        <div id="analysis-report" className="relative min-h-screen pb-32 selection:bg-primary/20 font-sans">
+            {/* Ambient Background */}
+            <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-background to-background -z-10 pointer-events-none" />
+            <div className="fixed top-0 right-0 w-[500px] h-[500px] bg-purple-500/5 dark:bg-purple-500/10 rounded-full blur-[120px] -z-10 pointer-events-none" />
 
-                {url && (
-                    <div className="flex flex-wrap gap-2">
-                        <Badge variant="outline" className="text-xs py-1 px-3">
-                            <span className="mr-1 text-muted-foreground">URL:</span> {url}
-                        </Badge>
-                        <Badge variant="outline" className="text-xs py-1 px-3">
-                            <span className="mr-1 text-muted-foreground">Category:</span> {category}
-                        </Badge>
-                        <Badge variant="outline" className="text-xs py-1 px-3">
-                            <span className="mr-1 text-muted-foreground">Target:</span> {target}
-                        </Badge>
-                        <Badge variant="outline" className="text-xs py-1 px-3">
-                            <span className="mr-1 text-muted-foreground">Competitors:</span> {competitors}
-                        </Badge>
+            {/* 1. Sticky Header Hero section */}
+            <div className="sticky top-0 z-50 w-full bg-white/70 dark:bg-slate-950/70 backdrop-blur-2xl border-b border-border/50 shadow-sm transition-all">
+                <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="flex items-baseline gap-3">
+                        <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground truncate max-w-[200px] sm:max-w-none">
+                            {brandKor}
+                        </h1>
+                        {url ? (
+                            <a
+                                href={url.startsWith('http') ? url : `https://${url}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group flex items-center gap-1.5 text-sm sm:text-base font-semibold text-muted-foreground hover:text-primary transition-colors truncate hidden sm:inline-flex bg-muted/30 hover:bg-primary/10 px-2 py-0.5 rounded-md"
+                                title="웹사이트 방문"
+                            >
+                                {brandEng}
+                                <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </a>
+                        ) : (
+                            <span className="text-sm sm:text-base font-semibold text-muted-foreground truncate hidden sm:inline-block px-2 py-0.5">
+                                {brandEng}
+                            </span>
+                        )}
                     </div>
-                )}
+
+                    <div className="flex items-center gap-4">
+                        {/* Progress UI */}
+                        <nav className="flex items-center space-x-2 text-sm font-medium mr-4">
+                            <span className="flex items-center text-primary bg-primary/10 px-3 py-1 rounded-full">
+                                <CheckCircle2 className="w-4 h-4 mr-1" />
+                                브랜드 분석
+                            </span>
+                            <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
+                            <span className="flex items-center text-muted-foreground opacity-50">
+                                <PenTool className="w-4 h-4 mr-1" />
+                                콘텐츠 전략 수립
+                            </span>
+                            <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
+                            <span className="flex items-center text-muted-foreground opacity-50">
+                                <LayoutTemplate className="w-4 h-4 mr-1" />
+                                콘텐츠 생성
+                            </span>
+                        </nav>
+                    </div>
+                </div>
             </div>
 
-            {/* 0. Brand DNA (Persona) - Newly Added */}
-            <BrandPersona persona={analysisData.persona} analysisId={savedAnalysisId} />
+            <div className="container max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-12 animate-in slide-in-from-bottom-8 fade-in duration-1000">
 
 
 
-            {/* 1. KPI Dashboard */}
-            <section className="space-y-4">
-                <h2 className="text-2xl font-semibold tracking-tight">1. KPI Dashboard</h2>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    {kpis.map((kpi: any, i: number) => (
-                        <Card key={i}>
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">
-                                    {kpi.label}
-                                </CardTitle>
-                                <span className={`text-xs font-bold ${kpi.trend === 'up' ? 'text-green-500' : kpi.trend === 'down' ? 'text-red-500' : 'text-gray-500'}`}>
-                                    {kpi.change}
-                                </span>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">{kpi.value}</div>
-                                <p className="text-xs text-muted-foreground mt-1">
-                                    {kpi.description}
-                                </p>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
-            </section>
+                {targetAndTone && (
+                    <TargetToneDashboard
+                        initialValues={targetAndTone}
+                        originalValues={originalTargetAndTone || targetAndTone}
+                        brandKor={brandKor}
+                        brandEng={brandEng}
+                        initialConcepts={concepts || null}
+                        initialHistory={conceptHistory || []}
+                        analysisId={savedAnalysisId}
+                    />
+                )}
 
-            {/* 2. Insight Discovery */}
-            <section className="space-y-4">
-                <h2 className="text-2xl font-semibold tracking-tight">2. Insight Discovery</h2>
-                <Card className="bg-slate-50 dark:bg-slate-900 border-none shadow-sm">
-                    <CardHeader>
-                        <CardTitle>Perception Gap Analysis</CardTitle>
-                        <CardDescription>Contrast between Brand Intent and Consumer Perception</CardDescription>
-                    </CardHeader>
-                    <CardContent className="grid gap-6 md:grid-cols-3 text-center">
-                        <div className="space-y-2 p-4 bg-white dark:bg-black rounded-lg border">
-                            <Badge variant="outline" className="mb-2">Brand Intent</Badge>
-                            <p className="text-sm font-medium">{insight.intent}</p>
-                        </div>
-                        <div className="flex items-center justify-center">
-                            <div className="flex flex-col items-center space-y-2">
-                                <span className="text-3xl">↔</span>
-                                <span className="text-xs font-bold text-orange-500">GAP IDENTIFIED</span>
-                            </div>
-                        </div>
-                        <div className="space-y-2 p-4 bg-white dark:bg-black rounded-lg border">
-                            <Badge variant="outline" className="mb-2">Consumer Perception</Badge>
-                            <p className="text-sm font-medium">{insight.perception}</p>
-                        </div>
-                        <div className="md:col-span-3 bg-orange-50 dark:bg-orange-950/30 p-4 rounded text-sm text-orange-800 dark:text-orange-200">
-                            <strong>Insight:</strong> {insight.gap}
-                        </div>
-                    </CardContent>
-                </Card>
-            </section>
 
-            {/* 3. Strategic Framework (Visual Layout) */}
-            <section className="space-y-4">
-                <h2 className="text-2xl font-semibold tracking-tight">3. Strategic Framework (MECE)</h2>
-                <div className="grid gap-4 md:grid-cols-2">
-                    {strategy.map((item: any, i: number) => (
-                        <Card key={i}>
-                            <CardHeader>
-                                <CardTitle className="text-lg">{item.category}</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                                    {item.points.map((pt: string, j: number) => (
-                                        <li key={j}>{pt}</li>
-                                    ))}
-                                </ul>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
-            </section>
-
-            {/* 4. Action Plan */}
-            <section className="space-y-4">
-                <h2 className="text-2xl font-semibold tracking-tight">4. Action Plan</h2>
-                <div className="relative border-l-2 border-gray-200 dark:border-gray-800 ml-4 space-y-8 py-4">
-                    {actions.map((action: any, i: number) => (
-                        <div key={i} className="relative ml-6">
-                            <div className="absolute -left-[31px] top-1 h-4 w-4 rounded-full bg-black dark:bg-white border-4 border-white dark:border-black"></div>
-                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                                <h3 className="text-lg font-bold">{action.phase}: {action.title}</h3>
-                                <Badge variant="secondary">{action.timeline}</Badge>
-                            </div>
-                            <p className="text-muted-foreground mt-1 text-sm">{action.description}</p>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* 5. Voice of Customer */}
-            <section className="space-y-4">
-                <h2 className="text-2xl font-semibold tracking-tight">5. Voice of Customer</h2>
-                <div className="grid gap-4 md:grid-cols-2">
-                    <Card className="border-green-100 bg-green-50/50 dark:bg-green-900/10">
-                        <CardHeader><CardTitle className="text-green-700 dark:text-green-400">Positive Sentiment (Props)</CardTitle></CardHeader>
-                        <CardContent className="space-y-4">
-                            {sentiments.filter((s: any) => s.category === 'positive').map((s: any, i: number) => (
-                                <div key={i} className="bg-white dark:bg-black p-3 rounded shadow-sm text-sm italic">
-                                    "{s.text}"
-                                    <div className="text-xs text-gray-400 mt-1 not-italic text-right">- {s.source}</div>
-                                </div>
-                            ))}
-                        </CardContent>
-                    </Card>
-                    <Card className="border-red-100 bg-red-50/50 dark:bg-red-900/10">
-                        <CardHeader><CardTitle className="text-red-700 dark:text-red-400">Negative Sentiment (Cons)</CardTitle></CardHeader>
-                        <CardContent className="space-y-4">
-                            {sentiments.filter((s: any) => s.category === 'negative').map((s: any, i: number) => (
-                                <div key={i} className="bg-white dark:bg-black p-3 rounded shadow-sm text-sm italic">
-                                    "{s.text}"
-                                    <div className="text-xs text-gray-400 mt-1 not-italic text-right">- {s.source}</div>
-                                </div>
-                            ))}
-                        </CardContent>
-                    </Card>
-                </div>
-            </section>
-
-            <AnalysisActions
-                analysisId={savedAnalysisId}
-                brand={brandKor}
-                url={url || ''}
-                category={category || ''}
-                target={target || ''}
-                competitors={competitors || ''}
-                content={JSON.stringify({
-                    kpis,
-                    insight,
-                    strategy,
-                    actions,
-                    sentiments,
-                    extendedStrategy: analysisData.extendedStrategy,
-                    savedContents: analysisData.savedContents,
-                    persona: analysisData.persona
-                })}
-            />
-
-            {/* 0.5 Content Generator - Moved to Bottom (Stage 2) */}
-            {savedAnalysisId && analysisData.persona && (
-                <ContentGenerator analysisId={savedAnalysisId} brandName={brandKor} initialSavedContents={savedContents || []} />
-            )}
+            </div>
         </div>
     );
 }

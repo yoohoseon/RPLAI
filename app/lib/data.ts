@@ -2,7 +2,7 @@ import { auth } from '@/auth';
 import prisma from '@/lib/prisma';
 
 export async function fetchBrandAnalyses(
-    filters?: { brand?: string; userName?: string; teamName?: string },
+    filters?: { brand?: string; userName?: string; teamName?: string; sort?: string },
     page: number = 1,
     limit: number = 10
 ) {
@@ -54,11 +54,21 @@ export async function fetchBrandAnalyses(
         const totalCount = await prisma.brandAnalysis.count({ where });
         const totalPages = Math.ceil(totalCount / limit);
 
+        let orderByDef: any = { createdAt: 'desc' };
+        if (filters?.sort) {
+            switch (filters.sort) {
+                case 'date-asc': orderByDef = { createdAt: 'asc' }; break;
+                case 'date-desc': orderByDef = { createdAt: 'desc' }; break;
+                case 'brand-asc': orderByDef = { brandKor: 'asc' }; break;
+                case 'brand-desc': orderByDef = { brandKor: 'desc' }; break;
+            }
+        }
+
         const data = await prisma.brandAnalysis.findMany({
             where,
             skip,
             take: limit,
-            orderBy: { createdAt: 'desc' },
+            orderBy: orderByDef,
             include: {
                 user: {
                     select: {

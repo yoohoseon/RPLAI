@@ -26,6 +26,7 @@ export default function HistoryFilters({ teams }: HistoryFiltersProps) {
     const [brand, setBrand] = useState(searchParams.get('brand')?.toString() || '');
     const [userName, setUserName] = useState(searchParams.get('userName')?.toString() || '');
     const [teamName, setTeamName] = useState(searchParams.get('teamName')?.toString() || '');
+    const [sort, setSort] = useState(searchParams.get('sort')?.toString() || 'date-desc');
 
     const handleSearch = () => {
         const params = new URLSearchParams(searchParams);
@@ -37,10 +38,11 @@ export default function HistoryFilters({ teams }: HistoryFiltersProps) {
         else params.delete('userName');
 
         // For Team Name, strict match or contains? 
-        // Previously it was 'contains'. But dropdown sends exact name usually.
-        // Let's keep it 'teamName' param. 
         if (teamName && teamName !== 'all') params.set('teamName', teamName);
         else params.delete('teamName');
+
+        if (sort && sort !== 'date-desc') params.set('sort', sort);
+        else params.delete('sort');
 
         // Reset page to 1 when searching
         params.set('page', '1');
@@ -95,6 +97,24 @@ export default function HistoryFilters({ teams }: HistoryFiltersProps) {
                                 {team.name}
                             </SelectItem>
                         ))}
+                    </SelectContent>
+                </Select>
+            </div>
+
+            <div className="flex flex-col gap-2 w-full sm:w-auto">
+                <label className="text-sm font-medium">정렬 옵션</label>
+                <Select
+                    value={sort}
+                    onValueChange={(value) => setSort(value)}
+                >
+                    <SelectTrigger className="w-full sm:w-[150px]">
+                        <SelectValue placeholder="정렬 방식" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="date-desc">최신순</SelectItem>
+                        <SelectItem value="date-asc">과거순</SelectItem>
+                        <SelectItem value="brand-asc">브랜드명 (가나다)</SelectItem>
+                        <SelectItem value="brand-desc">브랜드명 (역순)</SelectItem>
                     </SelectContent>
                 </Select>
             </div>

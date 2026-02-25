@@ -8,11 +8,10 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { format } from 'date-fns';
 import { ArrowRight } from 'lucide-react';
+import { HistoryTableRow } from '@/components/history/history-table-row';
 
 import HistoryFilters from '@/components/history/history-filters';
 
@@ -23,6 +22,7 @@ interface HistoryPageProps {
         brand?: string;
         userName?: string;
         teamName?: string;
+        sort?: string;
         page?: string;
     }>;
 }
@@ -36,7 +36,8 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
         {
             brand: params.brand,
             userName: params.userName,
-            teamName: params.teamName
+            teamName: params.teamName,
+            sort: params.sort
         },
         currentPage,
         limit
@@ -66,60 +67,20 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                                 <TableHead className="w-[150px]">Date</TableHead>
                                 <TableHead>Brand</TableHead>
                                 <TableHead>Category</TableHead>
-                                <TableHead>Target</TableHead>
                                 <TableHead>Created By</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
+                                <TableHead className="text-right"><span className="sr-only">Actions</span></TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {analyses.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={6} className="text-center h-24 text-muted-foreground">
+                                    <TableCell colSpan={5} className="text-center h-24 text-muted-foreground">
                                         No analysis history found.
                                     </TableCell>
                                 </TableRow>
                             ) : (
                                 analyses.map((analysis) => (
-                                    <TableRow key={analysis.id}>
-                                        <TableCell className="font-medium">
-                                            {format(analysis.createdAt, 'yyyy-MM-dd')}
-                                            <br />
-                                            <span className="text-xs text-muted-foreground">
-                                                {format(analysis.createdAt, 'HH:mm')}
-                                            </span>
-                                        </TableCell>
-                                        <TableCell className="font-bold">
-                                            {analysis.brandKor}
-                                            <br />
-                                            <span className="text-xs text-muted-foreground font-normal">
-                                                {analysis.brandEng}
-                                            </span>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Badge variant="secondary" className="font-normal">
-                                                {analysis.category}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell className="max-w-[200px] truncate text-muted-foreground">
-                                            {analysis.target}
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="flex flex-col">
-                                                <span className="text-sm">{analysis.user.name}</span>
-                                                <span className="text-xs text-muted-foreground">{analysis.user.email}</span>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            {/* Future: Link to detail view, passing content or ID */}
-                                            {/* For now, just button placeholder or link to retry with params */}
-                                            <Link href={`/main/analysis?brandKor=${analysis.brandKor}&brandEng=${analysis.brandEng}&category=${analysis.category}&target=${analysis.target}&competitors=${analysis.competitors}&url=${analysis.url}`}>
-                                                <Button variant="outline" size="sm" className="gap-2">
-                                                    View
-                                                    <ArrowRight className="h-4 w-4" />
-                                                </Button>
-                                            </Link>
-                                        </TableCell>
-                                    </TableRow>
+                                    <HistoryTableRow key={analysis.id} analysis={analysis} />
                                 ))
                             )}
                         </TableBody>

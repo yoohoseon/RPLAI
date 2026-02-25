@@ -5,7 +5,6 @@ import { authenticate } from '@/app/lib/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function LoginForm() {
     const [errorMessage, dispatch, isPending] = useActionState(
@@ -26,13 +25,13 @@ export default function LoginForm() {
                             <line x1="15" x2="3" y1="12" y2="12" />
                         </svg>
                     </div>
-                    <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 mb-2">Welcome Back</h1>
-                    <p className="text-sm text-muted-foreground">Sign in to access your workspace</p>
+                    <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 mb-2">환영합니다</h1>
+                    <p className="text-sm text-muted-foreground">워크스페이스에 접근하려면 로그인하세요</p>
                 </div>
 
                 <form action={dispatch} className="relative z-10 space-y-6">
                     <div className="space-y-2">
-                        <Label htmlFor="email" className="text-sm font-medium leading-none">Email</Label>
+                        <Label htmlFor="email" className="text-sm font-medium leading-none">이메일</Label>
                         <Input
                             id="email"
                             name="email"
@@ -43,7 +42,7 @@ export default function LoginForm() {
                         />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="password" className="text-sm font-medium leading-none">Password</Label>
+                        <Label htmlFor="password" className="text-sm font-medium leading-none">비밀번호</Label>
                         <Input
                             id="password"
                             name="password"
@@ -72,11 +71,11 @@ export default function LoginForm() {
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                Logging in...
+                                로그인 중...
                             </div>
                         ) : (
                             <div className="flex items-center gap-2">
-                                Sign In
+                                로그인
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
                                     <path d="M5 12h14" />
                                     <path d="m12 5 7 7-7 7" />

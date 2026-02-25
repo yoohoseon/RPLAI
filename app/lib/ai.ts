@@ -48,6 +48,15 @@ const personaSchema = z.object({
     slogan: z.string().describe("A catchy slogan for the brand. If you create a new one instead of finding an official one, append '(AI 제작)' to the very end."),
 });
 
+const targetAndToneSchema = z.object({
+    lifestyle: z.number().min(0).max(100).describe("Lifestyle: 0 (안정/실속 Stability/Practical) to 100 (성취/도전 Achievement/Challenge)"),
+    lifestyleExplanation: z.string().describe("AI rationale for selecting this lifestyle value based on the brand's core product/service. MUST be in Korean (한국어로 작성)"),
+    knowledge: z.number().min(0).max(100).describe("Knowledge/Involvement: 0 (대중/입문 Public/Beginner) to 100 (전문가/매니아 Expert/Maniac)"),
+    knowledgeExplanation: z.string().describe("AI rationale for selecting this knowledge value. MUST be in Korean (한국어로 작성)"),
+    communication: z.number().min(0).max(100).describe("Communication Relationship: 0 (친근한 Friendly) to 100 (신뢰받는 Trusted)"),
+    communicationExplanation: z.string().describe("AI rationale for selecting this communication value. MUST be in Korean (한국어로 작성)"),
+});
+
 const brandAnalysisSchema = z.object({
     kpis: z.array(kpiSchema).describe("List of 4 key performance indicators"),
     insight: insightSchema.describe("Brand perception gap analysis"),
@@ -55,6 +64,7 @@ const brandAnalysisSchema = z.object({
     actions: z.array(actionStepSchema).describe("3-phase action plan"),
     sentiments: z.array(sentimentSchema).describe("Representative customer sentiments (2 positive, 2 negative)"),
     persona: personaSchema.describe("The defined brand persona and digital soul"),
+    targetAndTone: targetAndToneSchema.describe("Brand target and tone mapping from 0 to 100"),
 });
 
 export async function generateBrandAnalysis(
@@ -73,7 +83,8 @@ export async function generateBrandAnalysis(
         tiktok?: string,
         naver_blog?: string
     },
-    userId?: string // Optional userId for caching
+    userId?: string, // Optional userId for caching
+    description?: string // Description from user form to prevent hallucination
 ) {
     try {
         // 1. Check Cache (Database)
@@ -94,11 +105,11 @@ export async function generateBrandAnalysis(
         if (existingAnalysis) {
             try {
                 const parsedContent = JSON.parse(existingAnalysis.content);
-                if (parsedContent && parsedContent.kpis && parsedContent.kpis.length > 0) {
-                    console.log(`[AI] Returning cached analysis for ${brandKor} (${brandEng})`);
+                if (parsedContent && parsedContent.targetAndTone) {
+                    console.log(`[AI] Returning cached target and tone analysis for ${brandKor} (${brandEng})`);
                     return parsedContent;
                 } else {
-                    console.warn(`[AI] Cached analysis for ${brandKor} is invalid/empty. Re-generating.`);
+                    console.warn(`[AI] Cached analysis for ${brandKor} is invalid/empty (missing targetAndTone). Re-generating.`);
                 }
             } catch (e) {
                 console.error(`[AI] Failed to parse cached analysis for ${brandKor}`, e);
@@ -115,6 +126,7 @@ export async function generateBrandAnalysis(
       Analyze the brand "${brandKor}" (English Name: "${brandEng}") in the "${category}" industry.
       Target Audience: ${target}
       Key Competitors: ${competitors}
+      ${description ? `Brand Description / Core Product: ${description}` : ''}
       ${url ? `Official Website: ${url}` : ''}
       ${socialUrls?.instagram ? `Instagram: ${socialUrls.instagram}` : ''}
       ${socialUrls?.twitter ? `Twitter/X: ${socialUrls.twitter}` : ''}
@@ -124,27 +136,28 @@ export async function generateBrandAnalysis(
       ${socialUrls?.tiktok ? `TikTok: ${socialUrls.tiktok}` : ''}
       ${socialUrls?.naver_blog ? `Naver Blog: ${socialUrls.naver_blog}` : ''}
 
-      Provide a comprehensive brand analysis including:
-      1. 4 Key KPIs relevant to this brand's health.
-      2. A perception gap analysis (Intent vs Perception).
-      3. A Strategic Framework (SWOT Analysis).
-      4. A 3-Phase Action Plan to improve brand performance.
-      5. Representative Voice of Customer (VoC) sentiments (simulated based on typical market feedback).
-      6. Brand Persona Definition: Extract the brand's "Soul" including Personality archetype, Tone, Keywords, Unique Selling Proposition (USP), Brand Story/Narrative, Philosophy, Voice, and a catchy Slogan. (IMPORTANT: If you cannot find an official slogan and must generate a new one, you MUST append '(AI 제작)' at the end of the slogan string).
+      Provide a structured response. Since the user ONLY wants the Target & Tone mapping, you MUST focus entirely on analyzing the website and brand core values to deduce the target and tone mapping.
+      
+      For the "targetAndTone" field, output 3 slider values from 0 to 100: 
+         - lifestyle: 0 (안정/실속 Stability/Practical) to 100 (성취/도전 Achievement/Challenge)
+         - knowledge: 0 (대중/입문 Public/Beginner) to 100 (전문가/매니아 Expert/Maniac)
+         - communication: 0 (친근한 Friendly) to 100 (신뢰받는 Trusted)
 
-      IMPORTANT: Use the Google Search tool to find the most recent and accurate information about this brand.
-      Ensure the tone is professional, strategic, and actionable.
-      Language: Korean (Translate ALL content values to Korean. Do NOT use English for descriptions or points).
-      If a KPI value is not available, use "측정 미달" instead of "측정 필요".
+      CRITICAL: For all "*Explanation" fields, you MUST write the rationale entirely in Korean (반드시 한국어로 작성하세요).
+
+      For all other fields (kpis, insight, strategy, actions, sentiments, persona), just return empty or generic placeholder dummy strings/arrays because they will NOT be displayed.
+
+      IMPORTANT: Use the Google Search tool to find the most recent and accurate information about this brand to calculate the target and tone.
 
       Output ONLY a valid JSON object matching this schema:
       {
-        "kpis": [{ "label": string, "value": string, "trend": "up"|"down"|"neutral", "change": string, "description": string }],
-        "insight": { "intent": string, "perception": string, "gap": string },
-        "strategy": [{ "category": string, "points": string[] }],
-        "actions": [{ "phase": string, "title": string, "description": string, "timeline": string }],
-        "sentiments": [{ "category": "positive"|"negative", "text": string, "source": string }],
-        "persona": { "personality": string, "tone": string[], "keywords": string[], "usp": string, "story": string, "philosophy": string, "voice": string, "slogan": string }
+        "kpis": [{ "label": "Mock", "value": "Mock", "trend": "neutral", "change": "Mock", "description": "Mock" }],
+        "insight": { "intent": "Mock", "perception": "Mock", "gap": "Mock" },
+        "strategy": [],
+        "actions": [],
+        "sentiments": [],
+        "persona": { "personality": "Mock", "tone": [], "keywords": [], "usp": "Mock", "story": "Mock", "philosophy": "Mock", "voice": "Mock", "slogan": "Mock" },
+        "targetAndTone": { "lifestyle": number, "lifestyleExplanation": "Mock", "knowledge": number, "knowledgeExplanation": "Mock", "communication": number, "communicationExplanation": "Mock" }
       }
     `;
 
@@ -197,7 +210,7 @@ export async function generateBrandAnalysis(
 
         // 2. Save to Cache (Database)
         // Only save if object is valid
-        if (userId && object && object.kpis && object.kpis.length > 0) {
+        if (userId && object && object.targetAndTone) {
             try {
                 await prisma.brandAnalysis.create({
                     data: {
@@ -208,7 +221,10 @@ export async function generateBrandAnalysis(
                         competitors,
                         url: url || '',
                         socialUrls: socialUrls ? JSON.stringify(socialUrls) : undefined,
-                        content: JSON.stringify(object),
+                        content: JSON.stringify({
+                            ...object,
+                            originalTargetAndTone: object.targetAndTone
+                        }),
                         userId: userId
                     }
                 });
@@ -271,6 +287,14 @@ function getMockAnalysisData(brand: string, category: string) {
             philosophy: "Building a better future through continuous innovation.",
             voice: "A confident and expert voice that guides the customer.",
             slogan: "Innovation that connects the future."
+        },
+        targetAndTone: {
+            lifestyle: 50,
+            lifestyleExplanation: "AI Error - Mock Reason",
+            knowledge: 60,
+            knowledgeExplanation: "AI Error - Mock Reason",
+            communication: 40,
+            communicationExplanation: "AI Error - Mock Reason"
         }
     };
 }
