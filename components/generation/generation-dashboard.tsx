@@ -1,13 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Sparkles, Plus, Image as ImageIcon, Sparkles as SparklesIcon, Save, Download, Instagram, Youtube, Lock, PenTool, Check, RotateCcw, Edit2 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Sparkles, Plus, Image as ImageIcon, Sparkles as SparklesIcon, Save, Download, Instagram, Youtube, Lock, PenTool, Check, RotateCcw, Edit2, FileSpreadsheet, ArrowUpDown } from "lucide-react";
+import * as XLSX from 'xlsx';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { generateMarketingContent } from "@/app/lib/generation-actions";
 
 const KEYWORD_CATEGORIES = [
     { key: "essence", label: "브랜드 에센스", desc: "무드와 핵심 가치" },
@@ -33,20 +36,26 @@ interface GenerationDashboardProps {
         themes: Theme[];
     };
     analysisId: string;
+    brandName: string;
+    userEmail: string;
 }
 
-export function GenerationDashboard({ strategy }: GenerationDashboardProps) {
+export function GenerationDashboard({ strategy, brandName, userEmail }: GenerationDashboardProps) {
     const { themes } = strategy;
     const [activeThemeIdx, setActiveThemeIdx] = useState(0);
     const [selectedKeywords, setSelectedKeywords] = useState<{ [category: string]: string[] }>({
         essence: [], season: [], painPoint: [], trend: [], cta: []
     });
+    // Store user-added keywords per theme and category
+    const [customKeywords, setCustomKeywords] = useState<{ [themeIdx: number]: { [category: string]: string[] } }>({});
 
     const [isGeneratingContent, setIsGeneratingContent] = useState(false);
     const [isCopied, setIsCopied] = useState(false);
     const [isEditingVisual, setIsEditingVisual] = useState(false);
     const [isEditingCopy, setIsEditingCopy] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [sortBy, setSortBy] = useState<'latest' | 'oldest' | 'abc'>('latest');
+
     const [savedContents, setSavedContents] = useState<Array<{
         hook?: string;
         body?: string;
@@ -54,7 +63,30 @@ export function GenerationDashboard({ strategy }: GenerationDashboardProps) {
         hashtags?: string;
         imageDescription?: string;
         imagePrompt?: string;
+        keywords?: { [category: string]: string[] };
+        themeIdx?: number;
+        createdAt?: number;
+        creatorEmail?: string;
     }>>([]);
+
+    // Load saved contents from localStorage when strategy.id changes
+    useEffect(() => {
+        if (typeof window !== 'undefined' && strategy.id) {
+            const storageKey = `rplai_saved_contents_${strategy.id}_${userEmail}`;
+            const saved = localStorage.getItem(storageKey);
+            if (saved) {
+                try {
+                    setSavedContents(JSON.parse(saved));
+                } catch (e) {
+                    console.error('Failed to parse saved contents', e);
+                    setSavedContents([]);
+                }
+            } else {
+                setSavedContents([]);
+            }
+        }
+    }, [strategy.id]);
+
     const [generatedContent, setGeneratedContent] = useState<{
         hook?: string;
         body?: string;
@@ -62,7 +94,17 @@ export function GenerationDashboard({ strategy }: GenerationDashboardProps) {
         hashtags?: string;
         imageDescription?: string;
         imagePrompt?: string;
+        keywords?: { [category: string]: string[] };
+        themeIdx?: number;
     } | null>(null);
+
+    // Save contents to localStorage whenever they change
+    useEffect(() => {
+        if (typeof window !== 'undefined' && strategy.id && savedContents.length > 0) {
+            const storageKey = `rplai_saved_contents_${strategy.id}_${userEmail}`;
+            localStorage.setItem(storageKey, JSON.stringify(savedContents));
+        }
+    }, [savedContents, strategy.id]);
 
     const toggleKeyword = (category: string, keyword: string) => {
         setSelectedKeywords(prev => {
@@ -77,36 +119,52 @@ export function GenerationDashboard({ strategy }: GenerationDashboardProps) {
 
     const handleGenerateContent = async (isAutoSelect: boolean = false) => {
         setIsGeneratingContent(true);
+        setIsEditingVisual(false);
+        setIsEditingCopy(false);
 
-        // 시연용 딜레이 및 데이터 세팅 
-        setTimeout(() => {
-            if (isAutoSelect) {
-                // (1) 데모용: AI에 의해 키워드가 자동 선택되는 연출 
-                const demoTheme = themes[activeThemeIdx];
-                if (demoTheme && demoTheme.keywords) {
-                    const newSelections: { [k: string]: string[] } = { essence: [], season: [], painPoint: [], trend: [], cta: [] };
-                    Object.keys(newSelections).forEach(key => {
-                        const list = demoTheme.keywords[key] || [];
-                        if (list.length > 0) {
-                            // 각 카테고리별로 무작위 1~2개 선택 
-                            newSelections[key] = list.slice(0, Math.max(1, Math.floor(Math.random() * 2) + 1));
-                        }
-                    });
-                    setSelectedKeywords(newSelections);
-                }
+        let finalKeywords = selectedKeywords;
+
+        // If AI Recommended mode, pick keywords first (Simulating AI selection)
+        if (isAutoSelect) {
+            const demoTheme = themes[activeThemeIdx];
+            if (demoTheme && demoTheme.keywords) {
+                const newSelections: { [k: string]: string[] } = { essence: [], season: [], painPoint: [], trend: [], cta: [] };
+                Object.keys(newSelections).forEach(key => {
+                    const list = demoTheme.keywords[key] || [];
+                    if (list.length > 0) {
+                        // Pick 1-2 random keywords per category
+                        newSelections[key] = list
+                            .sort(() => 0.5 - Math.random())
+                            .slice(0, Math.max(1, Math.floor(Math.random() * 2) + 1));
+                    }
+                });
+                setSelectedKeywords(newSelections);
+                finalKeywords = newSelections;
             }
+        }
 
-            // (2) 생성 결과 세팅 (단일 결과)
-            setGeneratedContent({
-                hook: "완벽한 하루를 완성하는 단 하나의 선택 ✨",
-                body: "기다리던 그 순간이 마침내 찾아왔습니다.\n우리가 찾던 본질적인 아름다움, 이제 일상 속 자연스러운 변화로 직접 경험해보세요.",
-                cta: "지금 프로필 링크에서 새로운 컬렉션을 만나보세요!",
-                hashtags: "#신제품런칭 #일상을바꾸다 #브랜드캠페인 #라이프스타일 #트렌드",
-                imageDescription: "미니멀하고 세련된 느낌의 스튜디오 배경에서 은은한 자연 채광을 받으며 매끄럽게 연출된 브랜드 신제품 화보입니다. 프리미엄하고 모던한 감성을 시각적으로 전달합니다.",
-                imagePrompt: "1:1 aspect ratio, A sleek and modern product showcase in a minimalist studio environment, soft natural lighting, high-end commercial photography style."
-            });
+        try {
+            const result = await generateMarketingContent(
+                strategy.conceptName,
+                strategy.conceptMessage,
+                finalKeywords
+            );
+
+            if (result.success && result.data) {
+                setGeneratedContent({
+                    ...result.data,
+                    keywords: finalKeywords,
+                    themeIdx: activeThemeIdx
+                });
+            } else {
+                console.error("Content generation failed:", result.error);
+                // Fallback to minimal data if needed, but let's just show an error toast/log for now
+            }
+        } catch (error) {
+            console.error("Error in handleGenerateContent:", error);
+        } finally {
             setIsGeneratingContent(false);
-        }, 1500);
+        }
     };
 
     const handleCopyAll = () => {
@@ -128,30 +186,144 @@ export function GenerationDashboard({ strategy }: GenerationDashboardProps) {
     const handleSaveContent = () => {
         if (!generatedContent || isAlreadySaved) return;
         setIsSaving(true);
-        setSavedContents(prev => [generatedContent, ...prev]);
+        const itemToSave = {
+            ...generatedContent,
+            createdAt: Date.now(),
+            creatorEmail: userEmail
+        };
+        setSavedContents(prev => [itemToSave, ...prev]);
         setTimeout(() => setIsSaving(false), 1000);
     };
 
+    const sortedContents = [...savedContents].sort((a, b) => {
+        if (sortBy === 'latest') return (b.createdAt || 0) - (a.createdAt || 0);
+        if (sortBy === 'oldest') return (a.createdAt || 0) - (b.createdAt || 0);
+        if (sortBy === 'abc') return (a.hook || '').localeCompare(b.hook || '');
+        return 0;
+    });
+
     const totalSelected = Object.values(selectedKeywords).flat().length;
 
-    const savedContentsList = savedContents.length > 0 && (
+    const handleExportToExcel = () => {
+        if (sortedContents.length === 0) return;
+
+        // Prepare data for Excel
+        const exportData = sortedContents.map((item, index) => ({
+            '순번': index + 1,
+            '브랜드명': brandName,
+            '캠페인 콘셉명': strategy.conceptName,
+            '핵심 메시지': strategy.conceptMessage,
+            '발행 예정 시기': strategy.timing,
+            '캠페인 목표': strategy.goal,
+            '테마': item.themeIdx !== undefined ? themes[item.themeIdx]?.themeName : '-',
+            'Hook (광고 카피)': item.hook || '',
+            'Body (본문 내용)': item.body || '',
+            'CTA (행동 유도)': item.cta || '',
+            '해시태그': item.hashtags || '',
+            '비주얼 구성 가이드': item.imageDescription || '',
+            '이미지 생성 프롬프트': item.imagePrompt || '',
+            '조합된 키워드': item.keywords ? Object.entries(item.keywords)
+                .filter(([_, kws]) => kws.length > 0)
+                .map(([cat, kws]) => {
+                    const catLabel = KEYWORD_CATEGORIES.find(c => c.key === cat)?.label || cat;
+                    return `${catLabel}: ${kws.join(', ')}`;
+                })
+                .join(' / ') : ''
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(exportData);
+
+        // Adjust column widths
+        const wscols = [
+            { wch: 5 },  // 순번
+            { wch: 15 }, // 브랜드명
+            { wch: 25 }, // 캠페인 콘셉명
+            { wch: 40 }, // 핵심 메시지
+            { wch: 15 }, // 발행 예정 시기
+            { wch: 20 }, // 캠페인 목표
+            { wch: 15 }, // 테마
+            { wch: 40 }, // Hook
+            { wch: 60 }, // Body
+            { wch: 30 }, // CTA
+            { wch: 30 }, // 해시태그
+            { wch: 50 }, // 비주얼
+            { wch: 50 }, // 프롬프트
+            { wch: 40 }  // 키워드
+        ];
+        worksheet['!cols'] = wscols;
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "저장된 기획안");
+
+        const today = new Date();
+        const yymmdd = today.getFullYear().toString().slice(2) +
+            (today.getMonth() + 1).toString().padStart(2, '0') +
+            today.getDate().toString().padStart(2, '0');
+        const hhmm = today.getHours().toString().padStart(2, '0') +
+            today.getMinutes().toString().padStart(2, '0');
+        const fileName = `골드넥스_RPLAI_${brandName}_콘텐츠_${yymmdd}_${hhmm}.xlsx`;
+        XLSX.writeFile(workbook, fileName);
+    };
+
+    const savedContentsList = sortedContents.length > 0 && (
         <div className="pt-6 flex flex-col gap-4 pb-8">
-            <h4 className="text-sm font-extrabold flex items-center gap-2 text-foreground/80">
-                <Save className="w-4 h-4 text-primary" />
-                저장된 기획안 ({savedContents.length}건)
-            </h4>
+            <div className="flex items-center justify-between">
+                <h4 className="text-sm font-extrabold flex items-center gap-2 text-foreground/80">
+                    <Save className="w-4 h-4 text-primary" />
+                    저장된 기획안 ({sortedContents.length}건)
+                </h4>
+                <Select value={sortBy} onValueChange={(val: any) => setSortBy(val)}>
+                    <SelectTrigger className="w-[110px] h-8 text-[11px] font-bold rounded-full bg-white dark:bg-slate-900 border-border/40">
+                        <div className="flex items-center gap-1.5">
+                            <ArrowUpDown className="w-3 h-3 text-primary" />
+                            <SelectValue placeholder="정렬 방식" />
+                        </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="latest" className="text-[11px] font-bold">최신순</SelectItem>
+                        <SelectItem value="oldest" className="text-[11px] font-bold">이전순</SelectItem>
+                        <SelectItem value="abc" className="text-[11px] font-bold">ABC순</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
             <div className="flex flex-col gap-3">
-                {savedContents.map((item, idx) => (
-                    <div key={idx} className="bg-white/60 dark:bg-slate-900/60 border border-border/60 rounded-xl p-4 flex flex-col gap-2 hover:border-primary/40 transition-colors shadow-sm cursor-pointer group">
+                {sortedContents.map((item, idx) => (
+                    <div
+                        key={idx}
+                        onClick={() => {
+                            setGeneratedContent(item);
+                            if (item.keywords) {
+                                setSelectedKeywords(item.keywords);
+                            }
+                            if (item.themeIdx !== undefined) {
+                                setActiveThemeIdx(item.themeIdx);
+                            }
+                            const container = document.getElementById('generation-result-container');
+                            if (container) container.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="bg-white/60 dark:bg-slate-900/60 border border-border/60 rounded-xl p-4 flex flex-col gap-2 hover:border-primary/40 transition-colors shadow-sm cursor-pointer group"
+                    >
                         <p className="font-bold text-sm text-foreground line-clamp-1 group-hover:text-primary transition-colors">{item.hook}</p>
                         <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">{item.body}</p>
-                        <div className="flex items-center gap-2 mt-2">
-                            <span className="text-[10px] font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-sm shrink-0">Instagram</span>
-                            <span className="text-[10px] text-muted-foreground line-clamp-1 flex-1">💡 {item.imageDescription}</span>
+                        <div className="flex items-center justify-between mt-2">
+                            <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-sm shrink-0">Instagram</span>
+                                <span className="text-[10px] text-muted-foreground line-clamp-1 flex-1">💡 {item.imageDescription}</span>
+                            </div>
                         </div>
                     </div>
                 ))}
             </div>
+
+            <Button
+                variant="outline"
+                size="sm"
+                className="w-full mt-2 h-10 rounded-xl text-xs font-bold text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-500/20 bg-emerald-50/30 dark:bg-emerald-500/5 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:text-emerald-700 transition-all gap-2"
+                onClick={handleExportToExcel}
+            >
+                <FileSpreadsheet className="w-4 h-4" />
+                보관함 전체 엑셀 다운로드 (총 {sortedContents.length}건)
+            </Button>
         </div>
     );
 
@@ -201,22 +373,51 @@ export function GenerationDashboard({ strategy }: GenerationDashboardProps) {
                                                 </span>
                                             </div>
                                             <div className="flex flex-wrap gap-2.5">
-                                                {themes[activeThemeIdx].keywords && themes[activeThemeIdx].keywords[cat.key]?.map((kw: string, i: number) => {
-                                                    const isSelected = selectedKeywords[cat.key]?.includes(kw);
-                                                    return (
-                                                        <button
-                                                            key={i}
-                                                            onClick={() => toggleKeyword(cat.key, kw)}
-                                                            className={`inline-flex items-center justify-center px-4 py-2 text-sm font-semibold transition-all rounded-full border shadow-sm select-none active:scale-95 duration-200 ${isSelected
-                                                                ? "bg-primary text-primary-foreground border-primary shadow-primary/20"
-                                                                : "bg-white dark:bg-slate-950 border-border/50 text-muted-foreground hover:bg-muted/80 hover:text-foreground hover:border-border/80"
-                                                                }`}
-                                                        >
-                                                            {kw}
-                                                        </button>
-                                                    );
-                                                })}
-                                                <button className="inline-flex items-center justify-center px-4 py-2 text-sm font-bold transition-all rounded-full border-2 border-dashed border-border/80 text-muted-foreground hover:bg-muted hover:text-foreground active:scale-95 bg-transparent ml-1 hover:border-primary/50">
+                                                {(() => {
+                                                    const standardKeywords = themes[activeThemeIdx].keywords?.[cat.key] || [];
+                                                    const extraKeywords = customKeywords[activeThemeIdx]?.[cat.key] || [];
+                                                    const allKeywords = [...standardKeywords, ...extraKeywords];
+
+                                                    return allKeywords.map((kw: string, i: number) => {
+                                                        const isSelected = selectedKeywords[cat.key]?.includes(kw);
+                                                        return (
+                                                            <button
+                                                                key={i}
+                                                                onClick={() => toggleKeyword(cat.key, kw)}
+                                                                className={`inline-flex items-center justify-center px-4 py-2 text-sm font-semibold transition-all rounded-full border shadow-sm select-none active:scale-95 duration-200 ${isSelected
+                                                                    ? "bg-primary text-primary-foreground border-primary shadow-primary/20"
+                                                                    : "bg-white dark:bg-slate-950 border-border/50 text-muted-foreground hover:bg-muted/80 hover:text-foreground hover:border-border/80"
+                                                                    }`}
+                                                            >
+                                                                {kw}
+                                                            </button>
+                                                        );
+                                                    });
+                                                })()}
+                                                <button
+                                                    onClick={() => {
+                                                        const newKw = prompt(`${cat.label} 카테고리에 추가할 키워드를 입력해주세요.`);
+                                                        if (newKw && newKw.trim()) {
+                                                            const trimmedKw = newKw.trim();
+                                                            // Add to custom keywords for this theme and category
+                                                            setCustomKeywords(prev => {
+                                                                const themeCustom = prev[activeThemeIdx] || {};
+                                                                const catCustom = themeCustom[cat.key] || [];
+                                                                if (catCustom.includes(trimmedKw)) return prev;
+                                                                return {
+                                                                    ...prev,
+                                                                    [activeThemeIdx]: {
+                                                                        ...themeCustom,
+                                                                        [cat.key]: [...catCustom, trimmedKw]
+                                                                    }
+                                                                };
+                                                            });
+                                                            // Automatically select it
+                                                            toggleKeyword(cat.key, trimmedKw);
+                                                        }
+                                                    }}
+                                                    className="inline-flex items-center justify-center px-4 py-2 text-sm font-bold transition-all rounded-full border-2 border-dashed border-border/80 text-muted-foreground hover:bg-muted hover:text-foreground active:scale-95 bg-transparent ml-1 hover:border-primary/50"
+                                                >
                                                     <Plus className="w-4 h-4 mr-1.5" />
                                                     직접 추가
                                                 </button>
@@ -286,17 +487,21 @@ export function GenerationDashboard({ strategy }: GenerationDashboardProps) {
                     {!generatedContent && !isGeneratingContent ? (
                         <div className="flex-1 flex flex-col p-2 animate-in fade-in duration-500 max-h-full overflow-hidden">
                             <div className="flex-1 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent flex flex-col pb-24 px-2">
-                                <div className="flex-1 flex flex-col items-center justify-center text-center p-8 min-h-[400px]">
-                                    <div className="w-20 h-20 rounded-full bg-primary/5 flex items-center justify-center mb-6">
-                                        <SparklesIcon className="w-10 h-10 text-muted-foreground/30" />
+                                {savedContents.length === 0 ? (
+                                    <div className="flex-1 flex flex-col items-center justify-center text-center p-8 min-h-[400px]">
+                                        <div className="w-20 h-20 rounded-full bg-primary/5 flex items-center justify-center mb-6">
+                                            <SparklesIcon className="w-10 h-10 text-muted-foreground/30" />
+                                        </div>
+                                        <h4 className="text-xl font-bold mb-3 text-foreground/80">생성된 콘텐츠가 없습니다</h4>
+                                        <p className="text-muted-foreground text-sm max-w-[280px]">
+                                            좌측에서 원하는 앵글과 키워드를 조합하여 <strong>[AI 추천 조합]</strong> 버튼을 눌러보세요.
+                                        </p>
                                     </div>
-                                    <h4 className="text-xl font-bold mb-3 text-foreground/80">생성된 콘텐츠가 없습니다</h4>
-                                    <p className="text-muted-foreground text-sm max-w-[280px]">
-                                        좌측에서 원하는 앵글과 키워드를 조합하여 <strong>[AI 추천 조합]</strong> 버튼을 눌러보세요.
-                                    </p>
-                                </div>
-                                {savedContents.length > 0 && <div className="h-px w-full bg-border/40 mt-4 mb-2"></div>}
-                                {savedContentsList}
+                                ) : (
+                                    <div className="animate-in fade-in slide-in-from-top-2 duration-500">
+                                        {savedContentsList}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ) : isGeneratingContent ? (
@@ -311,7 +516,7 @@ export function GenerationDashboard({ strategy }: GenerationDashboardProps) {
                             </p>
                         </div>
                     ) : generatedContent != null ? (
-                        <div className="flex-1 flex flex-col p-2 animate-in slide-in-from-bottom-4 fade-in duration-500 max-h-full overflow-hidden">
+                        <div id="generation-result-container" className="flex-1 flex flex-col p-2 animate-in slide-in-from-bottom-4 fade-in duration-500 max-h-full overflow-hidden">
                             <div className="flex-1 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent flex flex-col gap-6 pb-24 px-2">
 
                                 {/* Visual Prompt Section (Instagram Square Mock) */}

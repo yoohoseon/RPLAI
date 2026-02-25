@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 import { CheckCircle2, ChevronRight, LayoutTemplate } from 'lucide-react';
 import Link from 'next/link';
+import { auth } from '@/auth';
 import { GenerationDashboard } from '@/components/generation/generation-dashboard';
 
 export interface SavedStrategyData {
@@ -23,6 +24,7 @@ interface GenerationPageProps {
 }
 
 export default async function GenerationPage(props: GenerationPageProps) {
+    const session = await auth();
     const searchParams = await props.searchParams;
     const analysisId = searchParams.analysisId;
     const strategyId = searchParams.strategyId;
@@ -95,7 +97,12 @@ export default async function GenerationPage(props: GenerationPageProps) {
             </div>
 
             <main className="container max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-12 animate-in slide-in-from-bottom-8 fade-in duration-1000">
-                <GenerationDashboard strategy={strategy as SavedStrategyData} analysisId={analysisId} />
+                <GenerationDashboard
+                    strategy={strategy as SavedStrategyData}
+                    analysisId={analysisId}
+                    brandName={brandRecord.brandKor || brandRecord.brandEng || ''}
+                    userEmail={session?.user?.email || ''}
+                />
             </main>
         </div>
     );
