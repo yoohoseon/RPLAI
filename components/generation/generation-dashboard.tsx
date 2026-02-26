@@ -20,7 +20,7 @@ const KEYWORD_CATEGORIES = [
     { key: "cta", label: "CTA (콜투액션)", desc: "행동 유도 문구" }
 ];
 
-const TOSS_BLUE = "#EE2924";
+const TOSS_BLUE = "#3182F6";
 const TOSS_GRAY_BG = "#F2F4F6";
 const TOSS_TEXT_DARK = "#191F28";
 const TOSS_TEXT_GRAY = "#4E5968";
@@ -308,11 +308,11 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                         }}
                         className="bg-[#F9FAFB] border border-[#F2F4F6] rounded-2xl p-5 flex flex-col gap-2 hover:bg-[#F2F4F6] transition-all cursor-pointer group"
                     >
-                        <p className="font-bold text-[15px] text-[#191F28] line-clamp-1 group-hover:text-[#EE2924] transition-colors">{item.hook}</p>
+                        <p className="font-bold text-[15px] text-[#191F28] line-clamp-1 group-hover:text-[#3182F6] transition-colors">{item.hook}</p>
                         <p className="text-[13px] text-[#4E5968] line-clamp-2 leading-relaxed">{item.body}</p>
                         <div className="flex items-center justify-between mt-3">
                             <div className="flex items-center gap-2">
-                                <span className="text-[11px] font-bold bg-[#EE2924]/10 text-[#EE2924] px-2.5 py-1 rounded-lg shrink-0">Instagram</span>
+                                <span className="text-[11px] font-bold bg-[#3182F6]/10 text-[#3182F6] px-2.5 py-1 rounded-lg shrink-0">Instagram</span>
                                 <span className="text-[11px] font-medium text-[#4E5968] line-clamp-1 flex-1">💡 {item.imageDescription}</span>
                             </div>
                         </div>
@@ -323,7 +323,7 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
             <Button
                 variant="outline"
                 size="lg"
-                className="w-full mt-4 h-14 rounded-2xl text-sm font-bold text-[#EE2924] border-none bg-[#F2F4F6] hover:bg-[#E5E8EB] transition-all gap-2"
+                className="w-full mt-4 h-14 rounded-2xl text-sm font-bold text-[#3182F6] border-none bg-[#F2F4F6] hover:bg-[#E5E8EB] transition-all gap-2"
                 onClick={handleExportToExcel}
             >
                 <FileSpreadsheet className="w-5 h-5" />
@@ -337,7 +337,7 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
             {/* Left Side: Keyword Selection */}
             <div className="flex flex-col h-full gap-4">
                 <h3 className="text-2xl font-bold tracking-tight text-[#191F28] flex items-center gap-2 mb-2">
-                    <Sparkles className="w-6 h-6 text-[#EE2924]" />
+                    <Sparkles className="w-6 h-6 text-[#3182F6]" />
                     캠페인 앵글 및 키워드 선택
                 </h3>
                 <Card className="rounded-[2rem] border-none bg-white flex flex-col min-h-[700px] transition-all overflow-hidden h-full shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
@@ -347,17 +347,17 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                                 <div className="p-6 border-b border-[#F2F4F6]">
                                     <TabsList className="w-full h-auto p-1 grid grid-cols-3 gap-1 rounded-2xl bg-[#F2F4F6]">
                                         {themes.map((t, i) => (
-                                            <TabsTrigger key={i} value={i.toString()} className="whitespace-normal text-xs sm:text-sm py-3 px-2 text-center font-bold tracking-tight rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#EE2924] data-[state=active]:shadow-sm transition-all h-full break-keep border-none">
+                                            <TabsTrigger key={i} value={i.toString()} className="whitespace-normal text-xs sm:text-sm py-3 px-2 text-center font-bold tracking-tight rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#3182F6] data-[state=active]:shadow-sm transition-all h-full break-keep border-none">
                                                 {t.themeName}
                                             </TabsTrigger>
                                         ))}
                                     </TabsList>
                                     <div className="mt-6 px-1 flex gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-[#EE2924]/10 flex items-center justify-center shrink-0">
-                                            <Sparkles className="w-5 h-5 text-[#EE2924]" />
+                                        <div className="w-10 h-10 rounded-full bg-[#3182F6]/10 flex items-center justify-center shrink-0">
+                                            <Sparkles className="w-5 h-5 text-[#3182F6]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs font-bold text-[#EE2924] mb-1">AI 앵글 추천</p>
+                                            <p className="text-xs font-bold text-[#3182F6] mb-1">AI 앵글 추천</p>
                                             <p className="text-[15px] font-semibold text-[#191F28] leading-snug break-keep">
                                                 {themes[activeThemeIdx].description}
                                             </p>
@@ -377,7 +377,7 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                                                         {cat.desc}
                                                     </span>
                                                 </div>
-                                                <span className="text-xs font-bold text-[#EE2924]">
+                                                <span className="text-xs font-bold text-[#3182F6]">
                                                     {selectedKeywords[cat.key]?.length || 0} 선택됨
                                                 </span>
                                             </div>
@@ -394,7 +394,7 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                                                                 key={i}
                                                                 onClick={() => toggleKeyword(cat.key, kw)}
                                                                 className={`inline-flex items-center justify-center px-4 py-2.5 text-[14px] font-semibold transition-all rounded-xl select-none active:scale-95 duration-200 cursor-pointer ${isSelected
-                                                                    ? "bg-[#EE2924] text-white shadow-md shadow-[#EE2924]/20"
+                                                                    ? "bg-[#3182F6] text-white shadow-md shadow-[#3182F6]/20"
                                                                     : "bg-[#F2F4F6] text-[#4E5968] hover:bg-[#E5E8EB] border-none"
                                                                     }`}
                                                             >
@@ -442,12 +442,12 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                                             onClick={() => handleGenerateContent(true)}
                                             disabled={isGeneratingContent}
                                         >
-                                            <SparklesIcon className="w-5 h-5 mr-2 text-[#EE2924]" />
+                                            <SparklesIcon className="w-5 h-5 mr-2 text-[#3182F6]" />
                                             AI 추천 조합
                                         </Button>
                                         <Button
                                             size="lg"
-                                            className="grow basis-2/3 h-16 rounded-[24px] text-[17px] font-bold bg-[#EE2924] text-white hover:bg-[#D11F1B] shadow-lg shadow-[#EE2924]/10 active:scale-[0.98] transition-all group border-none"
+                                            className="grow basis-2/3 h-16 rounded-[24px] text-[17px] font-bold bg-[#3182F6] text-white hover:bg-[#1B64DA] shadow-lg shadow-[#3182F6]/10 active:scale-[0.98] transition-all group border-none"
                                             onClick={() => handleGenerateContent(false)}
                                             disabled={isGeneratingContent || totalSelected === 0}
                                         >
@@ -477,7 +477,7 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
             <div className="flex flex-col h-full gap-4">
                 <div className="flex items-center justify-between px-2">
                     <h3 className="text-2xl font-bold tracking-tight text-[#191F28] flex items-center gap-2">
-                        <Wand2 className="w-6 h-6 text-[#EE2924]" />
+                        <Wand2 className="w-6 h-6 text-[#3182F6]" />
                         콘텐츠 생성 결과
                     </h3>
 
@@ -535,21 +535,21 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                                 <div className="space-y-4">
                                     <div className="flex items-center justify-between">
                                         <h4 className="text-[17px] font-bold flex items-center gap-2 text-[#191F28]">
-                                            <ImageIcon className="w-5 h-5 text-[#EE2924]" />
+                                            <ImageIcon className="w-5 h-5 text-[#3182F6]" />
                                             인스타그램 비주얼 가이드
                                         </h4>
                                         <div className="flex items-center gap-2">
                                             <Dialog>
                                                 <DialogTrigger asChild>
                                                     <Button size="sm" variant="ghost" className="h-9 px-4 rounded-full text-xs font-bold text-[#4E5968] bg-[#F2F4F6] hover:bg-[#E5E8EB]">
-                                                        <SparklesIcon className="w-3.5 h-3.5 mr-1.5 text-[#EE2924]" />
+                                                        <SparklesIcon className="w-3.5 h-3.5 mr-1.5 text-[#3182F6]" />
                                                         영문 프롬프트
                                                     </Button>
                                                 </DialogTrigger>
                                                 <DialogContent className="sm:max-w-md rounded-[2rem] border-none shadow-2xl">
                                                     <DialogHeader>
                                                         <DialogTitle className="text-xl font-bold flex items-center gap-2 text-[#191F28]">
-                                                            <SparklesIcon className="w-5 h-5 text-[#EE2924]" />
+                                                            <SparklesIcon className="w-5 h-5 text-[#3182F6]" />
                                                             AI 프롬프트 (Midjourney)
                                                         </DialogTitle>
                                                     </DialogHeader>
@@ -557,7 +557,7 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                                                         {generatedContent?.imagePrompt}
                                                     </div>
                                                     <div className="flex justify-end mt-4">
-                                                        <Button size="lg" onClick={() => navigator.clipboard.writeText(generatedContent?.imagePrompt || "")} className="rounded-2xl h-12 px-6 bg-[#EE2924] text-white font-bold hover:bg-[#D11F1B]">
+                                                        <Button size="lg" onClick={() => navigator.clipboard.writeText(generatedContent?.imagePrompt || "")} className="rounded-2xl h-12 px-6 bg-[#3182F6] text-white font-bold hover:bg-[#1B64DA]">
                                                             <Download className="w-4 h-4 mr-1.5" />
                                                             프롬프트 복사하기
                                                         </Button>
@@ -596,14 +596,14 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                                 <div className="space-y-4">
                                     <div className="flex items-center justify-between">
                                         <h4 className="text-[17px] font-bold flex items-center gap-2 text-[#191F28]">
-                                            <PenTool className="w-5 h-5 text-[#EE2924]" />
+                                            <PenTool className="w-5 h-5 text-[#3182F6]" />
                                             인스타그램 본문 카피
                                         </h4>
                                         <div className="flex items-center gap-2">
                                             <Button size="sm" variant="ghost" className="h-9 px-4 rounded-full text-xs font-bold text-[#4E5968] hover:bg-[#F2F4F6]" onClick={() => setIsEditingCopy(!isEditingCopy)}>
                                                 {isEditingCopy ? "수정 완료" : "내용 수정"}
                                             </Button>
-                                            <Button size="sm" variant="ghost" className="h-9 px-4 rounded-full text-xs font-bold text-[#EE2924] bg-[#EE2924]/10 hover:bg-[#EE2924]/20 transition-all font-bold" onClick={handleCopyAll}>
+                                            <Button size="sm" variant="ghost" className="h-9 px-4 rounded-full text-xs font-bold text-[#3182F6] bg-[#3182F6]/10 hover:bg-[#3182F6]/20 transition-all font-bold" onClick={handleCopyAll}>
                                                 {isCopied ? "복사 완료!" : "전체 복사"}
                                             </Button>
                                         </div>
@@ -625,7 +625,7 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                                                     placeholder="본문 내용을 입력하세요"
                                                 />
                                                 <div className="flex gap-2">
-                                                    <span className="shrink-0 mt-3 text-[#EE2924]">👉</span>
+                                                    <span className="shrink-0 mt-3 text-[#3182F6]">👉</span>
                                                     <Input
                                                         value={generatedContent?.cta || ''}
                                                         onChange={(e) => handleContentChange('cta', e.target.value)}
@@ -636,7 +636,7 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                                                 <Input
                                                     value={generatedContent?.hashtags || ''}
                                                     onChange={(e) => handleContentChange('hashtags', e.target.value)}
-                                                    className="font-bold text-[#EE2924] bg-white border-[#F2F4F6] h-12 rounded-xl"
+                                                    className="font-bold text-[#3182F6] bg-white border-[#F2F4F6] h-12 rounded-xl"
                                                     placeholder="#해시태그"
                                                 />
                                             </div>
@@ -651,10 +651,10 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                                                 <div className="h-px w-full bg-[#F2F4F6]"></div>
                                                 <div className="space-y-4">
                                                     <p className="font-bold flex items-start gap-2">
-                                                        <span className="shrink-0 mt-0.5 text-[#EE2924]">👉</span>
+                                                        <span className="shrink-0 mt-0.5 text-[#3182F6]">👉</span>
                                                         {generatedContent?.cta}
                                                     </p>
-                                                    <p className="text-[#EE2924] font-bold leading-relaxed text-[14px]">
+                                                    <p className="text-[#3182F6] font-bold leading-relaxed text-[14px]">
                                                         {generatedContent?.hashtags}
                                                     </p>
                                                 </div>
@@ -674,7 +674,7 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                                         새로 만들기
                                     </Button>
                                     <Button
-                                        className={`rounded-2xl px-10 h-14 text-base font-bold transition-all shadow-lg ${isAlreadySaved ? 'bg-[#ABB3BB] text-white' : 'bg-[#EE2924] text-white hover:bg-[#D11F1B] shadow-[#EE2924]/20'}`}
+                                        className={`rounded-2xl px-10 h-14 text-base font-bold transition-all shadow-lg ${isAlreadySaved ? 'bg-[#ABB3BB] text-white' : 'bg-[#3182F6] text-white hover:bg-[#1B64DA] shadow-[#3182F6]/20'}`}
                                         onClick={handleSaveContent}
                                         disabled={isSaving || isAlreadySaved}
                                     >

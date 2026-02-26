@@ -9,7 +9,7 @@ export default function MainPage() {
                     <div className="space-y-4">
                         <h1 className="text-5xl lg:text-[72px] font-bold tracking-tight text-[#191F28] leading-[1.15]">
                             데이터로 이끄는<br />
-                            <span className="text-[#EE2924]">브랜드의 성장</span>
+                            <span className="text-[#3182F6]">브랜드의 성장</span>
                         </h1>
                         <p className="text-[19px] lg:text-[22px] font-medium text-[#4E5968] leading-relaxed max-w-xl mx-auto lg:mx-0 break-keep">
                             단 몇 초 만에 심도 있는 시장 인사이트를 도출합니다.<br />
@@ -19,13 +19,13 @@ export default function MainPage() {
 
                     <div className="flex flex-wrap gap-3 justify-center lg:justify-start pt-4">
                         <div className="flex items-center gap-2 text-[15px] font-bold bg-white text-[#4E5968] px-5 py-2.5 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#F2F4F6]">
-                            <span className="text-[#EE2924]">✓</span> 라이프스타일 큐레이션
+                            <span className="text-[#3182F6]">✓</span> 라이프스타일 큐레이션
                         </div>
                         <div className="flex items-center gap-2 text-[15px] font-bold bg-white text-[#4E5968] px-5 py-2.5 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#F2F4F6]">
-                            <span className="text-[#EE2924]">✓</span> 지식/관여도 분석
+                            <span className="text-[#3182F6]">✓</span> 지식/관여도 분석
                         </div>
                         <div className="flex items-center gap-2 text-[15px] font-bold bg-white text-[#4E5968] px-5 py-2.5 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#F2F4F6]">
-                            <span className="text-[#EE2924]">✓</span> 디지털 소통 구조
+                            <span className="text-[#3182F6]">✓</span> 디지털 소통 구조
                         </div>
                     </div>
                 </div>

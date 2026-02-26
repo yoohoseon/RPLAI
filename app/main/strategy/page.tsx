@@ -67,11 +67,11 @@ export default async function StrategyPage(props: StrategyPageProps) {
                         {/* Progress UI */}
                         <nav className="flex items-center space-x-3 text-sm font-bold">
                             <Link href={`/main/analysis?id=${analysisId}`} className="flex items-center text-[#4E5968] hover:text-[#191F28] transition-colors gap-1.5">
-                                <CheckCircle2 className="w-4 h-4 text-[#EE2924]" />
+                                <CheckCircle2 className="w-4 h-4 text-[#3182F6]" />
                                 브랜드 분석
                             </Link>
                             <ChevronRight className="w-4 h-4 text-[#ABB3BB]" />
-                            <span className="flex items-center text-[#EE2924] bg-[#EE2924]/10 px-4 py-1.5 rounded-full gap-1.5">
+                            <span className="flex items-center text-[#3182F6] bg-[#3182F6]/10 px-4 py-1.5 rounded-full gap-1.5">
                                 <PenTool className="w-4 h-4" />
                                 콘텐츠 전략 수립
                             </span>

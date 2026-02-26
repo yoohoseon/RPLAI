@@ -67,16 +67,16 @@ export default async function TeamsPage({
                         <div className="space-y-4 w-full sm:w-auto">
                             <CardTitle className="text-xl font-bold text-[#191F28]">전체 팀 목록</CardTitle>
                             <form className="relative flex items-center w-full max-w-md group">
-                                <div className="absolute left-4 text-[#8B95A1] group-focus-within:text-[#EE2924] transition-colors">
+                                <div className="absolute left-4 text-[#8B95A1] group-focus-within:text-[#3182F6] transition-colors">
                                     <Search className="w-5 h-5" />
                                 </div>
                                 <Input
                                     name="query"
                                     placeholder="팀 이름 검색..."
                                     defaultValue={query}
-                                    className="h-13 w-full bg-[#F9FAFB] border-[#F2F4F6] rounded-[18px] pl-12 pr-24 text-[15px] font-bold focus:bg-white focus:ring-4 focus:ring-[#EE2924]/5 transition-all"
+                                    className="h-13 w-full bg-[#F9FAFB] border-[#F2F4F6] rounded-[18px] pl-12 pr-24 text-[15px] font-bold focus:bg-white focus:ring-4 focus:ring-[#3182F6]/5 transition-all"
                                 />
-                                <Button type="submit" className="absolute right-1.5 h-10 px-5 bg-[#EE2924] hover:bg-[#D11F1B] text-white rounded-[14px] font-bold text-[14px] transition-all shadow-sm">
+                                <Button type="submit" className="absolute right-1.5 h-10 px-5 bg-[#3182F6] hover:bg-[#1B64DA] text-white rounded-[14px] font-bold text-[14px] transition-all shadow-sm">
                                     검색
                                 </Button>
                             </form>
@@ -98,7 +98,7 @@ export default async function TeamsPage({
                                     {teams.map((team) => (
                                         <tr key={team.id} className="bg-white border-b border-[#F2F4F6] hover:bg-[#F9FAFB] transition-colors group">
                                             <td className="px-8 py-6">
-                                                <Link href={`/dashboard/teams/${team.id}`} className="font-bold text-[16px] text-[#EE2924] hover:underline whitespace-nowrap">
+                                                <Link href={`/dashboard/teams/${team.id}`} className="font-bold text-[16px] text-[#3182F6] hover:underline whitespace-nowrap">
                                                     {team.name}
                                                 </Link>
                                             </td>
@@ -148,7 +148,7 @@ export default async function TeamsPage({
                                     )}
                                 </Button>
                                 <span className="text-[14px] font-bold text-[#191F28] px-4 min-w-[100px] text-center">
-                                    <span className="text-[#EE2924]">{currentPage}</span> <span className="text-[#ABB3BB] mx-1">/</span> {totalPages}
+                                    <span className="text-[#3182F6]">{currentPage}</span> <span className="text-[#ABB3BB] mx-1">/</span> {totalPages}
                                 </span>
                                 <Button
                                     variant="outline"

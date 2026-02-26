@@ -31,8 +31,8 @@ export function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; on
             <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden border-[#F2F4F6] rounded-[32px] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
                 <div className="p-10">
                     <DialogHeader className="mb-8">
-                        <div className="w-14 h-14 bg-[#EE2924]/5 rounded-2xl flex items-center justify-center mb-6">
-                            <Lock className="w-7 h-7 text-[#EE2924]" />
+                        <div className="w-14 h-14 bg-[#3182F6]/5 rounded-2xl flex items-center justify-center mb-6">
+                            <Lock className="w-7 h-7 text-[#3182F6]" />
                         </div>
                         <DialogTitle className="text-[22px] font-bold text-[#191F28] tracking-tight">비밀번호 변경</DialogTitle>
                         <DialogDescription className="text-[15px] font-medium text-[#4E5968] leading-relaxed mt-2 uppercase tracking-wide">
@@ -50,7 +50,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; on
                                     name="currentPassword"
                                     type="password"
                                     placeholder="현재 비밀번호 입력"
-                                    className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20 placeholder:text-[#ABB3BB]"
+                                    className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#3182F6]/20 placeholder:text-[#ABB3BB]"
                                     required
                                 />
                             </div>
@@ -63,7 +63,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; on
                                     name="newPassword"
                                     type="password"
                                     placeholder="새 비밀번호 입력"
-                                    className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20 placeholder:text-[#ABB3BB]"
+                                    className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#3182F6]/20 placeholder:text-[#ABB3BB]"
                                     required
                                 />
                             </div>
@@ -76,7 +76,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; on
                                     name="confirmPassword"
                                     type="password"
                                     placeholder="한 번 더 입력해주세요"
-                                    className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20 placeholder:text-[#ABB3BB]"
+                                    className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#3182F6]/20 placeholder:text-[#ABB3BB]"
                                     required
                                 />
                             </div>
@@ -90,7 +90,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; on
                             <Button
                                 type="submit"
                                 disabled={isPending}
-                                className="w-full h-16 rounded-[20px] bg-[#EE2924] hover:bg-[#D11F1B] text-white font-bold text-[17px] shadow-lg shadow-[#EE2924]/10 active:scale-[0.98] transition-all"
+                                className="w-full h-16 rounded-[20px] bg-[#3182F6] hover:bg-[#1B64DA] text-white font-bold text-[17px] shadow-lg shadow-[#3182F6]/10 active:scale-[0.98] transition-all"
                             >
                                 {isPending ? (
                                     <>

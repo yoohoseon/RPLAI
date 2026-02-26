@@ -95,7 +95,7 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
                     <p className="text-[#4E5968] mb-10 text-lg font-medium break-keep">
                         브랜드 분석 데이터를 생성하는 도중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.
                     </p>
-                    <a href="/main" className="inline-flex items-center justify-center px-10 py-4 bg-[#EE2924] text-white font-bold rounded-2xl hover:bg-[#D11F1B] transition-all shadow-lg shadow-[#EE2924]/10 active:scale-95 text-[16px]">
+                    <a href="/main" className="inline-flex items-center justify-center px-10 py-4 button-primary font-bold rounded-2xl transition-all shadow-lg shadow-[#FF5A5F]/10 active:scale-95 text-[16px]">
                         대시보드로 돌아가기
                     </a>
                 </div>
@@ -134,7 +134,7 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
                     <div className="flex items-center gap-4">
                         {/* Progress UI */}
                         <nav className="flex items-center space-x-3 text-sm font-bold">
-                            <span className="flex items-center text-[#EE2924] bg-[#EE2924]/10 px-4 py-1.5 rounded-full gap-1.5">
+                            <span className="flex items-center text-[#3182F6] bg-[#3182F6]/10 px-4 py-1.5 rounded-full gap-1.5">
                                 <CheckCircle2 className="w-4 h-4" />
                                 브랜드 분석
                             </span>

@@ -204,7 +204,7 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
             <section className="space-y-6 relative lg:col-span-5">
                 <div className="flex items-center justify-between mb-2 gap-4 flex-wrap">
                     <div className="flex items-center gap-3">
-                        <div className="w-1.5 h-6 bg-[#EE2924] rounded-full" />
+                        <div className="w-1.5 h-6 bg-[#3182F6] rounded-full" />
                         <h2 className="text-2xl font-bold tracking-tight text-[#191F28]">Target & Tone</h2>
                     </div>
                 </div>
@@ -219,18 +219,18 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                                         {originalValues.lifestyleExplanation && (
                                             <Tooltip>
                                                 <TooltipTrigger>
-                                                    <Info className="w-4 h-4 text-[#ABB3BB] hover:text-[#EE2924] cursor-help transition-colors" />
+                                                    <Info className="w-4 h-4 text-[#ABB3BB] hover:text-[#3182F6] cursor-help transition-colors" />
                                                 </TooltipTrigger>
                                                 <TooltipContent side="top" sideOffset={8} className="max-w-[340px] p-4 border-[#F2F4F6] shadow-xl rounded-[20px]">
                                                     <p className="text-[13px] font-medium leading-relaxed break-keep text-[#4E5968]">
-                                                        <span className="text-[#EE2924] font-bold mr-1">AI 분석 결과:</span>
+                                                        <span className="text-[#3182F6] font-bold mr-1">AI 분석 결과:</span>
                                                         {originalValues.lifestyleExplanation}
                                                     </p>
                                                 </TooltipContent>
                                             </Tooltip>
                                         )}
                                     </span>
-                                    <div className="text-[14px] font-bold text-[#EE2924] bg-[#EE2924]/5 px-3 py-1 rounded-lg">
+                                    <div className="text-[14px] font-bold text-[#3182F6] bg-[#3182F6]/5 px-3 py-1 rounded-lg">
                                         {lifestyle}%
                                     </div>
                                 </div>
@@ -243,7 +243,7 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                                     onValueChange={(vals) => setLifestyle(vals[0])}
                                     max={100}
                                     step={1}
-                                    className="w-full [--primary:#EE2924]"
+                                    className="w-full [--primary:#3182F6]"
                                 />
                             </div>
 
@@ -255,18 +255,18 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                                         {originalValues.knowledgeExplanation && (
                                             <Tooltip>
                                                 <TooltipTrigger>
-                                                    <Info className="w-4 h-4 text-[#ABB3BB] hover:text-[#EE2924] cursor-help transition-colors" />
+                                                    <Info className="w-4 h-4 text-[#ABB3BB] hover:text-[#3182F6] cursor-help transition-colors" />
                                                 </TooltipTrigger>
                                                 <TooltipContent side="top" sideOffset={8} className="max-w-[340px] p-4 border-[#F2F4F6] shadow-xl rounded-[20px]">
                                                     <p className="text-[13px] font-medium leading-relaxed break-keep text-[#4E5968]">
-                                                        <span className="text-[#EE2924] font-bold mr-1">AI 분석 결과:</span>
+                                                        <span className="text-[#3182F6] font-bold mr-1">AI 분석 결과:</span>
                                                         {originalValues.knowledgeExplanation}
                                                     </p>
                                                 </TooltipContent>
                                             </Tooltip>
                                         )}
                                     </span>
-                                    <div className="text-[14px] font-bold text-[#EE2924] bg-[#EE2924]/5 px-3 py-1 rounded-lg">
+                                    <div className="text-[14px] font-bold text-[#3182F6] bg-[#3182F6]/5 px-3 py-1 rounded-lg">
                                         {knowledge}%
                                     </div>
                                 </div>
@@ -279,7 +279,7 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                                     onValueChange={(vals) => setKnowledge(vals[0])}
                                     max={100}
                                     step={1}
-                                    className="w-full [--primary:#EE2924]"
+                                    className="w-full [--primary:#3182F6]"
                                 />
                             </div>
 
@@ -291,18 +291,18 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                                         {originalValues.communicationExplanation && (
                                             <Tooltip>
                                                 <TooltipTrigger>
-                                                    <Info className="w-4 h-4 text-[#ABB3BB] hover:text-[#EE2924] cursor-help transition-colors" />
+                                                    <Info className="w-4 h-4 text-[#ABB3BB] hover:text-[#3182F6] cursor-help transition-colors" />
                                                 </TooltipTrigger>
                                                 <TooltipContent side="top" sideOffset={8} className="max-w-[340px] p-4 border-[#F2F4F6] shadow-xl rounded-[20px]">
                                                     <p className="text-[13px] font-medium leading-relaxed break-keep text-[#4E5968]">
-                                                        <span className="text-[#EE2924] font-bold mr-1">AI 분석 결과:</span>
+                                                        <span className="text-[#3182F6] font-bold mr-1">AI 분석 결과:</span>
                                                         {originalValues.communicationExplanation}
                                                     </p>
                                                 </TooltipContent>
                                             </Tooltip>
                                         )}
                                     </span>
-                                    <div className="text-[14px] font-bold text-[#EE2924] bg-[#EE2924]/5 px-3 py-1 rounded-lg">
+                                    <div className="text-[14px] font-bold text-[#3182F6] bg-[#3182F6]/5 px-3 py-1 rounded-lg">
                                         {communication}%
                                     </div>
                                 </div>
@@ -315,7 +315,7 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                                     onValueChange={(vals) => setCommunication(vals[0])}
                                     max={100}
                                     step={1}
-                                    className="w-full [--primary:#EE2924]"
+                                    className="w-full [--primary:#3182F6]"
                                 />
                             </div>
                         </TooltipProvider>
@@ -337,14 +337,14 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                         {conceptHistory && conceptHistory.length > 0 && (
                             <div className="pt-10 border-t border-[#F2F4F6]">
                                 <h3 className="font-bold text-[15px] text-[#191F28] mb-5 flex items-center gap-2">
-                                    <History className="w-4 h-4 text-[#EE2924]" />
+                                    <History className="w-4 h-4 text-[#3182F6]" />
                                     최근 분석 히스토리
                                 </h3>
                                 <div className="space-y-3 max-h-[250px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-[#F2F4F6]">
                                     {conceptHistory.map((item, idx) => (
                                         <div
                                             key={item.id || idx}
-                                            className="flex justify-between items-center bg-[#F9FAFB] border border-[#F2F4F6] p-4 rounded-2xl hover:bg-[#F2F4F6] hover:border-[#EE2924]/20 transition-all cursor-pointer group shadow-sm"
+                                            className="flex justify-between items-center bg-[#F9FAFB] border border-[#F2F4F6] p-4 rounded-2xl hover:bg-[#F2F4F6] hover:border-[#3182F6]/20 transition-all cursor-pointer group shadow-sm"
                                             onClick={() => handleRestoreHistory(item)}
                                         >
                                             <div className="flex flex-col gap-2">
@@ -367,7 +367,7 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                                                 >
                                                     {isDeletingHistory[item.id] ? <Loader2 className="w-4 h-4 animate-spin text-rose-500" /> : <Trash2 className="w-4 h-4" />}
                                                 </Button>
-                                                <ArrowRight className="w-5 h-5 text-[#ABB3BB] group-hover:text-[#EE2924] transition-colors self-center mr-1" />
+                                                <ArrowRight className="w-5 h-5 text-[#ABB3BB] group-hover:text-[#3182F6] transition-colors self-center mr-1" />
                                             </div>
                                         </div>
                                     ))}
@@ -382,7 +382,7 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
             <section className="space-y-6 relative flex flex-col lg:col-span-7">
                 <div className="flex items-center justify-between mb-2 gap-4 flex-wrap">
                     <div className="flex items-center gap-3">
-                        <div className="w-1.5 h-6 bg-[#EE2924] rounded-full" />
+                        <div className="w-1.5 h-6 bg-[#3182F6] rounded-full" />
                         <h2 className="text-2xl font-bold tracking-tight text-[#191F28]">Concept & Key Message</h2>
                     </div>
                 </div>
@@ -393,8 +393,8 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                             {isLoadingConcepts ? (
                                 <div className="flex flex-col items-center justify-center space-y-6 text-center animate-in fade-in duration-500">
                                     <div className="relative">
-                                        <div className="absolute inset-0 bg-[#EE2924]/10 rounded-full blur-2xl animate-pulse"></div>
-                                        <Rocket className="w-16 h-16 text-[#EE2924] relative animate-bounce" />
+                                        <div className="absolute inset-0 bg-[#3182F6]/10 rounded-full blur-2xl animate-pulse"></div>
+                                        <Rocket className="w-16 h-16 text-[#3182F6] relative animate-bounce" />
                                     </div>
                                     <div className="space-y-2">
                                         <p className="text-[#191F28] font-bold text-xl">AI가 맞춤형 컨셉을 분석하고 있습니다</p>
@@ -416,7 +416,7 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                                     </div>
                                     <Button
                                         onClick={handleGenerateConcepts}
-                                        className="bg-[#EE2924] text-white hover:bg-[#D11F1B] h-16 px-10 rounded-2xl font-bold text-lg shadow-lg shadow-[#EE2924]/20 transition-all active:scale-[0.98] group"
+                                        className="bg-[#3182F6] text-white hover:bg-[#1B64DA] h-16 px-10 rounded-2xl font-bold text-lg shadow-lg shadow-[#3182F6]/20 transition-all active:scale-[0.98] group"
                                     >
                                         AI 분석 시작하기
                                         <ArrowRightCircle className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -429,7 +429,7 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                             {isLoadingConcepts && (
                                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
                                     <div className="bg-white/90 backdrop-blur-sm p-6 rounded-3xl shadow-2xl border border-[#F2F4F6] flex flex-col items-center">
-                                        <Loader2 className="w-10 h-10 text-[#EE2924] animate-spin mb-3" />
+                                        <Loader2 className="w-10 h-10 text-[#3182F6] animate-spin mb-3" />
                                         <p className="text-[15px] font-bold text-[#191F28]">새로운 컨셉 분석 중...</p>
                                     </div>
                                 </div>
@@ -441,7 +441,7 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                                         <TabsTrigger
                                             key={idx}
                                             value={`concept-${idx}`}
-                                            className="h-11 px-6 rounded-xl border border-[#F2F4F6] text-[#4E5968] font-bold data-[state=active]:bg-[#EE2924] data-[state=active]:text-white data-[state=active]:border-[#EE2924] shadow-sm transition-all"
+                                            className="h-11 px-6 rounded-xl border border-[#F2F4F6] text-[#4E5968] font-bold data-[state=active]:bg-[#3182F6] data-[state=active]:text-white data-[state=active]:border-[#3182F6] shadow-sm transition-all"
                                         >
                                             {concept.conceptName}
                                         </TabsTrigger>
@@ -450,7 +450,7 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                                 <Button
                                     onClick={handleGenerateConcepts}
                                     variant="outline"
-                                    className="h-11 rounded-xl border-[#F2F4F6] text-[#EE2924] font-bold hover:bg-[#F9FAFB] shrink-0"
+                                    className="h-11 rounded-xl border-[#F2F4F6] text-[#3182F6] font-bold hover:bg-[#F9FAFB] shrink-0"
                                 >
                                     <RotateCcw className="w-4 h-4 mr-2" />
                                     다시 분석
@@ -469,14 +469,14 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                                                     <input
                                                         value={editConceptName}
                                                         onChange={e => setEditConceptName(e.target.value)}
-                                                        className="font-bold text-xl text-[#191F28] tracking-tight bg-white border border-[#F2F4F6] rounded-xl px-4 py-2 w-full focus:ring-2 focus:ring-[#EE2924]/20 focus:outline-none"
+                                                        className="font-bold text-xl text-[#191F28] tracking-tight bg-white border border-[#F2F4F6] rounded-xl px-4 py-2 w-full focus:ring-2 focus:ring-[#3182F6]/20 focus:outline-none"
                                                         placeholder="컨셉명"
                                                         autoFocus
                                                     />
                                                     <textarea
                                                         value={editConceptDesc}
                                                         onChange={e => setEditConceptDesc(e.target.value)}
-                                                        className="text-[15px] text-[#4E5968] font-medium leading-relaxed bg-white border border-[#F2F4F6] rounded-xl px-4 py-3 w-full min-h-[80px] resize-none focus:ring-2 focus:ring-[#EE2924]/20 focus:outline-none"
+                                                        className="text-[15px] text-[#4E5968] font-medium leading-relaxed bg-white border border-[#F2F4F6] rounded-xl px-4 py-3 w-full min-h-[80px] resize-none focus:ring-2 focus:ring-[#3182F6]/20 focus:outline-none"
                                                         placeholder="컨셉 설명"
                                                     />
                                                 </div>
@@ -502,7 +502,7 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
-                                                    className="absolute top-4 right-4 h-10 w-10 bg-white/50 border border-[#F2F4F6] hover:bg-white rounded-xl shadow-sm text-[#ABB3BB] hover:text-[#EE2924] opacity-0 group-hover:opacity-100 transition-all"
+                                                    className="absolute top-4 right-4 h-10 w-10 bg-white/50 border border-[#F2F4F6] hover:bg-white rounded-xl shadow-sm text-[#ABB3BB] hover:text-[#3182F6] opacity-0 group-hover:opacity-100 transition-all"
                                                     onClick={() => handleConceptEditStart(idx, concept.conceptName, concept.description)}
                                                 >
                                                     <Edit2 className="h-4 w-4" />
@@ -516,13 +516,13 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                                                 const isEditing = editingMsg?.conceptIdx === idx && editingMsg?.msgIdx === msgIdx;
 
                                                 return (
-                                                    <div key={msgIdx} className="group relative bg-white rounded-2xl p-6 border border-[#F2F4F6] shadow-sm hover:shadow-md hover:border-[#EE2924]/20 transition-all min-h-[70px] flex items-center pr-16 animate-in slide-in-from-bottom-2 fade-in">
+                                                    <div key={msgIdx} className="group relative bg-white rounded-2xl p-6 border border-[#F2F4F6] shadow-sm hover:shadow-md hover:border-[#3182F6]/20 transition-all min-h-[70px] flex items-center pr-16 animate-in slide-in-from-bottom-2 fade-in">
                                                         {isEditing ? (
                                                             <div className="flex w-full gap-3 items-start">
                                                                 <textarea
                                                                     value={editValue}
                                                                     onChange={(e) => setEditValue(e.target.value)}
-                                                                    className="flex min-h-[70px] w-full rounded-xl border border-[#F2F4F6] bg-white px-4 py-3 text-[15px] font-bold focus:ring-2 focus:ring-[#EE2924]/20 focus:outline-none resize-none"
+                                                                    className="flex min-h-[70px] w-full rounded-xl border border-[#F2F4F6] bg-white px-4 py-3 text-[15px] font-bold focus:ring-2 focus:ring-[#3182F6]/20 focus:outline-none resize-none"
                                                                     autoFocus
                                                                 />
                                                                 <div className="flex flex-col gap-2">
@@ -548,7 +548,7 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                                                                             </Button>
                                                                         </DropdownMenuTrigger>
                                                                         <DropdownMenuContent align="end" className="w-[190px] rounded-2xl p-2 border-[#F2F4F6] shadow-2xl">
-                                                                            <DropdownMenuItem onClick={() => handleSelectMessage(concept.conceptName, msg)} className="flex items-center gap-2.5 text-[#EE2924] font-bold focus:bg-[#EE2924]/5 focus:text-[#EE2924] cursor-pointer rounded-xl py-3 px-3">
+                                                                            <DropdownMenuItem onClick={() => handleSelectMessage(concept.conceptName, msg)} className="flex items-center gap-2.5 text-[#3182F6] font-bold focus:bg-[#3182F6]/5 focus:text-[#3182F6] cursor-pointer rounded-xl py-3 px-3">
                                                                                 <ArrowRightCircle className="h-5 w-5" />
                                                                                 <span>콘텐츠 기획하기</span>
                                                                             </DropdownMenuItem>
@@ -571,7 +571,7 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                                                         variant="ghost"
                                                         onClick={() => handleShowMore(idx)}
                                                         disabled={isLoadingMore[idx]}
-                                                        className="w-full h-16 text-[#8B95A1] font-bold hover:text-[#EE2924] hover:bg-[#EE2924]/5 rounded-2xl border-2 border-dashed border-[#F2F4F6] transition-all"
+                                                        className="w-full h-16 text-[#8B95A1] font-bold hover:text-[#3182F6] hover:bg-[#3182F6]/5 rounded-2xl border-2 border-dashed border-[#F2F4F6] transition-all"
                                                     >
                                                         {isLoadingMore[idx] ? (
                                                             <>

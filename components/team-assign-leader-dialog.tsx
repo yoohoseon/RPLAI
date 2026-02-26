@@ -40,7 +40,7 @@ export function TeamAssignLeaderDialog({ teamId, users }: { teamId: string; user
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" className="h-9 px-4 border-[#EE2924] text-[#EE2924] hover:bg-[#EE2924]/5 rounded-xl font-bold transition-all flex items-center gap-2">
+                <Button variant="outline" className="h-9 px-4 border-[#3182F6] text-[#3182F6] hover:bg-[#3182F6]/5 rounded-xl font-bold transition-all flex items-center gap-2">
                     <Plus className="w-4 h-4" />
                     리더 지정하기
                 </Button>
@@ -48,8 +48,8 @@ export function TeamAssignLeaderDialog({ teamId, users }: { teamId: string; user
             <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden border-[#F2F4F6] rounded-[32px] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
                 <div className="p-10">
                     <DialogHeader className="mb-8">
-                        <div className="w-14 h-14 bg-[#EE2924]/5 rounded-2xl flex items-center justify-center mb-6">
-                            <UserCheck className="w-7 h-7 text-[#EE2924]" />
+                        <div className="w-14 h-14 bg-[#3182F6]/5 rounded-2xl flex items-center justify-center mb-6">
+                            <UserCheck className="w-7 h-7 text-[#3182F6]" />
                         </div>
                         <DialogTitle className="text-[22px] font-bold text-[#191F28] tracking-tight">팀 리더 지정</DialogTitle>
                         <DialogDescription className="text-[15px] font-medium text-[#4E5968] leading-relaxed mt-2">
@@ -65,7 +65,7 @@ export function TeamAssignLeaderDialog({ teamId, users }: { teamId: string; user
                                     팀원 선택
                                 </Label>
                                 <Select value={leaderId} onValueChange={setLeaderId}>
-                                    <SelectTrigger className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20">
+                                    <SelectTrigger className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#3182F6]/20">
                                         <SelectValue placeholder="리더로 지정할 사용자 선택" />
                                     </SelectTrigger>
                                     <SelectContent className="rounded-2xl border-[#F2F4F6] shadow-xl">
@@ -92,7 +92,7 @@ export function TeamAssignLeaderDialog({ teamId, users }: { teamId: string; user
                             <Button
                                 type="submit"
                                 disabled={isPending || !leaderId}
-                                className="w-full h-16 rounded-[20px] bg-[#EE2924] hover:bg-[#D11F1B] text-white font-bold text-[17px] shadow-lg shadow-[#EE2924]/10 active:scale-[0.98] transition-all disabled:bg-[#F2F4F6] disabled:text-[#ABB3BB] disabled:shadow-none"
+                                className="w-full h-16 rounded-[20px] bg-[#3182F6] hover:bg-[#1B64DA] text-white font-bold text-[17px] shadow-lg shadow-[#3182F6]/10 active:scale-[0.98] transition-all disabled:bg-[#F2F4F6] disabled:text-[#ABB3BB] disabled:shadow-none"
                             >
                                 {isPending ? (
                                     <>

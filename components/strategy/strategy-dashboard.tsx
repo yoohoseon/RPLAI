@@ -86,7 +86,7 @@ export function StrategyDashboard({ concept, message, availableConcepts, analysi
 
                     {/* Unified Parameters Card */}
                     <div className="flex items-center gap-2 px-2">
-                        <LayoutTemplate className="w-5 h-5 text-[#EE2924]" />
+                        <LayoutTemplate className="w-5 h-5 text-[#3182F6]" />
                         <h3 className="text-xl font-bold tracking-tight text-[#191F28]">콘텐츠 기획</h3>
                     </div>
                     <Card className="rounded-[32px] border-[#F2F4F6] bg-white flex flex-col min-h-[550px] transition-all overflow-hidden h-full shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
@@ -104,12 +104,12 @@ export function StrategyDashboard({ concept, message, availableConcepts, analysi
                                             setSelectedMsgIdx(0); // Reset message index when concept changes
                                         }}
                                     >
-                                        <SelectTrigger className="w-full h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl focus:ring-[#EE2924]/20 text-[16px] font-bold text-[#191F28]">
+                                        <SelectTrigger className="w-full h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl focus:ring-[#3182F6]/20 text-[16px] font-bold text-[#191F28]">
                                             <SelectValue placeholder="컨셉을 선택하세요" />
                                         </SelectTrigger>
                                         <SelectContent className="rounded-2xl border-[#F2F4F6] shadow-xl w-[var(--radix-select-trigger-width)]">
                                             {availableConcepts.map((item: ConceptItem, idx: number) => (
-                                                <SelectItem key={idx} value={idx.toString()} className="font-bold text-[15px] py-3.5 px-10 focus:bg-[#F2F4F6] focus:text-[#EE2924] data-[state=checked]:text-[#EE2924]">
+                                                <SelectItem key={idx} value={idx.toString()} className="font-bold text-[15px] py-3.5 px-10 focus:bg-[#F2F4F6] focus:text-[#3182F6] data-[state=checked]:text-[#3182F6]">
                                                     {item.concept}
                                                 </SelectItem>
                                             ))}
@@ -123,7 +123,7 @@ export function StrategyDashboard({ concept, message, availableConcepts, analysi
                             )}
 
                             <div className="bg-[#F9FAFB] rounded-[24px] p-6 flex flex-col gap-4 border border-[#F2F4F6]">
-                                <span className="text-[13px] font-bold text-[#EE2924] uppercase tracking-wider flex items-center gap-2">
+                                <span className="text-[13px] font-bold text-[#3182F6] uppercase tracking-wider flex items-center gap-2">
                                     <MessageSquare className="w-4 h-4" />
                                     핵심 광고 메시지 (Key Message)
                                 </span>
@@ -132,12 +132,12 @@ export function StrategyDashboard({ concept, message, availableConcepts, analysi
                                         value={selectedMsgIdx.toString()}
                                         onValueChange={(val) => setSelectedMsgIdx(parseInt(val))}
                                     >
-                                        <SelectTrigger className="w-full h-auto min-h-14 py-4 px-5 bg-white border-[#F2F4F6] rounded-2xl focus:ring-[#EE2924]/20 text-[15px] font-bold leading-relaxed text-left text-[#191F28] whitespace-normal [&>span]:line-clamp-none shadow-sm">
+                                        <SelectTrigger className="w-full h-auto min-h-14 py-4 px-5 bg-white border-[#F2F4F6] rounded-2xl focus:ring-[#3182F6]/20 text-[15px] font-bold leading-relaxed text-left text-[#191F28] whitespace-normal [&>span]:line-clamp-none shadow-sm">
                                             <SelectValue placeholder="키 메시지를 선택하세요" />
                                         </SelectTrigger>
                                         <SelectContent className="rounded-2xl border-[#F2F4F6] shadow-xl w-[var(--radix-select-trigger-width)]">
                                             {activeConcept.messages.map((msg: string, idx: number) => (
-                                                <SelectItem key={idx} value={idx.toString()} className="font-bold text-[14px] py-4 px-10 leading-relaxed whitespace-normal focus:bg-[#F2F4F6] focus:text-[#EE2924] data-[state=checked]:text-[#EE2924] data-[state=checked]:bg-[#EE2924]/5">
+                                                <SelectItem key={idx} value={idx.toString()} className="font-bold text-[14px] py-4 px-10 leading-relaxed whitespace-normal focus:bg-[#F2F4F6] focus:text-[#3182F6] data-[state=checked]:text-[#3182F6] data-[state=checked]:bg-[#3182F6]/5">
                                                     {msg}
                                                 </SelectItem>
                                             ))}
@@ -167,7 +167,7 @@ export function StrategyDashboard({ concept, message, availableConcepts, analysi
                 {/* Right Side: Saved Strategies History */}
                 <div className="flex flex-col h-full gap-4">
                     <div className="flex items-center gap-2 px-2">
-                        <Clock className="w-5 h-5 text-[#EE2924]" />
+                        <Clock className="w-5 h-5 text-[#3182F6]" />
                         <h3 className="text-xl font-bold tracking-tight text-[#191F28]">저장된 전략 히스토리</h3>
                     </div>
                     <Card className="rounded-[32px] border-[#F2F4F6] bg-white flex flex-col flex-1 transition-all overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.04)] p-4">
@@ -189,11 +189,11 @@ export function StrategyDashboard({ concept, message, availableConcepts, analysi
                                     const descriptionStr = themeOutput ? themeOutput.description : '';
 
                                     return (
-                                        <div key={strategy.id || idx} className="bg-white border border-[#F2F4F6] p-6 rounded-[24px] shadow-sm hover:shadow-md hover:border-[#EE2924]/30 transition-all flex flex-col gap-4">
+                                        <div key={strategy.id || idx} className="bg-white border border-[#F2F4F6] p-6 rounded-[24px] shadow-sm hover:shadow-md hover:border-[#3182F6]/30 transition-all flex flex-col gap-4">
                                             <div className="flex justify-between items-start gap-2">
                                                 <div className="space-y-2">
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#EE2924] bg-[#EE2924]/5 px-2.5 py-1 rounded-lg inline-block">
+                                                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#3182F6] bg-[#3182F6]/5 px-2.5 py-1 rounded-lg inline-block">
                                                             {strategy.conceptName}
                                                         </span>
                                                         <span className="text-[11px] font-bold uppercase tracking-wider text-[#4E5968] bg-[#F2F4F6] px-2.5 py-1 rounded-lg inline-block">
@@ -213,7 +213,7 @@ export function StrategyDashboard({ concept, message, availableConcepts, analysi
                                                     {strategy.createdAt ? new Date(strategy.createdAt).toLocaleDateString() : '최근 저장됨'}
                                                 </span>
                                                 <Link href={`/main/generation?analysisId=${analysisId}&strategyId=${strategy.id}`}>
-                                                    <Button size="sm" className="bg-[#EE2924] text-white hover:bg-[#D11F1B] rounded-xl text-[13px] font-bold px-4 h-9 shadow-sm">
+                                                    <Button size="sm" className="bg-[#3182F6] text-white hover:bg-[#1B64DA] rounded-xl text-[13px] font-bold px-4 h-9 shadow-sm">
                                                         업무 보드 열기
                                                         <ArrowRight className="w-4 h-4 ml-2" />
                                                     </Button>

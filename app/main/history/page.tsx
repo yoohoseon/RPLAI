@@ -54,7 +54,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                         <p className="text-[17px] font-medium text-[#4E5968]">과거의 브랜드 분석 및 전략 수립 기록을 확인하세요.</p>
                     </div>
                     <Link href="/main">
-                        <Button className="bg-[#EE2924] text-white hover:bg-[#D11F1B] rounded-2xl px-6 h-12 font-bold shadow-lg shadow-[#EE2924]/10">
+                        <Button className="bg-[#3182F6] text-white hover:bg-[#1B64DA] rounded-2xl px-6 h-12 font-bold shadow-lg shadow-[#3182F6]/10">
                             새로운 분석 시작하기
                         </Button>
                     </Link>

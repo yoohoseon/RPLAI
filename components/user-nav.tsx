@@ -43,18 +43,18 @@ export function UserNav({ user }: { user: any }) {
                     <DropdownMenuSeparator className="bg-[#F2F4F6] mx-2" />
                     <DropdownMenuGroup className="p-1">
                         {(user.role === 'MASTER' || user.role === 'TEAM_LEADER') && (
-                            <DropdownMenuItem asChild className="rounded-xl h-11 px-3 focus:bg-[#EE2924]/5 focus:text-[#EE2924] font-medium transition-all cursor-pointer">
+                            <DropdownMenuItem asChild className="rounded-xl h-11 px-3 focus:bg-[#3182F6]/5 focus:text-[#3182F6] font-medium transition-all cursor-pointer">
                                 <Link href="/dashboard">
                                     팀 관리 설정
                                 </Link>
                             </DropdownMenuItem>
                         )}
-                        <DropdownMenuItem asChild className="rounded-xl h-11 px-3 focus:bg-[#EE2924]/5 focus:text-[#EE2924] font-medium transition-all cursor-pointer">
+                        <DropdownMenuItem asChild className="rounded-xl h-11 px-3 focus:bg-[#3182F6]/5 focus:text-[#3182F6] font-medium transition-all cursor-pointer">
                             <Link href="/main/history">
                                 분석 내역 확인
                             </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => setShowChangePassword(true)} className="rounded-xl h-11 px-3 focus:bg-[#EE2924]/5 focus:text-[#EE2924] font-medium transition-all cursor-pointer">
+                        <DropdownMenuItem onSelect={() => setShowChangePassword(true)} className="rounded-xl h-11 px-3 focus:bg-[#3182F6]/5 focus:text-[#3182F6] font-medium transition-all cursor-pointer">
                             비밀번호 변경
                         </DropdownMenuItem>
                     </DropdownMenuGroup>

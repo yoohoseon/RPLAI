@@ -28,7 +28,7 @@ export function TeamCreateDialog() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="h-12 px-6 bg-[#EE2924] hover:bg-[#D11F1B] text-white rounded-xl font-bold transition-all shadow-lg shadow-[#EE2924]/20 flex items-center gap-2">
+                <Button className="h-12 px-6 bg-[#3182F6] hover:bg-[#1B64DA] text-white rounded-xl font-bold transition-all shadow-lg shadow-[#3182F6]/20 flex items-center gap-2">
                     <Plus className="w-5 h-5" />
                     새로운 팀 생성
                 </Button>
@@ -36,8 +36,8 @@ export function TeamCreateDialog() {
             <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden border-[#F2F4F6] rounded-[32px] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
                 <div className="p-10">
                     <DialogHeader className="mb-8">
-                        <div className="w-14 h-14 bg-[#EE2924]/5 rounded-2xl flex items-center justify-center mb-6">
-                            <Users className="w-7 h-7 text-[#EE2924]" />
+                        <div className="w-14 h-14 bg-[#3182F6]/5 rounded-2xl flex items-center justify-center mb-6">
+                            <Users className="w-7 h-7 text-[#3182F6]" />
                         </div>
                         <DialogTitle className="text-[22px] font-bold text-[#191F28] tracking-tight">팀 생성</DialogTitle>
                         <DialogDescription className="text-[15px] font-medium text-[#4E5968] leading-relaxed mt-2">
@@ -54,7 +54,7 @@ export function TeamCreateDialog() {
                                     id="name"
                                     name="name"
                                     placeholder="예: 마케팅 A팀"
-                                    className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20 placeholder:text-[#ABB3BB]"
+                                    className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#3182F6]/20 placeholder:text-[#ABB3BB]"
                                     required
                                 />
                             </div>
@@ -66,7 +66,7 @@ export function TeamCreateDialog() {
                                     id="description"
                                     name="description"
                                     placeholder="팀의 역할에 대해 간단히 적어주세요"
-                                    className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20 placeholder:text-[#ABB3BB]"
+                                    className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#3182F6]/20 placeholder:text-[#ABB3BB]"
                                 />
                             </div>
                             {state?.message && (
@@ -79,7 +79,7 @@ export function TeamCreateDialog() {
                             <Button
                                 type="submit"
                                 disabled={isPending}
-                                className="w-full h-16 rounded-[20px] bg-[#EE2924] hover:bg-[#D11F1B] text-white font-bold text-[17px] shadow-lg shadow-[#EE2924]/10 active:scale-[0.98] transition-all"
+                                className="w-full h-16 rounded-[20px] bg-[#3182F6] hover:bg-[#1B64DA] text-white font-bold text-[17px] shadow-lg shadow-[#3182F6]/10 active:scale-[0.98] transition-all"
                             >
                                 {isPending ? (
                                     <>

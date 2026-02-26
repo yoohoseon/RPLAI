@@ -16,7 +16,7 @@ export default async function DashboardHeader() {
                     <Link href="/main" className="hover:opacity-80 transition-opacity flex items-center">
                         <div className="relative w-24 h-8">
                             <Image
-                                src="/rp_logo.png"
+                                src="/rplai_logo.svg"
                                 alt="RPLAI"
                                 fill
                                 className="object-contain"
@@ -30,7 +30,7 @@ export default async function DashboardHeader() {
                     <div className="hidden sm:flex flex-col items-end">
                         <div className="flex items-center gap-2">
                             <span className="text-[15px] font-bold text-[#191F28]">{session.user.name}</span>
-                            <span className={`text-[11px] px-2.5 py-1 rounded-lg font-bold ${session.user.role === 'MASTER' ? 'bg-[#EE2924]/10 text-[#EE2924]' :
+                            <span className={`text-[11px] px-2.5 py-1 rounded-lg font-bold ${session.user.role === 'MASTER' ? 'bg-[#3182F6]/10 text-[#3182F6]' :
                                 session.user.role === 'TEAM_LEADER' ? 'bg-purple-100 text-purple-700' : 'bg-[#F2F4F6] text-[#4E5968]'
                                 }`}>
                                 {session.user.role}

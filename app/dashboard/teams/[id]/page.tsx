@@ -70,7 +70,7 @@ export default async function TeamDetailsPage({
                 {/* Header */}
                 <div className="flex items-end justify-between border-b border-[#F2F4F6] pb-8">
                     <div className="space-y-2">
-                        <div className="text-[14px] font-bold text-[#EE2924] uppercase tracking-wider mb-1">팀 상세 정보</div>
+                        <div className="text-[14px] font-bold text-[#3182F6] uppercase tracking-wider mb-1">팀 상세 정보</div>
                         <h1 className="text-3xl font-bold tracking-tight text-[#191F28]">{team.name}</h1>
                     </div>
                     <Button variant="outline" className="rounded-2xl border-[#F2F4F6] text-[#4E5968] font-bold h-12 px-6 hover:bg-white transition-all shadow-sm" asChild>
@@ -104,7 +104,7 @@ export default async function TeamDetailsPage({
                                 </div>
                                 <div className="space-y-2">
                                     <div className="text-[13px] font-bold text-[#8B95A1] uppercase tracking-wide">전체 분석 기록</div>
-                                    <div className="text-[15px] font-bold text-[#EE2924]">
+                                    <div className="text-[15px] font-bold text-[#3182F6]">
                                         {team.members.reduce((sum, m) => sum + m.analyses.length, 0)}건
                                     </div>
                                 </div>
@@ -118,7 +118,7 @@ export default async function TeamDetailsPage({
                                             <div className="text-[13px] font-medium text-[#8B95A1]">{leader.email}</div>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <span className="text-[11px] bg-[#EE2924]/10 text-[#EE2924] px-2.5 py-1 rounded-lg font-bold">LEADER</span>
+                                            <span className="text-[11px] bg-[#3182F6]/10 text-[#3182F6] px-2.5 py-1 rounded-lg font-bold">LEADER</span>
                                             <TeamRemoveMemberDialog userId={leader.id} teamId={team.id} userName={leader.name || '리더'} />
                                         </div>
                                     </div>
@@ -133,7 +133,7 @@ export default async function TeamDetailsPage({
                     <Card className="bg-white border-[#F2F4F6] rounded-[32px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden">
                         <CardHeader className="flex flex-row items-center justify-between p-8 pb-4">
                             <CardTitle className="text-xl font-bold text-[#191F28]">
-                                팀 멤버 <span className="text-[#EE2924] ml-1">{team.members.filter(m => m.role !== 'TEAM_LEADER').length}</span>
+                                팀 멤버 <span className="text-[#3182F6] ml-1">{team.members.filter(m => m.role !== 'TEAM_LEADER').length}</span>
                             </CardTitle>
                             <TeamAddMemberDialog teamId={team.id} users={users.filter(u => u.teamId !== team.id && u.role !== 'MASTER')} />
                         </CardHeader>
@@ -195,7 +195,7 @@ export default async function TeamDetailsPage({
                                                 {new Date(analysis.createdAt).toLocaleDateString('ko-KR')}
                                             </td>
                                             <td className="px-8 py-6 text-right">
-                                                <Button variant="ghost" className="h-10 px-4 rounded-xl text-[#EE2924] font-bold hover:bg-[#EE2924]/5 transition-all" asChild>
+                                                <Button variant="ghost" className="h-10 px-4 rounded-xl text-[#3182F6] font-bold hover:bg-[#3182F6]/5 transition-all" asChild>
                                                     <Link href={`/main/analysis?id=${analysis.id}`}>상세보기</Link>
                                                 </Button>
                                             </td>

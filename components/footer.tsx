@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 
 export function Footer() {
-    const footerText = "© 2026 Goldenax.co.,Ltd. All rights reserved.";
+    const footerText = "© 2026 RPLAI. Powered by Goldenax. All rights reserved.";
 
     // 글자 하나하나에 적용될 애니메이션
     const letterVariants = {

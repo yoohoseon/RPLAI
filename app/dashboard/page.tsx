@@ -73,18 +73,18 @@ export default async function DashboardPage() {
                                             const memberCount = team.members.length;
 
                                             return (
-                                                <li key={team.id} className="bg-[#F9FAFB] rounded-2xl border border-[#F2F4F6] hover:border-[#EE2924]/20 transition-all group">
+                                                <li key={team.id} className="bg-[#F9FAFB] rounded-2xl border border-[#F2F4F6] hover:border-[#3182F6]/20 transition-all group">
                                                     <Link href={`/dashboard/teams/${team.id}`} className="block p-5">
                                                         <div className="flex justify-between items-start mb-3">
                                                             <div>
-                                                                <div className="font-bold text-[17px] text-[#191F28] group-hover:text-[#EE2924] transition-colors">{team.name}</div>
+                                                                <div className="font-bold text-[17px] text-[#191F28] group-hover:text-[#3182F6] transition-colors">{team.name}</div>
                                                                 <div className="text-[14px] font-medium text-[#8B95A1] mt-1 break-keep line-clamp-1">{team.description || '팀 설명이 없습니다.'}</div>
                                                             </div>
                                                             <div className="flex gap-2">
                                                                 <span className="bg-white text-[#4E5968] text-[12px] font-bold px-3 py-1.5 rounded-lg border border-[#F2F4F6]">
                                                                     멤버 {memberCount}
                                                                 </span>
-                                                                <span className="bg-[#EE2924]/5 text-[#EE2924] text-[12px] font-bold px-3 py-1.5 rounded-lg border border-[#EE2924]/10">
+                                                                <span className="bg-[#3182F6]/5 text-[#3182F6] text-[12px] font-bold px-3 py-1.5 rounded-lg border border-[#3182F6]/10">
                                                                     기록 {totalAnalyses}
                                                                 </span>
                                                             </div>
@@ -120,7 +120,7 @@ export default async function DashboardPage() {
                                                     <span className="text-[13px] font-medium text-[#8B95A1]">{user.email}</span>
                                                 </div>
                                                 <div className="flex flex-col items-end gap-2">
-                                                    <span className={`text-[11px] px-2.5 py-1 rounded-lg font-bold ${user.role === 'MASTER' ? 'bg-[#EE2924]/10 text-[#EE2924]' :
+                                                    <span className={`text-[11px] px-2.5 py-1 rounded-lg font-bold ${user.role === 'MASTER' ? 'bg-[#3182F6]/10 text-[#3182F6]' :
                                                         user.role === 'TEAM_LEADER' ? 'bg-purple-50 text-purple-600' : 'bg-white text-[#4E5968] border border-[#F2F4F6]'
                                                         }`}>{user.role}</span>
                                                     {user.team && <span className="text-[11px] bg-white text-[#4E5968] px-2.5 py-1 rounded-lg border border-[#F2F4F6] font-bold">{user.team.name}</span>}
@@ -141,7 +141,7 @@ export default async function DashboardPage() {
                             <Card className="bg-white border-[#F2F4F6] rounded-[32px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden">
                                 <CardHeader className="flex flex-row items-center justify-between p-10 pb-6 border-b border-[#F2F4F6]">
                                     <div className="space-y-2">
-                                        <div className="text-[14px] font-bold text-[#EE2924] uppercase tracking-wider">나의 팀</div>
+                                        <div className="text-[14px] font-bold text-[#3182F6] uppercase tracking-wider">나의 팀</div>
                                         <CardTitle className="text-[28px] font-bold text-[#191F28]">{currentUser.team.name}</CardTitle>
                                         <p className="text-[16px] font-medium text-[#4E5968] mt-2">{currentUser.team.description || '팀 설명이 없습니다.'}</p>
                                     </div>
@@ -161,23 +161,23 @@ export default async function DashboardPage() {
                                                 팀 멤버 수
                                             </div>
                                         </div>
-                                        <Link href="/main/history" className="bg-[#F9FAFB] p-8 rounded-3xl border border-[#F2F4F6] text-center space-y-2 hover:border-[#EE2924]/30 hover:bg-white transition-all group">
-                                            <div className="text-3xl font-extrabold text-[#191F28] group-hover:text-[#EE2924] transition-colors">
+                                        <Link href="/main/history" className="bg-[#F9FAFB] p-8 rounded-3xl border border-[#F2F4F6] text-center space-y-2 hover:border-[#3182F6]/30 hover:bg-white transition-all group">
+                                            <div className="text-3xl font-extrabold text-[#191F28] group-hover:text-[#3182F6] transition-colors">
                                                 {currentUser.team.members.reduce((sum, m) => sum + m._count.analyses, 0)}
                                             </div>
-                                            <div className="text-[13px] text-[#8B95A1] font-bold uppercase tracking-wider group-hover:text-[#EE2924] transition-colors">
+                                            <div className="text-[13px] text-[#8B95A1] font-bold uppercase tracking-wider group-hover:text-[#3182F6] transition-colors">
                                                 전체 분석 기록
                                             </div>
                                         </Link>
                                     </div>
 
-                                    <div className="mb-10 p-6 bg-[#EE2924]/5 rounded-2xl border border-[#EE2924]/10 flex items-center justify-between">
+                                    <div className="mb-10 p-6 bg-[#3182F6]/5 rounded-2xl border border-[#3182F6]/10 flex items-center justify-between">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center border border-[#EE2924]/20">
-                                                <span className="text-[#EE2924] font-bold text-lg">L</span>
+                                            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center border border-[#3182F6]/20">
+                                                <span className="text-[#3182F6] font-bold text-lg">L</span>
                                             </div>
                                             <div className="flex flex-col">
-                                                <span className="text-[12px] font-bold text-[#EE2924] uppercase tracking-wide">팀 리더</span>
+                                                <span className="text-[12px] font-bold text-[#3182F6] uppercase tracking-wide">팀 리더</span>
                                                 <div className="font-bold text-[16px] text-[#191F28]">{currentUser.name || '관리자'} <span className="text-[#8B95A1] font-medium ml-1">({currentUser.email})</span></div>
                                             </div>
                                         </div>

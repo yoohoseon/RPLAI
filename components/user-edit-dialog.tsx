@@ -48,15 +48,15 @@ export function UserEditDialog({ user, teams }: { user: User; teams: Team[] }) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="w-9 h-9 text-[#8B95A1] hover:text-[#EE2924] hover:bg-[#EE2924]/5 rounded-xl transition-all" title="사용자 정보 수정">
+                <Button variant="ghost" size="icon" className="w-9 h-9 text-[#8B95A1] hover:text-[#3182F6] hover:bg-[#3182F6]/5 rounded-xl transition-all" title="사용자 정보 수정">
                     <Pencil className="h-4.5 w-4.5" />
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[520px] p-0 overflow-hidden border-[#F2F4F6] rounded-[32px] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
                 <div className="p-10">
                     <DialogHeader className="mb-8">
-                        <div className="w-14 h-14 bg-[#EE2924]/5 rounded-2xl flex items-center justify-center mb-6">
-                            <UserCircle className="w-7 h-7 text-[#EE2924]" />
+                        <div className="w-14 h-14 bg-[#3182F6]/5 rounded-2xl flex items-center justify-center mb-6">
+                            <UserCircle className="w-7 h-7 text-[#3182F6]" />
                         </div>
                         <DialogTitle className="text-[22px] font-bold text-[#191F28] tracking-tight">사용자 정보 수정</DialogTitle>
                         <DialogDescription className="text-[15px] font-medium text-[#4E5968] leading-relaxed mt-2">
@@ -76,7 +76,7 @@ export function UserEditDialog({ user, teams }: { user: User; teams: Team[] }) {
                                         name="name"
                                         defaultValue={user.name || ''}
                                         placeholder="이름 입력"
-                                        className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20"
+                                        className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#3182F6]/20"
                                         required
                                     />
                                 </div>
@@ -90,7 +90,7 @@ export function UserEditDialog({ user, teams }: { user: User; teams: Team[] }) {
                                         type="email"
                                         defaultValue={user.email || ''}
                                         placeholder="이메일 입력"
-                                        className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20"
+                                        className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#3182F6]/20"
                                         required
                                     />
                                 </div>
@@ -105,7 +105,7 @@ export function UserEditDialog({ user, teams }: { user: User; teams: Team[] }) {
                                     name="password"
                                     type="password"
                                     placeholder="변경하지 않으려면 공란으로 두세요"
-                                    className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20 placeholder:text-[#ABB3BB]"
+                                    className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#3182F6]/20 placeholder:text-[#ABB3BB]"
                                 />
                             </div>
 
@@ -114,12 +114,12 @@ export function UserEditDialog({ user, teams }: { user: User; teams: Team[] }) {
                                     권한 설정
                                 </Label>
                                 <Select value={role} onValueChange={setRole}>
-                                    <SelectTrigger className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20">
+                                    <SelectTrigger className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#3182F6]/20">
                                         <SelectValue placeholder="권한 선택" />
                                     </SelectTrigger>
                                     <SelectContent className="rounded-2xl border-[#F2F4F6] shadow-xl">
                                         <SelectItem value="MASTER" className="rounded-xl font-medium py-3 text-purple-600">Master</SelectItem>
-                                        <SelectItem value="TEAM_LEADER" className="rounded-xl font-medium py-3 text-[#EE2924]">Team Leader</SelectItem>
+                                        <SelectItem value="TEAM_LEADER" className="rounded-xl font-medium py-3 text-[#3182F6]">Team Leader</SelectItem>
                                         <SelectItem value="TEAM_MEMBER" className="rounded-xl font-medium py-3">Team Member</SelectItem>
                                     </SelectContent>
                                 </Select>
@@ -131,7 +131,7 @@ export function UserEditDialog({ user, teams }: { user: User; teams: Team[] }) {
                                     소속 팀 설정
                                 </Label>
                                 <Select value={teamId} onValueChange={setTeamId}>
-                                    <SelectTrigger className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#EE2924]/20">
+                                    <SelectTrigger className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#3182F6]/20">
                                         <SelectValue placeholder="팀 선택" />
                                     </SelectTrigger>
                                     <SelectContent className="rounded-2xl border-[#F2F4F6] shadow-xl">
@@ -156,7 +156,7 @@ export function UserEditDialog({ user, teams }: { user: User; teams: Team[] }) {
                             <Button
                                 type="submit"
                                 disabled={isPending}
-                                className="w-full h-16 rounded-[20px] bg-[#EE2924] hover:bg-[#D11F1B] text-white font-bold text-[17px] shadow-lg shadow-[#EE2924]/10 active:scale-[0.98] transition-all"
+                                className="w-full h-16 rounded-[20px] bg-[#3182F6] hover:bg-[#1B64DA] text-white font-bold text-[17px] shadow-lg shadow-[#3182F6]/10 active:scale-[0.98] transition-all"
                             >
                                 {isPending ? (
                                     <>

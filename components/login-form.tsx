@@ -16,7 +16,7 @@ export default function LoginForm() {
         <div className="w-full max-w-md animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="bg-white border border-[#F2F4F6] rounded-[32px] p-10 shadow-[0_12px_40px_rgba(0,0,0,0.06)] relative overflow-hidden">
                 <div className="mb-10 text-center">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-[#EE2924]/5 text-[#EE2924] mb-6">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-[#3182F6]/5 text-[#3182F6] mb-6">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8">
                             <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
                             <polyline points="10 17 15 12 10 7" />
@@ -36,7 +36,7 @@ export default function LoginForm() {
                             type="email"
                             placeholder="example@email.com"
                             required
-                            className="flex h-14 w-full rounded-2xl border border-[#F2F4F6] bg-[#F9FAFB] px-5 text-[15px] font-bold transition-all focus:outline-none focus:ring-4 focus:ring-[#EE2924]/5 focus:border-[#EE2924] placeholder:text-[#ABB3BB]"
+                            className="flex h-14 w-full rounded-2xl border border-[#F2F4F6] bg-[#F9FAFB] px-5 text-[15px] font-bold transition-all focus:outline-none focus:ring-4 focus:ring-[#3182F6]/5 focus:border-[#3182F6] placeholder:text-[#ABB3BB]"
                         />
                     </div>
                     <div className="space-y-2.5">
@@ -47,7 +47,7 @@ export default function LoginForm() {
                             type="password"
                             placeholder="••••••••"
                             required
-                            className="flex h-14 w-full rounded-2xl border border-[#F2F4F6] bg-[#F9FAFB] px-5 text-[15px] font-bold transition-all focus:outline-none focus:ring-4 focus:ring-[#EE2924]/5 focus:border-[#EE2924] placeholder:text-[#ABB3BB]"
+                            className="flex h-14 w-full rounded-2xl border border-[#F2F4F6] bg-[#F9FAFB] px-5 text-[15px] font-bold transition-all focus:outline-none focus:ring-4 focus:ring-[#3182F6]/5 focus:border-[#3182F6] placeholder:text-[#ABB3BB]"
                         />
                     </div>
 
@@ -63,7 +63,7 @@ export default function LoginForm() {
                     )}
 
                     <Button
-                        className="w-full h-16 rounded-[24px] bg-[#EE2924] text-white hover:bg-[#D11F1B] font-bold text-[17px] shadow-lg shadow-[#EE2924]/10 active:scale-[0.98] transition-all disabled:opacity-50 mt-4"
+                        className="w-full h-16 rounded-[24px] bg-[#3182F6] text-white hover:bg-[#1B64DA] font-bold text-[17px] shadow-lg shadow-[#3182F6]/10 active:scale-[0.98] transition-all disabled:opacity-50 mt-4"
                         type="submit"
                         disabled={isPending}
                     >
