@@ -28,7 +28,7 @@ export function TeamCreateDialog() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="h-12 px-6 bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#333D4B] rounded-xl font-bold transition-all shadow-none flex items-center gap-2">
+                <Button className="h-12 px-6 bg-[#333D4B] hover:bg-[#191F28] text-white rounded-xl font-bold transition-all shadow-sm flex items-center gap-2">
                     <Plus className="w-5 h-5" />
                     새로운 팀 생성
                 </Button>
@@ -79,7 +79,7 @@ export function TeamCreateDialog() {
                             <Button
                                 type="submit"
                                 disabled={isPending}
-                                className="w-full h-16 rounded-[20px] bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#333D4B] font-bold text-[17px] shadow-none active:scale-[0.98] transition-all"
+                                className="w-full h-16 rounded-[20px] bg-[#333D4B] hover:bg-[#191F28] text-white font-bold text-[17px] shadow-sm active:scale-[0.98] transition-all disabled:bg-[#ABB3BB]"
                             >
                                 {isPending ? (
                                     <>

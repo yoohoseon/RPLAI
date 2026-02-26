@@ -54,7 +54,7 @@ export default async function DashboardPage() {
                                     <TeamCreateDialog />
                                 </CardHeader>
                                 <CardContent className="p-8 pt-0">
-                                    <ul className="space-y-3 mb-6">
+                                    <ul className="space-y-3 max-h-[480px] overflow-y-auto pr-2 mb-6 scrollbar-thin scrollbar-thumb-[#F2F4F6]">
                                         {(await prisma.team.findMany({
                                             take: 10,
                                             orderBy: { createdAt: 'desc' },
@@ -99,7 +99,7 @@ export default async function DashboardPage() {
                                             )
                                         })}
                                     </ul>
-                                    <Button className="w-full h-14 bg-[#F2F4F6] text-[#4E5968] hover:bg-[#E5E8EB] rounded-2xl font-bold text-[15px] border-none shadow-none transition-all" variant="outline" asChild>
+                                    <Button className="w-full h-14 bg-[#333D4B] hover:bg-[#191F28] text-white rounded-2xl font-bold text-[15px] border-none shadow-sm transition-all active:scale-[0.98]" asChild>
                                         <a href="/dashboard/teams">모든 팀 보기</a>
                                     </Button>
                                 </CardContent>
@@ -128,7 +128,7 @@ export default async function DashboardPage() {
                                             </li>
                                         ))}
                                     </ul>
-                                    <Button className="w-full h-14 bg-[#F2F4F6] text-[#4E5968] hover:bg-[#E5E8EB] rounded-2xl font-bold text-[15px] border-none shadow-none transition-all" variant="outline" asChild>
+                                    <Button className="w-full h-14 bg-[#333D4B] hover:bg-[#191F28] text-white rounded-2xl font-bold text-[15px] border-none shadow-sm transition-all active:scale-[0.98]" asChild>
                                         <a href="/dashboard/users">모든 사용자 보기</a>
                                     </Button>
                                 </CardContent>

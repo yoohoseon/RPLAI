@@ -264,8 +264,9 @@ export default function LandingPage() {
             </section>
 
 
-            {/* ══ Footer ══ */}
-            {/* <Footer /> */}
-        </div>
+            <div className="bg-[#0E1117]">
+                <Footer />
+            </div>
+        </div >
     );
 }

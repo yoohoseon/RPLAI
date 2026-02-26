@@ -56,6 +56,7 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
 
     const [isGeneratingContent, setIsGeneratingContent] = useState(false);
     const [isCopied, setIsCopied] = useState(false);
+    const [isPromptCopied, setIsPromptCopied] = useState(false);
     const [isEditingVisual, setIsEditingVisual] = useState(false);
     const [isEditingCopy, setIsEditingCopy] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
@@ -174,7 +175,7 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
 
     const handleCopyAll = () => {
         if (!generatedContent) return;
-        const textToCopy = `${generatedContent.hook || ''}\n\n${generatedContent.body || ''}\n\n👉 ${generatedContent.cta || ''}\n\n${generatedContent.hashtags || ''}`.trim();
+        const textToCopy = `${generatedContent.hook || ''}\n\n${generatedContent.body || ''}\n\n${generatedContent.cta || ''}\n\n${generatedContent.hashtags || ''}`.trim();
         navigator.clipboard.writeText(textToCopy);
         setIsCopied(true);
         setTimeout(() => setIsCopied(false), 2000);
@@ -393,11 +394,12 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                                                             <button
                                                                 key={i}
                                                                 onClick={() => toggleKeyword(cat.key, kw)}
-                                                                className={`inline-flex items-center justify-center px-4 py-2.5 text-[14px] font-semibold transition-all rounded-xl select-none active:scale-95 duration-200 cursor-pointer ${isSelected
-                                                                    ? "bg-[#F2F4F6] text-[#333D4B] shadow-md shadow-none"
-                                                                    : "bg-[#F2F4F6] text-[#4E5968] hover:bg-[#E5E8EB] border-none"
+                                                                className={`inline-flex items-center justify-center px-4 py-2.5 text-[14px] font-[600] transition-all rounded-full select-none active:scale-95 duration-200 cursor-pointer border ${isSelected
+                                                                    ? "bg-[#333D4B] text-white border-[#333D4B] shadow-sm"
+                                                                    : "bg-[#F2F4F6] text-[#4E5968] border-transparent hover:bg-[#E5E8EB]"
                                                                     }`}
                                                             >
+                                                                {isSelected && <Check className="w-4 h-4 mr-1.5" />}
                                                                 {kw}
                                                             </button>
                                                         );
@@ -425,7 +427,7 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                                                             toggleKeyword(cat.key, trimmedKw);
                                                         }
                                                     }}
-                                                    className="inline-flex items-center justify-center px-4 py-2 text-sm font-bold transition-all rounded-full border-2 border-dashed border-border/80 text-muted-foreground hover:bg-muted hover:text-foreground active:scale-95 bg-transparent ml-1 hover:border-primary/50 cursor-pointer"
+                                                    className="inline-flex items-center justify-center px-4 py-2.5 text-[14px] font-[600] transition-all rounded-full select-none active:scale-95 duration-200 cursor-pointer border border-dashed border-[#ABB3BB] text-[#4E5968] hover:bg-[#F2F4F6] bg-transparent ml-1"
                                                 >
                                                     <Plus className="w-4 h-4 mr-1.5" />
                                                     직접 추가
@@ -447,7 +449,7 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                                         </Button>
                                         <Button
                                             size="lg"
-                                            className="grow basis-2/3 h-16 rounded-[24px] text-[17px] font-bold bg-[#F2F4F6] text-[#333D4B] hover:bg-[#E5E8EB] active:bg-[#D1D6DB] shadow-none active:scale-[0.98] transition-all group border-none"
+                                            className="grow basis-2/3 h-16 rounded-[24px] text-[17px] font-bold bg-[#333D4B] text-white hover:bg-[#191F28] active:bg-[#000000] shadow-sm active:scale-[0.98] transition-all group border-none disabled:bg-[#ABB3BB] disabled:text-white"
                                             onClick={() => handleGenerateContent(false)}
                                             disabled={isGeneratingContent || totalSelected === 0}
                                         >
@@ -546,20 +548,34 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                                                         영문 프롬프트
                                                     </Button>
                                                 </DialogTrigger>
-                                                <DialogContent className="sm:max-w-md rounded-[2rem] border-none shadow-2xl">
-                                                    <DialogHeader>
+                                                <DialogContent className="sm:max-w-lg rounded-[2rem] border-none shadow-2xl flex flex-col items-stretch max-h-[85vh] p-6 bg-white !pr-6">
+                                                    <DialogHeader className="shrink-0 mb-2">
                                                         <DialogTitle className="text-xl font-bold flex items-center gap-2 text-[#333D4B]">
                                                             <SparklesIcon className="w-5 h-5 text-[#333D4B]" />
                                                             AI 프롬프트 (Midjourney)
                                                         </DialogTitle>
                                                     </DialogHeader>
-                                                    <div className="bg-[#191F28] text-[#F9FAFB] p-6 rounded-2xl text-[14px] font-mono leading-relaxed break-words select-all">
+                                                    {/* 기존 코드에서 w-full(너비 100%)과 flex-shrink-0 방지 등을 보강했습니다. */}
+                                                    <div className="w-full min-w-0 bg-[#191F28] text-[#F9FAFB] p-6 rounded-2xl text-[14px] font-mono leading-relaxed break-words select-all overflow-y-auto flex-1 min-h-[200px] scrollbar-thin scrollbar-thumb-white/20">
                                                         {generatedContent?.imagePrompt}
                                                     </div>
-                                                    <div className="flex justify-end mt-4">
-                                                        <Button size="lg" onClick={() => navigator.clipboard.writeText(generatedContent?.imagePrompt || "")} className="rounded-2xl h-12 px-6 bg-[#F2F4F6] text-[#333D4B] font-bold hover:bg-[#E5E8EB]">
-                                                            <Download className="w-4 h-4 mr-1.5" />
-                                                            프롬프트 복사하기
+                                                    <div className="flex justify-end mt-4 shrink-0 w-full">
+                                                        <Button size="lg" onClick={() => {
+                                                            navigator.clipboard.writeText(generatedContent?.imagePrompt || "");
+                                                            setIsPromptCopied(true);
+                                                            setTimeout(() => setIsPromptCopied(false), 2000);
+                                                        }} className="rounded-2xl h-12 px-6 bg-[#F2F4F6] text-[#333D4B] font-bold hover:bg-[#E5E8EB]">
+                                                            {isPromptCopied ? (
+                                                                <>
+                                                                    <Check className="w-4 h-4 mr-1.5 text-green-600" />
+                                                                    복사 완료!
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <Download className="w-4 h-4 mr-1.5" />
+                                                                    프롬프트 복사하기
+                                                                </>
+                                                            )}
                                                         </Button>
                                                     </div>
                                                 </DialogContent>
@@ -612,33 +628,42 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                                     <div className="bg-[#F2F4F7] border-none rounded-[2rem] p-8 flex flex-col gap-4 text-[15px] font-semibold text-[#333D4B]">
                                         {isEditingCopy ? (
                                             <div className="space-y-4">
-                                                <Input
-                                                    value={generatedContent?.hook || ''}
-                                                    onChange={(e) => handleContentChange('hook', e.target.value)}
-                                                    className="font-bold text-lg bg-white border-none h-12 rounded-xl"
-                                                    placeholder="Hook 문구"
-                                                />
-                                                <Textarea
-                                                    value={generatedContent?.body || ''}
-                                                    onChange={(e) => handleContentChange('body', e.target.value)}
-                                                    className="min-h-[160px] bg-white border-none text-[15px] rounded-xl leading-relaxed"
-                                                    placeholder="본문 내용을 입력하세요"
-                                                />
-                                                <div className="flex gap-2">
-                                                    <span className="shrink-0 mt-3 text-[#333D4B]">👉</span>
+                                                <div>
+                                                    <label className="text-xs font-bold text-[#4E5968] ml-2 mb-1.5 block">훅 (Hook)</label>
+                                                    <Input
+                                                        value={generatedContent?.hook || ''}
+                                                        onChange={(e) => handleContentChange('hook', e.target.value)}
+                                                        className="font-bold text-lg bg-white border-none h-12 rounded-xl"
+                                                        placeholder="Hook 문구"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="text-xs font-bold text-[#4E5968] ml-2 mb-1.5 block">본문 (Body)</label>
+                                                    <Textarea
+                                                        value={generatedContent?.body || ''}
+                                                        onChange={(e) => handleContentChange('body', e.target.value)}
+                                                        className="min-h-[160px] bg-white border-none text-[15px] rounded-xl leading-relaxed"
+                                                        placeholder="본문 내용을 입력하세요"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="text-xs font-bold text-[#4E5968] ml-2 mb-1.5 block">콜투액션 (CTA)</label>
                                                     <Input
                                                         value={generatedContent?.cta || ''}
                                                         onChange={(e) => handleContentChange('cta', e.target.value)}
-                                                        className="flex-1 font-bold bg-white border-none h-12 rounded-xl"
+                                                        className="font-bold bg-white border-none h-12 rounded-xl"
                                                         placeholder="CTA 문구"
                                                     />
                                                 </div>
-                                                <Input
-                                                    value={generatedContent?.hashtags || ''}
-                                                    onChange={(e) => handleContentChange('hashtags', e.target.value)}
-                                                    className="font-bold text-[#333D4B] bg-white border-none h-12 rounded-xl"
-                                                    placeholder="#해시태그"
-                                                />
+                                                <div>
+                                                    <label className="text-xs font-bold text-[#4E5968] ml-2 mb-1.5 block">해시태그 (Hashtags)</label>
+                                                    <Input
+                                                        value={generatedContent?.hashtags || ''}
+                                                        onChange={(e) => handleContentChange('hashtags', e.target.value)}
+                                                        className="font-bold text-[#333D4B] bg-white border-none h-12 rounded-xl"
+                                                        placeholder="#해시태그"
+                                                    />
+                                                </div>
                                             </div>
                                         ) : (
                                             <div className="space-y-6">
@@ -651,7 +676,6 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                                                 <div className="h-px w-full bg-[#F2F4F6]"></div>
                                                 <div className="space-y-4">
                                                     <p className="font-bold flex items-start gap-2">
-                                                        <span className="shrink-0 mt-0.5 text-[#333D4B]">👉</span>
                                                         {generatedContent?.cta}
                                                     </p>
                                                     <p className="text-[#333D4B] font-bold leading-relaxed text-[14px]">
@@ -674,7 +698,7 @@ export function GenerationDashboard({ strategy, brandName, userEmail }: Generati
                                         새로 만들기
                                     </Button>
                                     <Button
-                                        className={`rounded-2xl px-10 h-14 text-base font-bold transition-all shadow-lg ${isAlreadySaved ? 'bg-[#ABB3BB] text-[#333D4B]' : 'bg-[#F2F4F6] text-[#333D4B] hover:bg-[#E5E8EB] active:bg-[#D1D6DB] shadow-none'}`}
+                                        className={`rounded-2xl px-10 h-14 text-base font-bold transition-all shadow-md ${isAlreadySaved ? 'bg-[#ABB3BB] text-white cursor-not-allowed' : 'bg-[#333D4B] text-white hover:bg-[#191F28] active:bg-[#000000]'}`}
                                         onClick={handleSaveContent}
                                         disabled={isSaving || isAlreadySaved}
                                     >

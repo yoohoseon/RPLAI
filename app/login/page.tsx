@@ -1,5 +1,6 @@
 import LoginForm from '@/components/login-form';
 import PublicHeader from '@/components/public-header';
+import { Footer } from '@/components/footer';
 
 export default function LoginPage() {
     return (
@@ -9,6 +10,7 @@ export default function LoginPage() {
             <main className="flex-1 flex items-center justify-center p-4 pt-16">
                 <LoginForm />
             </main>
+            <Footer />
         </div>
     );
 }
