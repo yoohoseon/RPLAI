@@ -48,12 +48,21 @@
 }
 
 html {
-  scrollbar-gutter: stable;
+  /* scrollbar-gutter removed to prevent phantom scrollbar track */
 }
 
-/* Prevent padding-right being added by Radix UI / shadcn when modal opens */
-body[data-scroll-locked] {
+/* Prevent padding/margin right being added by Radix UI / shadcn when modal opens */
+html[data-scroll-locked],
+body[data-scroll-locked],
+[data-scroll-locked] {
   padding-right: 0px !important;
+  margin-right: 0px !important;
+  --removed-body-scroll-bar-size: 0px !important;
+}
+
+[data-scroll-locked] .fixed {
+  padding-right: 0px !important;
+  margin-right: 0px !important;
 }
 
 :root {
@@ -131,7 +140,7 @@ body[data-scroll-locked] {
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-[#F2F4F7] text-foreground;
   }
 
   button {

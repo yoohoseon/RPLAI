@@ -46,15 +46,15 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
     const teams = await fetchTeams();
 
     return (
-        <div className="min-h-screen bg-[#F9FAFB] font-sans">
+        <div className="min-h-screen bg-[#F2F4F7] font-sans">
             <div className="container mx-auto py-12 px-6 max-w-7xl space-y-10 animate-in fade-in duration-700">
-                <div className="flex items-end justify-between border-b border-[#F2F4F6] pb-8">
+                <div className="flex items-end justify-between border-none pb-8">
                     <div className="space-y-2">
-                        <h1 className="text-3xl font-bold tracking-tight text-[#191F28]">분석 이력</h1>
+                        <h1 className="text-3xl font-bold tracking-tight text-[#333D4B]">분석 이력</h1>
                         <p className="text-[17px] font-medium text-[#4E5968]">과거의 브랜드 분석 및 전략 수립 기록을 확인하세요.</p>
                     </div>
                     <Link href="/main">
-                        <Button className="bg-[#3182F6] text-white hover:bg-[#1B64DA] rounded-2xl px-6 h-12 font-bold shadow-lg shadow-[#3182F6]/10">
+                        <Button className="bg-[#030000] text-white hover:bg-[#1A1A1A] active:bg-[#111111] rounded-2xl px-6 h-12 font-bold shadow-none">
                             새로운 분석 시작하기
                         </Button>
                     </Link>
@@ -63,10 +63,10 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                 <div className="space-y-6">
                     <HistoryFilters teams={teams} />
 
-                    <div className="bg-white rounded-[2rem] border border-[#F2F4F6] shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden">
+                    <div className="bg-white rounded-[2rem] border-none shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden">
                         <Table>
-                            <TableHeader className="bg-[#F9FAFB]">
-                                <TableRow className="hover:bg-transparent border-b border-[#F2F4F6]">
+                            <TableHeader className="bg-[#F2F4F7]">
+                                <TableRow className="hover:bg-transparent border-none">
                                     <TableHead className="w-[180px] text-[#8B95A1] font-bold h-14 px-8">분석 일시</TableHead>
                                     <TableHead className="text-[#8B95A1] font-bold h-14">브랜드</TableHead>
                                     <TableHead className="text-[#8B95A1] font-bold h-14">카테고리</TableHead>

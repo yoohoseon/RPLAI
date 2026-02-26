@@ -55,7 +55,7 @@ export default function HistoryFilters({ teams }: HistoryFiltersProps) {
     };
 
     return (
-        <div className="bg-white p-8 rounded-[32px] border border-[#F2F4F6] shadow-[0_8px_30px_rgba(0,0,0,0.04)] mb-8">
+        <div className="bg-white p-8 rounded-[32px] border-none shadow-[0_8px_30px_rgba(0,0,0,0.04)] mb-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 items-end">
                 <div className="space-y-2.5">
                     <label className="text-[14px] font-bold text-[#8B95A1] ml-1 flex items-center gap-1.5">
@@ -66,7 +66,7 @@ export default function HistoryFilters({ teams }: HistoryFiltersProps) {
                         value={brand}
                         onChange={(e) => setBrand(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        className="h-12 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-4 text-[15px] font-bold focus:ring-[#3182F6]/20 transition-all"
+                        className="h-12 bg-[#F2F4F7] border-none rounded-2xl px-4 text-[15px] font-bold focus:ring-[#3182F6]/20 transition-all"
                     />
                 </div>
 
@@ -79,7 +79,7 @@ export default function HistoryFilters({ teams }: HistoryFiltersProps) {
                         value={userName}
                         onChange={(e) => setUserName(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        className="h-12 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-4 text-[15px] font-bold focus:ring-[#3182F6]/20 transition-all"
+                        className="h-12 bg-[#F2F4F7] border-none rounded-2xl px-4 text-[15px] font-bold focus:ring-[#3182F6]/20 transition-all"
                         autoComplete="off"
                     />
                 </div>
@@ -92,10 +92,10 @@ export default function HistoryFilters({ teams }: HistoryFiltersProps) {
                         value={teamName || 'all'}
                         onValueChange={(value) => setTeamName(value === 'all' ? '' : value)}
                     >
-                        <SelectTrigger className="h-12 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-4 text-[15px] font-bold focus:ring-[#3182F6]/20 transition-all">
+                        <SelectTrigger className="h-12 bg-[#F2F4F7] border-none rounded-2xl px-4 text-[15px] font-bold focus:ring-[#3182F6]/20 transition-all">
                             <SelectValue placeholder="모든 팀" />
                         </SelectTrigger>
-                        <SelectContent className="rounded-2xl border-[#F2F4F6] shadow-xl">
+                        <SelectContent className="rounded-2xl border-none shadow-[0_10px_40px_rgba(0,0,0,0.08)]">
                             <SelectItem value="all" className="rounded-xl font-medium py-3">모든 팀</SelectItem>
                             {teams.map((team) => (
                                 <SelectItem key={team.id} value={team.name} className="rounded-xl font-medium py-3">
@@ -114,10 +114,10 @@ export default function HistoryFilters({ teams }: HistoryFiltersProps) {
                         value={sort}
                         onValueChange={(value) => setSort(value)}
                     >
-                        <SelectTrigger className="h-12 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-4 text-[15px] font-bold focus:ring-[#3182F6]/20 transition-all">
+                        <SelectTrigger className="h-12 bg-[#F2F4F7] border-none rounded-2xl px-4 text-[15px] font-bold focus:ring-[#3182F6]/20 transition-all">
                             <SelectValue placeholder="정렬 방식" />
                         </SelectTrigger>
-                        <SelectContent className="rounded-2xl border-[#F2F4F6] shadow-xl">
+                        <SelectContent className="rounded-2xl border-none shadow-[0_10px_40px_rgba(0,0,0,0.08)]">
                             <SelectItem value="date-desc" className="rounded-xl font-medium py-3">최신순</SelectItem>
                             <SelectItem value="date-asc" className="rounded-xl font-medium py-3">과거순</SelectItem>
                             <SelectItem value="brand-asc" className="rounded-xl font-medium py-3">브랜드명 (가나다)</SelectItem>
@@ -128,9 +128,9 @@ export default function HistoryFilters({ teams }: HistoryFiltersProps) {
 
                 <Button
                     onClick={handleSearch}
-                    className="h-12 bg-[#3182F6] hover:bg-[#1B64DA] text-white rounded-2xl font-bold text-[15px] shadow-lg shadow-[#3182F6]/10 active:scale-[0.98] transition-all"
+                    className="h-12 bg-[#030000] text-white hover:bg-[#1A1A1A] active:bg-[#111111] rounded-2xl font-bold text-[15px] shadow-none active:scale-[0.98] transition-all"
                 >
-                    <Search className="mr-2 h-4 w-4" />
+                    {/* <Search className="mr-2 h-4 w-4" /> */}
                     조회하기
                 </Button>
             </div>

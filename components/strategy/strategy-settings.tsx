@@ -31,8 +31,8 @@ export function StrategySettings({ onGenerate, isGenerating }: StrategySettingsP
         <div className="flex flex-col h-full bg-white rounded-b-[32px]">
             {/* Header Area */}
             <div className="p-8 pb-6">
-                <h3 className="text-lg font-bold flex items-center gap-2 text-[#191F28]">
-                    <Sparkles className="w-5 h-5 text-[#3182F6]" />
+                <h3 className="text-lg font-bold flex items-center gap-2 text-[#333D4B]">
+                    <Sparkles className="w-5 h-5 text-[#333D4B]" />
                     기획 설정
                 </h3>
                 <p className="text-[14px] font-medium text-[#4E5968] mt-2 leading-relaxed">캠페인 시기와 목적을 알려주시면, AI가 3가지 기획 앵글과 50개의 키워드 풀을 제안합니다.</p>
@@ -43,11 +43,11 @@ export function StrategySettings({ onGenerate, isGenerating }: StrategySettingsP
                 {/* 1. Timing Input (Slider & Checkbox) */}
                 <div className="space-y-6">
                     <div className="flex items-center justify-between">
-                        <Label className="text-[15px] font-bold flex items-center gap-2 text-[#191F28]">
+                        <Label className="text-[15px] font-bold flex items-center gap-2 text-[#333D4B]">
                             <Calendar className="w-4 h-4 text-[#8B95A1]" />
                             발행 예정 시기
                         </Label>
-                        <span className="text-[14px] font-bold text-[#3182F6] bg-[#3182F6]/5 px-4 py-1.5 rounded-full">
+                        <span className="text-[14px] font-bold text-[#333D4B] bg-[#F2F4F6]/5 px-4 py-1.5 rounded-full">
                             {month[0] === month[1] ? `${month[0]}월` : `${month[0]}월 ~ ${month[1]}월`}
                         </span>
                     </div>
@@ -67,25 +67,25 @@ export function StrategySettings({ onGenerate, isGenerating }: StrategySettingsP
                         </div>
                     </div>
 
-                    <div className="flex items-center space-x-3 bg-[#F9FAFB] p-5 rounded-2xl border border-[#F2F4F6] hover:bg-[#F2F4F6] transition-colors cursor-pointer group" onClick={() => setIsNewLaunch(!isNewLaunch)}>
+                    <div className="flex items-center space-x-3 bg-[#F2F4F7] p-5 rounded-2xl border-none hover:bg-[#F2F4F6] transition-colors cursor-pointer group" onClick={() => setIsNewLaunch(!isNewLaunch)}>
                         <Checkbox
                             id="newLaunch"
                             checked={isNewLaunch}
                             onCheckedChange={(checked) => setIsNewLaunch(checked as boolean)}
-                            className="border-[#ABB3BB] data-[state=checked]:bg-[#3182F6] data-[state=checked]:border-[#3182F6] w-5 h-5"
+                            className="border-[#ABB3BB] data-[state=checked]:bg-[#3182F6] data-[state=checked]:border-[#3182F6] data-[state=checked]:text-white w-5 h-5"
                         />
                         <Label
                             htmlFor="newLaunch"
-                            className="text-[14px] font-bold leading-none cursor-pointer flex-1 flex items-center justify-between text-[#4E5968] group-hover:text-[#191F28]"
+                            className="text-[14px] font-bold leading-none cursor-pointer flex-1 flex items-center justify-between text-[#4E5968] group-hover:text-[#333D4B]"
                         >
                             <span className="flex items-center gap-2">
                                 신제품 / 서비스 런칭 캠페인
                                 <TooltipProvider>
                                     <Tooltip>
                                         <TooltipTrigger asChild>
-                                            <Info className="w-4 h-4 text-[#ABB3BB] hover:text-[#3182F6] transition-colors cursor-help" />
+                                            <Info className="w-4 h-4 text-[#ABB3BB] hover:text-[#333D4B] transition-colors cursor-help" />
                                         </TooltipTrigger>
-                                        <TooltipContent side="top" className="max-w-[220px] text-[12px] font-bold p-3 rounded-xl border-[#F2F4F6] shadow-xl">
+                                        <TooltipContent side="top" className="max-w-[220px] text-[12px] font-bold p-3 rounded-xl border-none shadow-[0_10px_40px_rgba(0,0,0,0.08)]">
                                             체크 시 AI가 런칭 기대감, 사전예약 등에 관련된 시즌 키워드를 적극 탐색합니다.
                                         </TooltipContent>
                                     </Tooltip>
@@ -97,20 +97,20 @@ export function StrategySettings({ onGenerate, isGenerating }: StrategySettingsP
 
                 {/* 2. Goal Input */}
                 <div className="space-y-4">
-                    <Label className="text-[15px] font-bold flex items-center gap-2 text-[#191F28]">
+                    <Label className="text-[15px] font-bold flex items-center gap-2 text-[#333D4B]">
                         <Target className="w-4 h-4 text-[#8B95A1]" />
                         캠페인 핵심 목표
                     </Label>
                     <Select value={goal} onValueChange={setGoal}>
-                        <SelectTrigger className="w-full h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl focus:ring-[#3182F6]/20 text-[15px] font-bold text-[#191F28]">
+                        <SelectTrigger className="w-full h-14 bg-[#F2F4F7] border-none rounded-2xl focus:ring-[#3182F6]/20 text-[15px] font-bold text-[#333D4B]">
                             <SelectValue placeholder="유도하고 싶은 행동을 선택하세요" />
                         </SelectTrigger>
-                        <SelectContent className="rounded-2xl border-[#F2F4F6] shadow-2xl w-[var(--radix-select-trigger-width)]">
-                            <SelectItem value="인지도 확산 (도달/바이럴 중심)" className="py-3.5 px-10 font-bold focus:bg-[#F2F4F6] data-[state=checked]:text-[#3182F6]">인지도 확산 (도달/바이럴 중심)</SelectItem>
-                            <SelectItem value="매출/프로모션 전환 (세일즈 중심)" className="py-3.5 px-10 font-bold focus:bg-[#F2F4F6] data-[state=checked]:text-[#3182F6]">매출/프로모션 전환 (세일즈 중심)</SelectItem>
-                            <SelectItem value="고객 참여 유도 (댓글/이벤트 중심)" className="py-3.5 px-10 font-bold focus:bg-[#F2F4F6] data-[state=checked]:text-[#3182F6]">고객 참여 유도 (댓글/이벤트 중심)</SelectItem>
-                            <SelectItem value="브랜드 충성도/팬덤 강화 (정보성/소통 중심)" className="py-3.5 px-10 font-bold focus:bg-[#F2F4F6] data-[state=checked]:text-[#3182F6]">브랜드 충성도/팬덤 강화 (소통 중심)</SelectItem>
-                            <SelectItem value="웹사이트/앱 트래픽 유입" className="py-3.5 px-10 font-bold focus:bg-[#F2F4F6] data-[state=checked]:text-[#3182F6]">웹사이트/앱 트래픽 유입</SelectItem>
+                        <SelectContent className="rounded-2xl border-none shadow-2xl w-[var(--radix-select-trigger-width)]">
+                            <SelectItem value="인지도 확산 (도달/바이럴 중심)" className="py-3.5 px-10 font-bold focus:bg-[#F2F4F6] data-[state=checked]:text-[#333D4B]">인지도 확산 (도달/바이럴 중심)</SelectItem>
+                            <SelectItem value="매출/프로모션 전환 (세일즈 중심)" className="py-3.5 px-10 font-bold focus:bg-[#F2F4F6] data-[state=checked]:text-[#333D4B]">매출/프로모션 전환 (세일즈 중심)</SelectItem>
+                            <SelectItem value="고객 참여 유도 (댓글/이벤트 중심)" className="py-3.5 px-10 font-bold focus:bg-[#F2F4F6] data-[state=checked]:text-[#333D4B]">고객 참여 유도 (댓글/이벤트 중심)</SelectItem>
+                            <SelectItem value="브랜드 충성도/팬덤 강화 (정보성/소통 중심)" className="py-3.5 px-10 font-bold focus:bg-[#F2F4F6] data-[state=checked]:text-[#333D4B]">브랜드 충성도/팬덤 강화 (소통 중심)</SelectItem>
+                            <SelectItem value="웹사이트/앱 트래픽 유입" className="py-3.5 px-10 font-bold focus:bg-[#F2F4F6] data-[state=checked]:text-[#333D4B]">웹사이트/앱 트래픽 유입</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -122,7 +122,7 @@ export function StrategySettings({ onGenerate, isGenerating }: StrategySettingsP
                     onClick={handleGenerate}
                     disabled={!month[0] || !goal || isGenerating}
                     size="lg"
-                    className="w-full rounded-[20px] h-16 text-[17px] font-bold shadow-lg shadow-[#3182F6]/10 transition-all active:scale-[0.98] bg-[#3182F6] text-white hover:bg-[#1B64DA]"
+                    className="w-full rounded-[20px] h-16 text-[17px] font-bold shadow-none transition-all active:scale-[0.98] bg-[#030000] text-white hover:bg-[#1A1A1A] active:bg-[#111111]"
                 >
                     {isGenerating ? (
                         <>

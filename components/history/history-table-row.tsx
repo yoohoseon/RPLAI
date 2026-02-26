@@ -14,9 +14,9 @@ export function HistoryTableRow({ analysis }: { analysis: any }) {
     };
 
     return (
-        <TableRow onClick={handleRowClick} className="cursor-pointer hover:bg-[#F9FAFB] transition-colors group h-20 border-b border-[#F2F4F6]">
+        <TableRow onClick={handleRowClick} className="cursor-pointer hover:bg-[#F9FAFB] transition-colors group h-20 border-none">
             <TableCell className="px-8 font-medium">
-                <div className="text-[15px] text-[#191F28] font-bold">
+                <div className="text-[15px] text-[#333D4B] font-bold">
                     {format(analysis.createdAt, 'yyyy-MM-dd')}
                 </div>
                 <div className="text-[13px] text-[#8B95A1] font-medium">
@@ -24,7 +24,7 @@ export function HistoryTableRow({ analysis }: { analysis: any }) {
                 </div>
             </TableCell>
             <TableCell>
-                <div className="text-[16px] text-[#191F28] font-bold">
+                <div className="text-[16px] text-[#333D4B] font-bold">
                     {analysis.brandKor}
                 </div>
                 <div className="text-[13px] text-[#8B95A1] font-medium leading-tight">
@@ -38,7 +38,7 @@ export function HistoryTableRow({ analysis }: { analysis: any }) {
             </TableCell>
             <TableCell>
                 <div className="flex flex-col">
-                    <span className="text-[15px] text-[#191F28] font-bold">{analysis.user.name}</span>
+                    <span className="text-[15px] text-[#333D4B] font-bold">{analysis.user.name}</span>
                     <span className="text-[13px] text-[#8B95A1] font-medium">{analysis.user.email}</span>
                 </div>
             </TableCell>

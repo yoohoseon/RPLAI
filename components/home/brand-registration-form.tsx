@@ -84,8 +84,8 @@ export function BrandRegistrationForm() {
 
                 <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                        <label htmlFor="brandKor" className="text-[15px] font-bold text-[#191F28] px-1">
-                            브랜드명 (국문) <span className="text-[#3182F6]">*</span>
+                        <label htmlFor="brandKor" className="text-[15px] font-bold text-[#333D4B] px-1">
+                            브랜드명 (국문) <span className="text-[#333D4B]">*</span>
                         </label>
                         <input
                             id="brandKor"
@@ -95,12 +95,12 @@ export function BrandRegistrationForm() {
                             placeholder="예: 골드넥스"
                             value={formData.brandKor}
                             onChange={handleChange}
-                            className="flex h-14 w-full rounded-2xl border border-[#F2F4F6] bg-[#F9FAFB] px-5 text-[15px] font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#3182F6]/20 focus:border-[#3182F6] placeholder:text-[#ABB3BB]"
+                            className="flex h-[56px] w-full rounded-2xl border-none bg-[#F2F4F7] px-5 text-[15px] font-bold transition-all focus:bg-[#E5E8EB] focus:outline-none placeholder:text-[#A4AEC0] text-[#333D4B]"
                         />
                     </div>
                     <div className="space-y-3">
-                        <label htmlFor="brandEng" className="text-[15px] font-bold text-[#191F28] px-1">
-                            브랜드명 (영문) <span className="text-[#3182F6]">*</span>
+                        <label htmlFor="brandEng" className="text-[15px] font-bold text-[#333D4B] px-1">
+                            브랜드명 (영문) <span className="text-[#333D4B]">*</span>
                         </label>
                         <input
                             id="brandEng"
@@ -110,14 +110,14 @@ export function BrandRegistrationForm() {
                             placeholder="예: Goldenax"
                             value={formData.brandEng}
                             onChange={handleChange}
-                            className="flex h-14 w-full rounded-2xl border border-[#F2F4F6] bg-[#F9FAFB] px-5 text-[15px] font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#3182F6]/20 focus:border-[#3182F6] placeholder:text-[#ABB3BB]"
+                            className="flex h-[56px] w-full rounded-2xl border-none bg-[#F2F4F7] px-5 text-[15px] font-bold transition-all focus:bg-[#E5E8EB] focus:outline-none placeholder:text-[#A4AEC0] text-[#333D4B]"
                         />
                     </div>
                 </div>
 
                 <div className="space-y-3">
-                    <label htmlFor="url" className="text-[15px] font-bold text-[#191F28] px-1">
-                        웹사이트 링크 <span className="text-[#3182F6]">*</span>
+                    <label htmlFor="url" className="text-[15px] font-bold text-[#333D4B] px-1">
+                        웹사이트 링크 <span className="text-[#333D4B]">*</span>
                     </label>
                     <input
                         id="url"
@@ -127,13 +127,13 @@ export function BrandRegistrationForm() {
                         placeholder="https://example.com"
                         value={formData.url}
                         onChange={handleChange}
-                        className="flex h-14 w-full rounded-2xl border border-[#F2F4F6] bg-[#F9FAFB] px-5 text-[15px] font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#3182F6]/20 focus:border-[#3182F6] placeholder:text-[#ABB3BB]"
+                        className="flex h-[56px] w-full rounded-2xl border-none bg-[#F2F4F7] px-5 text-[15px] font-bold transition-all focus:bg-[#E5E8EB] focus:outline-none placeholder:text-[#A4AEC0] text-[#333D4B]"
                     />
                 </div>
 
                 <div className="space-y-3">
-                    <label htmlFor="category" className="text-[15px] font-bold text-[#191F28] px-1">
-                        주요 업종 <span className="text-[#3182F6]">*</span>
+                    <label htmlFor="category" className="text-[15px] font-bold text-[#333D4B] px-1">
+                        주요 업종 <span className="text-[#333D4B]">*</span>
                     </label>
                     <input
                         id="category"
@@ -143,13 +143,13 @@ export function BrandRegistrationForm() {
                         placeholder="예: 코스메틱, 라이프스타일 큐레이션, IT 기술 등"
                         value={formData.category}
                         onChange={handleChange}
-                        className="flex h-14 w-full rounded-2xl border border-[#F2F4F6] bg-[#F9FAFB] px-5 text-[15px] font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#3182F6]/20 focus:border-[#3182F6] placeholder:text-[#ABB3BB]"
+                        className="flex h-[56px] w-full rounded-2xl border-none bg-[#F2F4F7] px-5 text-[15px] font-bold transition-all focus:bg-[#E5E8EB] focus:outline-none placeholder:text-[#A4AEC0] text-[#333D4B]"
                     />
                 </div>
 
                 <div className="space-y-3">
-                    <label htmlFor="description" className="text-[15px] font-bold text-[#191F28] px-1">
-                        브랜드 설명 <span className="text-[#3182F6]">*</span>
+                    <label htmlFor="description" className="text-[15px] font-bold text-[#333D4B] px-1">
+                        브랜드 설명 <span className="text-[#333D4B]">*</span>
                     </label>
                     <textarea
                         id="description"
@@ -158,13 +158,13 @@ export function BrandRegistrationForm() {
                         placeholder="브랜드가 제공하는 핵심 가치나 특징을 적어주세요."
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        className="flex min-h-[100px] w-full rounded-2xl border border-[#F2F4F6] bg-[#F9FAFB] px-5 py-4 text-[15px] font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#3182F6]/20 focus:border-[#3182F6] placeholder:text-[#ABB3BB] resize-none"
+                        className="flex min-h-[120px] w-full rounded-2xl border-none bg-[#F2F4F7] px-5 py-5 text-[15px] font-bold transition-all focus:bg-[#E5E8EB] focus:outline-none placeholder:text-[#A4AEC0] text-[#333D4B] resize-none"
                     />
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-6 pt-2">
                     <div className="space-y-3">
-                        <label htmlFor="instagram" className="text-[15px] font-bold text-[#191F28] px-1">인스타그램</label>
+                        <label htmlFor="instagram" className="text-[15px] font-bold text-[#333D4B] px-1">인스타그램</label>
                         <input
                             id="instagram"
                             name="instagram"
@@ -172,11 +172,11 @@ export function BrandRegistrationForm() {
                             placeholder="https://instagram.com/..."
                             value={formData.instagram}
                             onChange={handleChange}
-                            className="flex h-12 w-full rounded-2xl border border-[#F2F4F6] bg-[#F9FAFB] px-5 text-[14px] font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#3182F6]/20 focus:border-[#3182F6] placeholder:text-[#ABB3BB]"
+                            className="flex h-[48px] w-full rounded-2xl border-none bg-[#F2F4F7] px-5 text-[14px] font-bold transition-all focus:bg-[#E5E8EB] focus:outline-none placeholder:text-[#A4AEC0] text-[#333D4B]"
                         />
                     </div>
                     <div className="space-y-3">
-                        <label htmlFor="youtube" className="text-[15px] font-bold text-[#191F28] px-1">유튜브</label>
+                        <label htmlFor="youtube" className="text-[15px] font-bold text-[#333D4B] px-1">유튜브</label>
                         <input
                             id="youtube"
                             name="youtube"
@@ -184,7 +184,7 @@ export function BrandRegistrationForm() {
                             placeholder="https://youtube.com/..."
                             value={formData.youtube}
                             onChange={handleChange}
-                            className="flex h-12 w-full rounded-2xl border border-[#F2F4F6] bg-[#F9FAFB] px-5 text-[14px] font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#3182F6]/20 focus:border-[#3182F6] placeholder:text-[#ABB3BB]"
+                            className="flex h-[48px] w-full rounded-2xl border-none bg-[#F2F4F7] px-5 text-[14px] font-bold transition-all focus:bg-[#E5E8EB] focus:outline-none placeholder:text-[#A4AEC0] text-[#333D4B]"
                         />
                     </div>
                 </div>
@@ -192,7 +192,7 @@ export function BrandRegistrationForm() {
                 <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full inline-flex items-center justify-center rounded-2xl text-lg font-bold transition-all disabled:opacity-50 h-16 shadow-lg mt-6 bg-[#3182F6] text-white hover:bg-[#1B64DA] shadow-[#3182F6]/20 active:scale-[0.98] cursor-pointer"
+                    className="w-full inline-flex items-center justify-center rounded-[20px] text-lg font-bold transition-all disabled:opacity-50 h-[60px] mt-6 bg-[#030000] text-white hover:bg-[#1A1A1A] active:bg-[#111111] active:scale-[0.98] border-none"
                 >
                     {isLoading ? <span className="flex items-center gap-2"><Loader2 className="w-5 h-5 animate-spin" /> 분석 중...</span> : "브랜드 분석 시작하기"}
                 </button>
@@ -216,13 +216,13 @@ export function BrandRegistrationForm() {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-3 mt-6 sm:space-x-0">
-                        <AlertDialogCancel onClick={() => setShowDialog(false)} className="mt-0 w-full sm:w-auto h-12 rounded-xl text-[#8B95A1] border-[#F2F4F6] hover:bg-[#F9FAFB] font-bold">
+                        <AlertDialogCancel onClick={() => setShowDialog(false)} className="mt-0 w-full sm:w-auto h-12 rounded-xl text-[#8B95A1] border-none hover:bg-[#F2F4F7] font-bold">
                             취소
                         </AlertDialogCancel>
-                        <Button variant="outline" onClick={handleGenerateNew} className="mt-0 w-full sm:w-auto h-12 rounded-xl text-[#4E5968] border-[#F2F4F6] hover:bg-[#F9FAFB] font-bold">
+                        <Button variant="outline" onClick={handleGenerateNew} className="mt-0 w-full sm:w-auto h-12 rounded-xl text-[#4E5968] border-none hover:bg-[#F2F4F7] font-bold">
                             새로 분석하기
                         </Button>
-                        <AlertDialogAction onClick={handleViewExisting} className="w-full sm:w-auto h-12 rounded-xl bg-[#3182F6] text-white hover:bg-[#1B64DA] font-bold shadow-lg shadow-[#3182F6]/10 border-none transition-all">
+                        <AlertDialogAction onClick={handleViewExisting} className="w-full sm:w-auto h-12 rounded-xl bg-[#F2F4F6] text-[#333D4B] hover:bg-[#E5E8EB] active:bg-[#D1D6DB] font-bold shadow-none border-none transition-all">
                             기존 결과 보기
                         </AlertDialogAction>
                     </AlertDialogFooter>

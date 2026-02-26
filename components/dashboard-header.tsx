@@ -10,7 +10,7 @@ export default async function DashboardHeader() {
     if (!session?.user) return null;
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 border-b border-[#F2F4F6] bg-white transition-all duration-300">
+        <header className="fixed top-0 left-0 right-0 z-50 border-none shadow-sm bg-white/90 backdrop-blur-md transition-all duration-300">
             <div className="flex h-16 items-center px-6 justify-between max-w-7xl mx-auto">
                 <div className="font-bold text-xl shrink-0">
                     <Link href="/main" className="hover:opacity-80 transition-opacity flex items-center">
@@ -29,8 +29,8 @@ export default async function DashboardHeader() {
                 <div className="flex items-center gap-6">
                     <div className="hidden sm:flex flex-col items-end">
                         <div className="flex items-center gap-2">
-                            <span className="text-[15px] font-bold text-[#191F28]">{session.user.name}</span>
-                            <span className={`text-[11px] px-2.5 py-1 rounded-lg font-bold ${session.user.role === 'MASTER' ? 'bg-[#3182F6]/10 text-[#3182F6]' :
+                            <span className="text-[15px] font-bold text-[#333D4B]">{session.user.name}</span>
+                            <span className={`text-[11px] px-2.5 py-1 rounded-lg font-bold ${session.user.role === 'MASTER' ? 'bg-[#F2F4F6] text-[#333D4B]' :
                                 session.user.role === 'TEAM_LEADER' ? 'bg-purple-100 text-purple-700' : 'bg-[#F2F4F6] text-[#4E5968]'
                                 }`}>
                                 {session.user.role}

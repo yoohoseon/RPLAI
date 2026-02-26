@@ -53,12 +53,12 @@ export default async function StrategyPage(props: StrategyPageProps) {
     }
 
     return (
-        <div className="relative min-h-screen pb-32 font-sans bg-[#F9FAFB]">
+        <div className="relative min-h-screen pb-32 font-sans bg-[#F2F4F7]">
             {/* Header & Step Bar */}
-            <div className="sticky top-0 z-50 w-full bg-white border-b border-[#F2F4F6] transition-all">
+            <div className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md shadow-sm border-none transition-all py-1">
                 <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="flex items-baseline gap-3">
-                        <h1 className="text-2xl font-bold tracking-tight text-[#191F28] truncate max-w-[200px] sm:max-w-none">
+                        <h1 className="text-2xl font-bold tracking-tight text-[#333D4B] truncate max-w-[200px] sm:max-w-none">
                             {brandRecord.brandKor} <span className="text-[#4E5968] text-lg font-medium tracking-normal ml-2">{brandRecord.brandEng}</span>
                         </h1>
                     </div>
@@ -66,12 +66,12 @@ export default async function StrategyPage(props: StrategyPageProps) {
                     <div className="flex items-center gap-4">
                         {/* Progress UI */}
                         <nav className="flex items-center space-x-3 text-sm font-bold">
-                            <Link href={`/main/analysis?id=${analysisId}`} className="flex items-center text-[#4E5968] hover:text-[#191F28] transition-colors gap-1.5">
-                                <CheckCircle2 className="w-4 h-4 text-[#3182F6]" />
+                            <Link href={`/main/analysis?id=${analysisId}`} className="flex items-center text-[#4E5968] hover:text-[#333D4B] transition-colors gap-1.5">
+                                <CheckCircle2 className="w-4 h-4 text-[#333D4B]" />
                                 브랜드 분석
                             </Link>
                             <ChevronRight className="w-4 h-4 text-[#ABB3BB]" />
-                            <span className="flex items-center text-[#3182F6] bg-[#3182F6]/10 px-4 py-1.5 rounded-full gap-1.5">
+                            <span className="flex items-center text-[#333D4B] bg-[#F2F4F7] px-5 py-2 rounded-2xl gap-2 shadow-none border-none">
                                 <PenTool className="w-4 h-4" />
                                 콘텐츠 전략 수립
                             </span>

@@ -51,17 +51,17 @@ export function TeamEditDialog({ team, users }: { team: Team; users: User[] }) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="w-9 h-9 text-[#8B95A1] hover:text-[#3182F6] hover:bg-[#3182F6]/5 rounded-xl transition-all" title="팀 정보 수정">
+                <Button variant="ghost" size="icon" className="w-9 h-9 text-[#8B95A1] hover:text-[#333D4B] hover:bg-[#F2F4F6]/5 rounded-xl transition-all" title="팀 정보 수정">
                     <Pencil className="h-4.5 w-4.5" />
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[520px] p-0 overflow-hidden border-[#F2F4F6] rounded-[32px] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+            <DialogContent className="sm:max-w-[520px] p-0 overflow-hidden border-none rounded-[32px] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
                 <div className="p-10">
                     <DialogHeader className="mb-8">
-                        <div className="w-14 h-14 bg-[#3182F6]/5 rounded-2xl flex items-center justify-center mb-6">
-                            <Pencil className="w-7 h-7 text-[#3182F6]" />
+                        <div className="w-14 h-14 bg-[#F2F4F6]/5 rounded-2xl flex items-center justify-center mb-6">
+                            <Pencil className="w-7 h-7 text-[#333D4B]" />
                         </div>
-                        <DialogTitle className="text-[22px] font-bold text-[#191F28] tracking-tight">팀 정보 수정</DialogTitle>
+                        <DialogTitle className="text-[22px] font-bold text-[#333D4B] tracking-tight">팀 정보 수정</DialogTitle>
                         <DialogDescription className="text-[15px] font-medium text-[#4E5968] leading-relaxed mt-2">
                             팀의 기본 설정 및 리더를 변경할 수 있습니다.
                         </DialogDescription>
@@ -78,7 +78,7 @@ export function TeamEditDialog({ team, users }: { team: Team; users: User[] }) {
                                     name="name"
                                     defaultValue={team.name}
                                     placeholder="팀 이름 입력"
-                                    className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#3182F6]/20"
+                                    className="h-14 bg-[#F2F4F7] border-none rounded-2xl px-5 text-[15px] font-bold focus:ring-[#3182F6]/20"
                                     required
                                 />
                             </div>
@@ -91,7 +91,7 @@ export function TeamEditDialog({ team, users }: { team: Team; users: User[] }) {
                                     name="description"
                                     defaultValue={team.description || ''}
                                     placeholder="팀 역할 등에 대한 설명"
-                                    className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#3182F6]/20"
+                                    className="h-14 bg-[#F2F4F7] border-none rounded-2xl px-5 text-[15px] font-bold focus:ring-[#3182F6]/20"
                                 />
                             </div>
                             <div className="space-y-2.5">
@@ -99,10 +99,10 @@ export function TeamEditDialog({ team, users }: { team: Team; users: User[] }) {
                                     팀 리더 지정
                                 </Label>
                                 <Select value={leaderId} onValueChange={setLeaderId}>
-                                    <SelectTrigger className="h-14 bg-[#F9FAFB] border-[#F2F4F6] rounded-2xl px-5 text-[15px] font-bold focus:ring-[#3182F6]/20">
+                                    <SelectTrigger className="h-14 bg-[#F2F4F7] border-none rounded-2xl px-5 text-[15px] font-bold focus:ring-[#3182F6]/20">
                                         <SelectValue placeholder="리더 선택" />
                                     </SelectTrigger>
-                                    <SelectContent className="rounded-2xl border-[#F2F4F6] shadow-xl">
+                                    <SelectContent className="rounded-2xl border-none shadow-[0_10px_40px_rgba(0,0,0,0.08)]">
                                         <SelectItem value="none" className="rounded-xl font-medium py-3 text-[#ABB3BB]">리더 없음</SelectItem>
                                         {users.map((user) => (
                                             <SelectItem key={user.id} value={user.id} className="rounded-xl font-medium py-3">
@@ -123,7 +123,7 @@ export function TeamEditDialog({ team, users }: { team: Team; users: User[] }) {
                             <Button
                                 type="submit"
                                 disabled={isPending}
-                                className="w-full h-16 rounded-[20px] bg-[#3182F6] hover:bg-[#1B64DA] text-white font-bold text-[17px] shadow-lg shadow-[#3182F6]/10 active:scale-[0.98] transition-all"
+                                className="w-full h-16 rounded-[20px] bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#333D4B] font-bold text-[17px] shadow-none active:scale-[0.98] transition-all"
                             >
                                 {isPending ? (
                                     <>

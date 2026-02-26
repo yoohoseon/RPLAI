@@ -15,7 +15,7 @@ export function Footer() {
     };
 
     return (
-        <footer className="w-full py-10 bg-slate-50 dark:bg-slate-950 border-t border-[#F2F4F6] mt-auto">
+        <footer className="w-full py-10 bg-slate-50 dark:bg-slate-950 border-none mt-auto">
             <div className="container mx-auto px-4">
                 <motion.p
                     className="text-center text-[#8B95A1] text-[14px] font-normal"

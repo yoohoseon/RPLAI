@@ -41,13 +41,13 @@ export function TeamDeleteDialog({ teamId, teamName }: { teamId: string, teamNam
                     <Trash2 className="h-4.5 w-4.5" />
                 </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent className="sm:max-w-[480px] p-0 overflow-hidden border-[#F2F4F6] rounded-[32px] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+            <AlertDialogContent className="sm:max-w-[480px] p-0 overflow-hidden border-none rounded-[32px] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
                 <div className="p-10">
                     <AlertDialogHeader className="mb-8">
                         <div className="w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center mb-6">
                             <AlertTriangle className="w-7 h-7 text-rose-500" />
                         </div>
-                        <AlertDialogTitle className="text-[22px] font-bold text-[#191F28] tracking-tight">팀을 삭제하시겠습니까?</AlertDialogTitle>
+                        <AlertDialogTitle className="text-[22px] font-bold text-[#333D4B] tracking-tight">팀을 삭제하시겠습니까?</AlertDialogTitle>
                         <AlertDialogDescription className="text-[15px] font-medium text-[#4E5968] leading-relaxed mt-2">
                             <strong>{teamName}</strong> 팀 정보가 영구적으로 삭제됩니다.<br />
                             <span className="text-rose-500 text-[13px] mt-2 block font-bold">* 소속된 팀원이 있는 경우 삭제할 수 없습니다.</span>

@@ -37,12 +37,12 @@ export function DeleteBrandButton({ analysisId }: { analysisId: string }) {
         <Button
             variant="ghost"
             size="sm"
-            className="flex items-center gap-1.5 rounded-full px-4 text-rose-500 hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-950/30 transition-all font-semibold cursor-pointer"
             disabled={isDeleting}
+            className="text-red-500 hover:text-red-600 hover:bg-transparent bg-transparent shadow-none"
             onClick={handleDelete}
         >
             {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-            브랜드 삭제
+            {/* 브랜드 삭제 */}
         </Button>
     )
 }
