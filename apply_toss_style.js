@@ -10,8 +10,8 @@ function processFile(filePath) {
     // Replace EXACT patterns to be safe
 
     content = content.replace(/bg-\[#3182F6\]/g, 'bg-[#F2F4F6]');
-    content = content.replace(/text-white hover:bg-\[#1B64DA\]/g, 'text-[#333D4B] hover:bg-[#E5E8EB] active:bg-[#D1D6DB]');
-    content = content.replace(/hover:bg-\[#1B64DA\] text-white/g, 'hover:bg-[#E5E8EB] text-[#333D4B] active:bg-[#D1D6DB]');
+    content = content.replace(/text-white hover:bg-\[#1B64DA\]/g, 'text-[#333333] hover:bg-[#E5E8EB] active:bg-[#D1D6DB]');
+    content = content.replace(/hover:bg-\[#1B64DA\] text-white/g, 'hover:bg-[#E5E8EB] text-[#333333] active:bg-[#D1D6DB]');
 
     // Shadow removals or soften for the buttons
     content = content.replace(/shadow-lg shadow-\[#3182F6\]\/10/g, 'shadow-none');
@@ -19,7 +19,7 @@ function processFile(filePath) {
     content = content.replace(/shadow-\[#3182F6\]\/20/g, 'shadow-none');
 
     // Other blue text elements
-    content = content.replace(/text-\[#3182F6\]/g, 'text-[#333D4B]');
+    content = content.replace(/text-\[#3182F6\]/g, 'text-[#333333]');
     content = content.replace(/bg-\[#3182F6\]\/5/g, 'bg-[#F2F4F6]');
     content = content.replace(/bg-\[#3182F6\]\/10/g, 'bg-[#E5E8EB]');
 
@@ -29,7 +29,7 @@ function processFile(filePath) {
     content = content.replace(/border-\[#F2F4F6\]/g, 'border-none shadow-[0_2px_24px_rgba(0,0,0,0.04)]');
 
     // Text colors
-    content = content.replace(/text-\[#191F28\]/g, 'text-[#333D4B]');
+    content = content.replace(/text-\[#191F28\]/g, 'text-[#333333]');
 
     if (content !== original) {
         fs.writeFileSync(filePath, content);

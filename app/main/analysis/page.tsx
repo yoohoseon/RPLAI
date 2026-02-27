@@ -91,11 +91,11 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
                     <div className="w-24 h-24 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-8">
                         <AlertTriangle className="w-12 h-12" />
                     </div>
-                    <h1 className="text-3xl font-bold mb-4 text-[#333D4B]">분석에 실패했습니다</h1>
+                    <h1 className="text-3xl font-bold mb-4 text-[#333333]">분석에 실패했습니다</h1>
                     <p className="text-[#4E5968] mb-10 text-lg font-medium break-keep">
                         브랜드 분석 데이터를 생성하는 도중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.
                     </p>
-                    <a href="/main" className="inline-flex items-center justify-center px-10 py-5 bg-[#F2F4F7] text-[#333D4B] font-bold rounded-2xl hover:bg-[#E5E8EB] transition-all shadow-none active:scale-[0.98] text-[16px]">
+                    <a href="/main" className="inline-flex items-center justify-center px-10 py-5 bg-[#F2F4F7] text-[#333333] font-bold rounded-2xl hover:bg-[#E5E8EB] transition-all shadow-none active:scale-[0.98] text-[16px]">
                         대시보드로 돌아가기
                     </a>
                 </div>
@@ -126,7 +126,7 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
             <div className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md shadow-sm border-none transition-all py-1">
                 <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="flex items-baseline gap-3">
-                        <h1 className="text-2xl font-bold tracking-tight text-[#333D4B] truncate max-w-[200px] sm:max-w-none">
+                        <h1 className="text-2xl font-bold tracking-tight text-[#333333] truncate max-w-[200px] sm:max-w-none">
                             {brandKor} <span className="text-[#4E5968] text-lg font-medium tracking-normal ml-2">{brandEng}</span>
                         </h1>
                     </div>
@@ -134,7 +134,7 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
                     <div className="flex items-center gap-4">
                         {/* Progress UI */}
                         <nav className="flex items-center space-x-3 text-sm font-bold">
-                            <span className="flex items-center text-[#333D4B] bg-[#F2F4F7] px-5 py-2 rounded-2xl gap-2 shadow-none border-none">
+                            <span className="flex items-center text-[#333333] bg-[#F2F4F7] px-5 py-2 rounded-2xl gap-2 shadow-none border-none">
                                 <CheckCircle2 className="w-4 h-4" />
                                 브랜드 분석
                             </span>

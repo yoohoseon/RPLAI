@@ -51,7 +51,7 @@ export function TeamEditDialog({ team, users }: { team: Team; users: User[] }) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="w-9 h-9 text-[#8B95A1] hover:text-[#333D4B] hover:bg-[#F2F4F6]/5 rounded-xl transition-all" title="팀 정보 수정">
+                <Button variant="ghost" size="icon" className="w-9 h-9 text-[#8B95A1] hover:text-[#333333] hover:bg-[#F2F4F6]/5 rounded-xl transition-all" title="팀 정보 수정">
                     <Pencil className="h-4.5 w-4.5" />
                 </Button>
             </DialogTrigger>
@@ -59,9 +59,9 @@ export function TeamEditDialog({ team, users }: { team: Team; users: User[] }) {
                 <div className="p-10">
                     <DialogHeader className="mb-8">
                         <div className="w-14 h-14 bg-[#F2F4F6]/5 rounded-2xl flex items-center justify-center mb-6">
-                            <Pencil className="w-7 h-7 text-[#333D4B]" />
+                            <Pencil className="w-7 h-7 text-[#333333]" />
                         </div>
-                        <DialogTitle className="text-[22px] font-bold text-[#333D4B] tracking-tight">팀 정보 수정</DialogTitle>
+                        <DialogTitle className="text-[22px] font-bold text-[#333333] tracking-tight">팀 정보 수정</DialogTitle>
                         <DialogDescription className="text-[15px] font-medium text-[#4E5968] leading-relaxed mt-2">
                             팀의 기본 설정 및 리더를 변경할 수 있습니다.
                         </DialogDescription>
@@ -123,7 +123,7 @@ export function TeamEditDialog({ team, users }: { team: Team; users: User[] }) {
                             <Button
                                 type="submit"
                                 disabled={isPending}
-                                className="w-full h-16 rounded-[20px] bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#333D4B] font-bold text-[17px] shadow-none active:scale-[0.98] transition-all"
+                                className="w-full h-16 rounded-[20px] bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#333333] font-bold text-[17px] shadow-none active:scale-[0.98] transition-all"
                             >
                                 {isPending ? (
                                     <>

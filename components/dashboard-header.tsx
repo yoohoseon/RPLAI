@@ -29,8 +29,8 @@ export default async function DashboardHeader() {
                 <div className="flex items-center gap-6">
                     <div className="hidden sm:flex flex-col items-end">
                         <div className="flex items-center gap-2">
-                            <span className="text-[15px] font-bold text-[#333D4B]">{session.user.name}</span>
-                            <span className={`text-[11px] px-2.5 py-1 rounded-lg font-bold ${session.user.role === 'MASTER' ? 'bg-[#F2F4F6] text-[#333D4B]' :
+                            <span className="text-[15px] font-bold text-[#333333]">{session.user.name}</span>
+                            <span className={`text-[11px] px-2.5 py-1 rounded-lg font-bold ${session.user.role === 'MASTER' ? 'bg-[#F2F4F6] text-[#333333]' :
                                 session.user.role === 'TEAM_LEADER' ? 'bg-purple-100 text-purple-700' : 'bg-[#F2F4F6] text-[#4E5968]'
                                 }`}>
                                 {session.user.role}

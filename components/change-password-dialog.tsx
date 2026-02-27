@@ -32,9 +32,9 @@ export function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; on
                 <div className="p-10">
                     <DialogHeader className="mb-8">
                         <div className="w-14 h-14 bg-[#F2F4F6]/5 rounded-2xl flex items-center justify-center mb-6">
-                            <Lock className="w-7 h-7 text-[#333D4B]" />
+                            <Lock className="w-7 h-7 text-[#333333]" />
                         </div>
-                        <DialogTitle className="text-[22px] font-bold text-[#333D4B] tracking-tight">비밀번호 변경</DialogTitle>
+                        <DialogTitle className="text-[22px] font-bold text-[#333333] tracking-tight">비밀번호 변경</DialogTitle>
                         <DialogDescription className="text-[15px] font-medium text-[#4E5968] leading-relaxed mt-2 uppercase tracking-wide">
                             보안을 위해 현재 비밀번호를 확인하고<br />새로운 비밀번호를 설정해주세요.
                         </DialogDescription>

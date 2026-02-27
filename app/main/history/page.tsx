@@ -50,7 +50,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
             <div className="container mx-auto py-12 px-6 max-w-7xl space-y-10 animate-in fade-in duration-700">
                 <div className="flex items-end justify-between border-none pb-8">
                     <div className="space-y-2">
-                        <h1 className="text-3xl font-bold tracking-tight text-[#333D4B]">분석 이력</h1>
+                        <h1 className="text-3xl font-bold tracking-tight text-[#333333]">분석 이력</h1>
                         <p className="text-[17px] font-medium text-[#4E5968]">과거의 브랜드 분석 및 전략 수립 기록을 확인하세요.</p>
                     </div>
                     <Link href="/main">

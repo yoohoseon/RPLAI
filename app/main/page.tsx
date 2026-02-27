@@ -7,7 +7,7 @@ export default function MainPage() {
                 {/* Left Column: Hero Text */}
                 <div className="space-y-8 text-center lg:text-left animate-in fade-in slide-in-from-left-5 duration-1000">
                     <div className="space-y-4">
-                        <h1 className="text-5xl lg:text-[72px] font-bold tracking-tight text-[#333D4B] leading-[1.15]">
+                        <h1 className="text-5xl lg:text-[72px] font-bold tracking-tight text-[#333333] leading-[1.15]">
                             데이터로 이끄는<br />
                             <span className="text-[#E14331]">브랜드의 성장</span>
                         </h1>
@@ -19,13 +19,13 @@ export default function MainPage() {
 
                     <div className="flex flex-wrap gap-3 justify-center lg:justify-start pt-4">
                         <div className="flex items-center gap-2 text-[15px] font-bold bg-white text-[#4E5968] px-5 py-3 rounded-2xl shadow-sm border-none">
-                            <span className="text-[#333D4B]">✓</span> 라이프스타일 큐레이션
+                            <span className="text-[#333333]">✓</span> 라이프스타일 큐레이션
                         </div>
                         <div className="flex items-center gap-2 text-[15px] font-bold bg-white text-[#4E5968] px-5 py-3 rounded-2xl shadow-sm border-none">
-                            <span className="text-[#333D4B]">✓</span> 지식/관여도 분석
+                            <span className="text-[#333333]">✓</span> 지식/관여도 분석
                         </div>
                         <div className="flex items-center gap-2 text-[15px] font-bold bg-white text-[#4E5968] px-5 py-3 rounded-2xl shadow-sm border-none">
-                            <span className="text-[#333D4B]">✓</span> 디지털 소통 구조
+                            <span className="text-[#333333]">✓</span> 디지털 소통 구조
                         </div>
                     </div>
                 </div>
@@ -34,7 +34,7 @@ export default function MainPage() {
                 <div className="w-full animate-in fade-in slide-in-from-right-5 duration-1000 delay-200">
                     <div className="bg-white rounded-[36px] p-8 sm:p-12 shadow-[0_4px_30px_rgba(0,0,0,0.03)] border-none relative overflow-hidden group">
                         <div className="mb-10 text-center lg:text-left">
-                            <h2 className="text-[28px] lg:text-[32px] font-bold tracking-tight mb-2 text-[#333D4B]">브랜드 정보 등록</h2>
+                            <h2 className="text-[28px] lg:text-[32px] font-bold tracking-tight mb-2 text-[#333333]">브랜드 정보 등록</h2>
                             <p className="text-[16px] font-medium text-[#4E5968]">분석할 브랜드의 정보를 입력해 주세요.</p>
                         </div>
 

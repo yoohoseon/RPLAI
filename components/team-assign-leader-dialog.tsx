@@ -40,7 +40,7 @@ export function TeamAssignLeaderDialog({ teamId, users }: { teamId: string; user
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" className="h-9 px-4 border-[#3182F6] text-[#333D4B] hover:bg-[#F2F4F6]/5 rounded-xl font-bold transition-all flex items-center gap-2">
+                <Button variant="outline" className="h-9 px-4 border-[#3182F6] text-[#333333] hover:bg-[#F2F4F6]/5 rounded-xl font-bold transition-all flex items-center gap-2">
                     <Plus className="w-4 h-4" />
                     리더 지정하기
                 </Button>
@@ -49,9 +49,9 @@ export function TeamAssignLeaderDialog({ teamId, users }: { teamId: string; user
                 <div className="p-10">
                     <DialogHeader className="mb-8">
                         <div className="w-14 h-14 bg-[#F2F4F6]/5 rounded-2xl flex items-center justify-center mb-6">
-                            <UserCheck className="w-7 h-7 text-[#333D4B]" />
+                            <UserCheck className="w-7 h-7 text-[#333333]" />
                         </div>
-                        <DialogTitle className="text-[22px] font-bold text-[#333D4B] tracking-tight">팀 리더 지정</DialogTitle>
+                        <DialogTitle className="text-[22px] font-bold text-[#333333] tracking-tight">팀 리더 지정</DialogTitle>
                         <DialogDescription className="text-[15px] font-medium text-[#4E5968] leading-relaxed mt-2">
                             팀을 이끌어갈 리더를 선택해주세요.<br />
                             리더는 팀원 관리 및 분석 권한을 가집니다.
@@ -92,7 +92,7 @@ export function TeamAssignLeaderDialog({ teamId, users }: { teamId: string; user
                             <Button
                                 type="submit"
                                 disabled={isPending || !leaderId}
-                                className="w-full h-16 rounded-[20px] bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#333D4B] font-bold text-[17px] shadow-none active:scale-[0.98] transition-all disabled:bg-[#F2F4F6] disabled:text-[#ABB3BB] disabled:shadow-none"
+                                className="w-full h-16 rounded-[20px] bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#333333] font-bold text-[17px] shadow-none active:scale-[0.98] transition-all disabled:bg-[#F2F4F6] disabled:text-[#ABB3BB] disabled:shadow-none"
                             >
                                 {isPending ? (
                                     <>

@@ -34,8 +34,8 @@ export default function PaginationControls({ totalPages, currentPage }: Paginati
                 이전
             </Button>
 
-            <span className="text-[14px] font-bold text-[#333D4B] px-4 min-w-[100px] text-center">
-                <span className="text-[#333D4B]">{currentPage}</span> <span className="text-[#ABB3BB] mx-1">/</span> {totalPages}
+            <span className="text-[14px] font-bold text-[#333333] px-4 min-w-[100px] text-center">
+                <span className="text-[#333333]">{currentPage}</span> <span className="text-[#ABB3BB] mx-1">/</span> {totalPages}
             </span>
 
             <Button

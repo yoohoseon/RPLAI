@@ -48,7 +48,7 @@ export function UserEditDialog({ user, teams }: { user: User; teams: Team[] }) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="w-9 h-9 text-[#8B95A1] hover:text-[#333D4B] hover:bg-[#F2F4F6]/5 rounded-xl transition-all" title="사용자 정보 수정">
+                <Button variant="ghost" size="icon" className="w-9 h-9 text-[#8B95A1] hover:text-[#333333] hover:bg-[#F2F4F6]/5 rounded-xl transition-all" title="사용자 정보 수정">
                     <Pencil className="h-4.5 w-4.5" />
                 </Button>
             </DialogTrigger>
@@ -56,9 +56,9 @@ export function UserEditDialog({ user, teams }: { user: User; teams: Team[] }) {
                 <div className="p-10">
                     <DialogHeader className="mb-8">
                         <div className="w-14 h-14 bg-[#F2F4F6]/5 rounded-2xl flex items-center justify-center mb-6">
-                            <UserCircle className="w-7 h-7 text-[#333D4B]" />
+                            <UserCircle className="w-7 h-7 text-[#333333]" />
                         </div>
-                        <DialogTitle className="text-[22px] font-bold text-[#333D4B] tracking-tight">사용자 정보 수정</DialogTitle>
+                        <DialogTitle className="text-[22px] font-bold text-[#333333] tracking-tight">사용자 정보 수정</DialogTitle>
                         <DialogDescription className="text-[15px] font-medium text-[#4E5968] leading-relaxed mt-2">
                             사용자의 이름, 이메일, 권한 및 소속 팀을 변경합니다.
                         </DialogDescription>
@@ -119,7 +119,7 @@ export function UserEditDialog({ user, teams }: { user: User; teams: Team[] }) {
                                     </SelectTrigger>
                                     <SelectContent className="rounded-2xl border-none shadow-[0_10px_40px_rgba(0,0,0,0.08)]">
                                         <SelectItem value="MASTER" className="rounded-xl font-medium py-3 text-purple-600">Master</SelectItem>
-                                        <SelectItem value="TEAM_LEADER" className="rounded-xl font-medium py-3 text-[#333D4B]">Team Leader</SelectItem>
+                                        <SelectItem value="TEAM_LEADER" className="rounded-xl font-medium py-3 text-[#333333]">Team Leader</SelectItem>
                                         <SelectItem value="TEAM_MEMBER" className="rounded-xl font-medium py-3">Team Member</SelectItem>
                                     </SelectContent>
                                 </Select>
@@ -156,7 +156,7 @@ export function UserEditDialog({ user, teams }: { user: User; teams: Team[] }) {
                             <Button
                                 type="submit"
                                 disabled={isPending}
-                                className="w-full h-16 rounded-[20px] bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#333D4B] font-bold text-[17px] shadow-none active:scale-[0.98] transition-all"
+                                className="w-full h-16 rounded-[20px] bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#333333] font-bold text-[17px] shadow-none active:scale-[0.98] transition-all"
                             >
                                 {isPending ? (
                                     <>

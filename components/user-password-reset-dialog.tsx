@@ -26,7 +26,7 @@ export function UserPasswordResetDialog({ userId, userName }: { userId: string; 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="w-9 h-9 text-[#8B95A1] hover:text-[#333D4B] hover:bg-[#F2F4F6]/5 rounded-xl transition-all" title="비밀번호 초기화">
+                <Button variant="ghost" size="icon" className="w-9 h-9 text-[#8B95A1] hover:text-[#333333] hover:bg-[#F2F4F6]/5 rounded-xl transition-all" title="비밀번호 초기화">
                     <KeyRound className="h-4.5 w-4.5" />
                 </Button>
             </DialogTrigger>
@@ -34,9 +34,9 @@ export function UserPasswordResetDialog({ userId, userName }: { userId: string; 
                 <div className="p-10">
                     <DialogHeader className="mb-8">
                         <div className="w-14 h-14 bg-[#F2F4F6]/5 rounded-2xl flex items-center justify-center mb-6">
-                            <KeyRound className="w-7 h-7 text-[#333D4B]" />
+                            <KeyRound className="w-7 h-7 text-[#333333]" />
                         </div>
-                        <DialogTitle className="text-[22px] font-bold text-[#333D4B] tracking-tight">비밀번호 초기화</DialogTitle>
+                        <DialogTitle className="text-[22px] font-bold text-[#333333] tracking-tight">비밀번호 초기화</DialogTitle>
                         <DialogDescription className="text-[15px] font-medium text-[#4E5968] leading-relaxed mt-2">
                             <strong>{userName}</strong> 사용자의 새로운 비밀번호를 설정합니다.
                         </DialogDescription>
@@ -67,7 +67,7 @@ export function UserPasswordResetDialog({ userId, userName }: { userId: string; 
                             <Button
                                 type="submit"
                                 disabled={isPending}
-                                className="w-full h-16 rounded-[20px] bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#333D4B] font-bold text-[17px] shadow-none active:scale-[0.98] transition-all"
+                                className="w-full h-16 rounded-[20px] bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#333333] font-bold text-[17px] shadow-none active:scale-[0.98] transition-all"
                             >
                                 {isPending ? (
                                     <>

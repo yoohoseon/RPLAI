@@ -99,7 +99,7 @@ export default async function DashboardPage() {
                                             )
                                         })}
                                     </ul>
-                                    <Button className="w-full h-14 bg-[#333D4B] hover:bg-[#191F28] text-white rounded-2xl font-bold text-[15px] border-none shadow-sm transition-all active:scale-[0.98]" asChild>
+                                    <Button className="w-full h-14 bg-[#333333] hover:bg-[#191F28] text-white rounded-2xl font-bold text-[15px] border-none shadow-sm transition-all active:scale-[0.98]" asChild>
                                         <a href="/dashboard/teams">모든 팀 보기</a>
                                     </Button>
                                 </CardContent>
@@ -128,7 +128,7 @@ export default async function DashboardPage() {
                                             </li>
                                         ))}
                                     </ul>
-                                    <Button className="w-full h-14 bg-[#333D4B] hover:bg-[#191F28] text-white rounded-2xl font-bold text-[15px] border-none shadow-sm transition-all active:scale-[0.98]" asChild>
+                                    <Button className="w-full h-14 bg-[#333333] hover:bg-[#191F28] text-white rounded-2xl font-bold text-[15px] border-none shadow-sm transition-all active:scale-[0.98]" asChild>
                                         <a href="/dashboard/users">모든 사용자 보기</a>
                                     </Button>
                                 </CardContent>

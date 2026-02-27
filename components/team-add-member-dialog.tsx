@@ -41,7 +41,7 @@ export function TeamAddMemberDialog({ teamId, users }: { teamId: string; users: 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="h-10 px-4 bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#333D4B] rounded-xl font-bold transition-all shadow-none flex items-center gap-2">
+                <Button className="h-10 px-4 bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#333333] rounded-xl font-bold transition-all shadow-none flex items-center gap-2">
                     <Plus className="w-4 h-4" />
                     멤버 추가
                 </Button>
@@ -50,9 +50,9 @@ export function TeamAddMemberDialog({ teamId, users }: { teamId: string; users: 
                 <div className="p-10">
                     <DialogHeader className="mb-8">
                         <div className="w-14 h-14 bg-[#F2F4F6]/5 rounded-2xl flex items-center justify-center mb-6">
-                            <UserPlus className="w-7 h-7 text-[#333D4B]" />
+                            <UserPlus className="w-7 h-7 text-[#333333]" />
                         </div>
-                        <DialogTitle className="text-[22px] font-bold text-[#333D4B] tracking-tight">팀 멤버 추가</DialogTitle>
+                        <DialogTitle className="text-[22px] font-bold text-[#333333] tracking-tight">팀 멤버 추가</DialogTitle>
                         <DialogDescription className="text-[15px] font-medium text-[#4E5968] leading-relaxed mt-2">
                             기존 사용자 중 팀원으로 합류할<br />사용자를 선택해주세요.
                         </DialogDescription>
@@ -92,7 +92,7 @@ export function TeamAddMemberDialog({ teamId, users }: { teamId: string; users: 
                             <Button
                                 type="submit"
                                 disabled={isPending || !userId}
-                                className="w-full h-16 rounded-[20px] bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#333D4B] font-bold text-[17px] shadow-none active:scale-[0.98] transition-all disabled:bg-[#F2F4F6] disabled:text-[#ABB3BB] disabled:shadow-none"
+                                className="w-full h-16 rounded-[20px] bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#333333] font-bold text-[17px] shadow-none active:scale-[0.98] transition-all disabled:bg-[#F2F4F6] disabled:text-[#ABB3BB] disabled:shadow-none"
                             >
                                 {isPending ? (
                                     <>

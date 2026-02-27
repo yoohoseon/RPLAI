@@ -36,7 +36,7 @@ export function TeamRemoveMemberDialog({ userId, teamId, userName }: { userId: s
                         <div className="w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center mb-6">
                             <AlertTriangle className="w-7 h-7 text-rose-500" />
                         </div>
-                        <AlertDialogTitle className="text-[22px] font-bold text-[#333D4B] tracking-tight">멤버를 제외하시겠습니까?</AlertDialogTitle>
+                        <AlertDialogTitle className="text-[22px] font-bold text-[#333333] tracking-tight">멤버를 제외하시겠습니까?</AlertDialogTitle>
                         <AlertDialogDescription className="text-[15px] font-medium text-[#4E5968] leading-relaxed mt-2">
                             <strong>{userName}</strong> 님을 이 팀에서 제외합니다.<br />
                             시스템 계정은 유지되나, 이 팀의 데이터에는 더 이상 접근할 수 없게 됩니다.

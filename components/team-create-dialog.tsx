@@ -28,7 +28,7 @@ export function TeamCreateDialog() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="h-12 px-6 bg-[#333D4B] hover:bg-[#191F28] text-white rounded-xl font-bold transition-all shadow-sm flex items-center gap-2">
+                <Button className="h-12 px-6 bg-[#333333] hover:bg-[#191F28] text-white rounded-xl font-bold transition-all shadow-sm flex items-center gap-2">
                     <Plus className="w-5 h-5" />
                     새로운 팀 생성
                 </Button>
@@ -37,9 +37,9 @@ export function TeamCreateDialog() {
                 <div className="p-10">
                     <DialogHeader className="mb-8">
                         <div className="w-14 h-14 bg-[#F2F4F6]/5 rounded-2xl flex items-center justify-center mb-6">
-                            <Users className="w-7 h-7 text-[#333D4B]" />
+                            <Users className="w-7 h-7 text-[#333333]" />
                         </div>
-                        <DialogTitle className="text-[22px] font-bold text-[#333D4B] tracking-tight">팀 생성</DialogTitle>
+                        <DialogTitle className="text-[22px] font-bold text-[#333333] tracking-tight">팀 생성</DialogTitle>
                         <DialogDescription className="text-[15px] font-medium text-[#4E5968] leading-relaxed mt-2">
                             새로운 브랜드 또는 프로젝트를 관리할<br />팀 단위를 생성합니다.
                         </DialogDescription>
@@ -79,7 +79,7 @@ export function TeamCreateDialog() {
                             <Button
                                 type="submit"
                                 disabled={isPending}
-                                className="w-full h-16 rounded-[20px] bg-[#333D4B] hover:bg-[#191F28] text-white font-bold text-[17px] shadow-sm active:scale-[0.98] transition-all disabled:bg-[#ABB3BB]"
+                                className="w-full h-16 rounded-[20px] bg-[#333333] hover:bg-[#191F28] text-white font-bold text-[17px] shadow-sm active:scale-[0.98] transition-all disabled:bg-[#ABB3BB]"
                             >
                                 {isPending ? (
                                     <>
