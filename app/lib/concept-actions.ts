@@ -10,7 +10,8 @@ export async function generateConceptsBatch(
     brandKor: string,
     brandEng: string,
     targetAndTone: { lifestyle: number; knowledge: number; communication: number },
-    analysisId?: string
+    analysisId?: string,
+    guidelines?: string
 ) {
     const prompt = `
     당신은 실력 있는 수석 브랜드 전략가이자 수석 카피라이터입니다.
@@ -23,6 +24,7 @@ export async function generateConceptsBatch(
     - 라이프스타일 지수 (0: 안정/실속 ~ 100: 성취/도전): ${targetAndTone.lifestyle}
     - 지식/관여도 지수 (0: 대중/입문 ~ 100: 전문가/매니아): ${targetAndTone.knowledge}
     - 소통 관계 지수 (0: 친근한 ~ 100: 신뢰받는): ${targetAndTone.communication}
+    ${guidelines ? `\n    [특별 요청/강력 지침]\n    ${guidelines}\n` : ''}
 
     [말투, 어휘, 소구점 절대 규칙]
     1. 소통 관계 지수(${targetAndTone.communication})에 따른 **말투(어미, 톤)**:
@@ -81,11 +83,13 @@ export async function generateConceptsBatch(
                             id: Date.now().toString(),
                             timestamp: new Date().toISOString(),
                             targetAndTone: parsedContent.targetAndTone || targetAndTone,
+                            guidelines: parsedContent.guidelines,
                             concepts: parsedContent.concepts
                         });
                     }
 
                     parsedContent.targetAndTone = targetAndTone;
+                    parsedContent.guidelines = guidelines;
                     parsedContent.concepts = object.concepts;
 
                     currentHistory = parsedContent.conceptHistory;

@@ -84,36 +84,39 @@ export async function generateBrandAnalysis(
         naver_blog?: string
     },
     userId?: string, // Optional userId for caching
-    description?: string // Description from user form to prevent hallucination
+    description?: string, // Description from user form to prevent hallucination
+    forceNew?: boolean
 ) {
     try {
         // 1. Check Cache (Database)
-        // Note: We are not consistently checking socialUrls for cache hit to allow flexibility, 
-        // or we can just ignore it for cache lookup to find previous analysis of same brand/category.
-        // For strictness, we should check relevant fields.
-        const existingAnalysis = await prisma.brandAnalysis.findFirst({
-            where: {
-                brandKor,
-                brandEng,
-                category,
-                target,
-                competitors,
-            },
-            orderBy: { createdAt: 'desc' }
-        });
+        // Only checking if forceNew is not true
+        if (!forceNew) {
+            const existingAnalysis = await prisma.brandAnalysis.findFirst({
+                where: {
+                    brandKor,
+                    brandEng,
+                    category,
+                    target,
+                    competitors,
+                },
+                orderBy: { createdAt: 'desc' }
+            });
 
-        if (existingAnalysis) {
-            try {
-                const parsedContent = JSON.parse(existingAnalysis.content);
-                if (parsedContent && parsedContent.targetAndTone) {
-                    console.log(`[AI] Returning cached target and tone analysis for ${brandKor} (${brandEng})`);
-                    return parsedContent;
-                } else {
-                    console.warn(`[AI] Cached analysis for ${brandKor} is invalid/empty (missing targetAndTone). Re-generating.`);
+            if (existingAnalysis) {
+                try {
+                    const parsedContent = JSON.parse(existingAnalysis.content);
+                    if (parsedContent && parsedContent.targetAndTone) {
+                        console.log(`[AI] Returning cached target and tone analysis for ${brandKor} (${brandEng})`);
+                        return parsedContent;
+                    } else {
+                        console.warn(`[AI] Cached analysis for ${brandKor} is invalid/empty (missing targetAndTone). Re-generating.`);
+                    }
+                } catch (e) {
+                    console.error(`[AI] Failed to parse cached analysis for ${brandKor}`, e);
                 }
-            } catch (e) {
-                console.error(`[AI] Failed to parse cached analysis for ${brandKor}`, e);
             }
+        } else {
+            console.log(`[AI] forceNew is true, generating new analysis for ${brandKor} (${brandEng}) bypassing cache.`);
         }
 
         const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;

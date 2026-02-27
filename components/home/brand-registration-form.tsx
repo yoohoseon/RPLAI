@@ -62,6 +62,8 @@ export function BrandRegistrationForm() {
 
         if (data.instagram) params.set("instagram", data.instagram);
         if (data.youtube) params.set("youtube", data.youtube);
+        if (data.id) params.set("id", data.id);
+        if (data.forceNew) params.set("forceNew", "true");
 
         router.push(`/main/analysis?${params.toString()}`);
     };
@@ -74,7 +76,7 @@ export function BrandRegistrationForm() {
     const handleGenerateNew = () => {
         setShowDialog(false);
         setIsLoading(true);
-        proceedToAnalysis(formData);
+        proceedToAnalysis({ ...formData, forceNew: true });
     };
 
     return (

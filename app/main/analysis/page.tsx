@@ -32,6 +32,7 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
     let competitors = (searchParams.competitors as string) || 'None';
     let target = (searchParams.target as string) || 'General';
     let description = (searchParams.description as string) || '';
+    let forceNew = searchParams.forceNew === "true";
 
     // Get current user session for caching
     const session = await auth();
@@ -69,7 +70,7 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
                 naver_blog: searchParams.naver_blog as string | undefined,
             };
 
-            analysisData = await generateBrandAnalysis(brandKor, brandEng, category, target, competitors, url, socialUrls, userId, description);
+            analysisData = await generateBrandAnalysis(brandKor, brandEng, category, target, competitors, url, socialUrls, userId, description, forceNew);
 
             // Find the ID of the analysis we just generated/retrieved
             const savedRecord = await prisma.brandAnalysis.findFirst({
@@ -112,8 +113,8 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
         extendedStrategy?: any;
         savedContents?: { id: string, type: string, topic: string, content: string, date: string }[];
         persona?: { personality: string; tone: string[]; keywords: string[]; usp: string; story: string; philosophy: string; voice: string; slogan: string };
-        targetAndTone?: { lifestyle: number; knowledge: number; communication: number; lifestyleExplanation?: string; knowledgeExplanation?: string; communicationExplanation?: string; };
-        originalTargetAndTone?: { lifestyle: number; knowledge: number; communication: number; lifestyleExplanation?: string; knowledgeExplanation?: string; communicationExplanation?: string; };
+        targetAndTone?: { lifestyle: number; knowledge: number; communication: number; lifestyleExplanation?: string; knowledgeExplanation?: string; communicationExplanation?: string; guidelines?: string; };
+        originalTargetAndTone?: { lifestyle: number; knowledge: number; communication: number; lifestyleExplanation?: string; knowledgeExplanation?: string; communicationExplanation?: string; guidelines?: string; };
         concepts?: any[];
         conceptHistory?: any[];
     }

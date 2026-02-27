@@ -24,6 +24,7 @@ interface TargetToneProps {
         lifestyleExplanation?: string;
         knowledgeExplanation?: string;
         communicationExplanation?: string;
+        guidelines?: string;
     }
     originalValues: {
         lifestyle: number;
@@ -32,6 +33,7 @@ interface TargetToneProps {
         lifestyleExplanation?: string;
         knowledgeExplanation?: string;
         communicationExplanation?: string;
+        guidelines?: string;
     }
 }
 
@@ -41,6 +43,7 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
     const [lifestyle, setLifestyle] = useState(initialValues.lifestyle);
     const [knowledge, setKnowledge] = useState(initialValues.knowledge);
     const [communication, setCommunication] = useState(initialValues.communication);
+    const [guidelines, setGuidelines] = useState(initialValues.guidelines || "");
 
     const [concepts, setConcepts] = useState<any[] | null>(initialConcepts);
     const [conceptHistory, setConceptHistory] = useState<any[]>(initialHistory);
@@ -70,7 +73,8 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
     const isModified =
         lifestyle !== originalValues.lifestyle ||
         knowledge !== originalValues.knowledge ||
-        communication !== originalValues.communication;
+        communication !== originalValues.communication ||
+        guidelines !== (originalValues.guidelines || "");
 
     const handleEditStart = (conceptIdx: number, msgIdx: number, currentMsg: string) => {
         setEditingMsg({ conceptIdx, msgIdx });
@@ -131,6 +135,7 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
         setLifestyle(originalValues.lifestyle);
         setKnowledge(originalValues.knowledge);
         setCommunication(originalValues.communication);
+        setGuidelines(originalValues.guidelines || "");
 
         // 오리지널 추천값에 해당하는 컨셉이 히스토리에 있다면 복원
         const originalHistory = conceptHistory.find(item =>
@@ -150,7 +155,7 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
 
     const handleGenerateConcepts = async () => {
         setIsLoadingConcepts(true);
-        const result = await generateConceptsBatch(brandKor, brandEng, { lifestyle, knowledge, communication }, analysisId);
+        const result = await generateConceptsBatch(brandKor, brandEng, { lifestyle, knowledge, communication }, analysisId, guidelines);
         if (result.success && result.data) {
             setConcepts(result.data.concepts);
             setVisibleCounts({ 0: 1, 1: 1, 2: 1 });
@@ -165,6 +170,7 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
         setLifestyle(historyItem.targetAndTone.lifestyle);
         setKnowledge(historyItem.targetAndTone.knowledge);
         setCommunication(historyItem.targetAndTone.communication);
+        setGuidelines(historyItem.guidelines || "");
         setConcepts(historyItem.concepts);
         setVisibleCounts({ 0: 1, 1: 1, 2: 1 });
     };
@@ -316,6 +322,21 @@ export function TargetToneDashboard({ initialValues, originalValues, brandKor, b
                                     max={100}
                                     step={1}
                                     className="w-full [--primary:#3182F6]"
+                                />
+                            </div>
+
+                            {/* Additional Guidelines */}
+                            <div className="space-y-3 pt-4 border-t border-[#F2F4F6]">
+                                <label htmlFor="guidelines" className="text-[15px] font-bold text-[#333333] px-1 flex items-center gap-2">
+                                    <Sparkles className="w-4 h-4 text-[#ABB3BB]" />
+                                    강력 지침 (선택 사항)
+                                </label>
+                                <textarea
+                                    id="guidelines"
+                                    value={guidelines}
+                                    onChange={(e) => setGuidelines(e.target.value)}
+                                    placeholder="예: 20대 초반 대학생 타겟이므로 무조건 유행하는 밈을 써줘, 할인 혜택을 특히 강조해줘 등 세부적인 요구사항을 입력하세요."
+                                    className="flex min-h-[100px] w-full rounded-2xl border-none bg-[#F2F4F7] p-5 text-[14px] font-medium transition-all focus:bg-[#E5E8EB] focus:outline-none placeholder:text-[#A4AEC0] text-[#4E5968] resize-none"
                                 />
                             </div>
                         </TooltipProvider>
