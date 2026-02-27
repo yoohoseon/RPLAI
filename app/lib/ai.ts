@@ -215,25 +215,74 @@ export async function generateBrandAnalysis(
         // Only save if object is valid
         if (userId && object && object.targetAndTone) {
             try {
-                await prisma.brandAnalysis.create({
-                    data: {
-                        brandKor,
-                        brandEng,
-                        category,
-                        target,
-                        competitors,
-                        url: url || '',
-                        socialUrls: socialUrls ? JSON.stringify(socialUrls) : undefined,
-                        content: JSON.stringify({
-                            ...object,
-                            originalTargetAndTone: object.targetAndTone
-                        }),
-                        userId: userId
-                    }
+                // 현재 브랜드명으로 기존 분석 기록이 있는지 확인
+                const existingAnalysis = await prisma.brandAnalysis.findFirst({
+                    where: { brandKor, brandEng },
+                    orderBy: { createdAt: 'desc' }
                 });
-                console.log(`[AI] Saved analysis for ${brandKor} to DB`);
+
+                let isDescriptionDifferent = true;
+                let existingContent: any = {};
+
+                if (existingAnalysis) {
+                    try {
+                        existingContent = JSON.parse(existingAnalysis.content || '{}');
+                        // 기존에 저장된 description이 있고, 새로 입력한 description과 동일하면 다른 설명이 아님
+                        if (existingContent.description && description && existingContent.description === description) {
+                            isDescriptionDifferent = false;
+                        } else if (!existingContent.description && !description) {
+                            isDescriptionDifferent = false;
+                        }
+                    } catch (e) { }
+                }
+
+                if (existingAnalysis && !isDescriptionDifferent) {
+                    // 설명이 같다면 기존 브랜드 ID에 업데이트 (덮어쓰지 않고 타겟&톤 등만 갱신하거나 유지)
+                    // 콘셉 도출 히스토리를 유지하기 위해 기존 content를 보존해야 합니다.
+                    await prisma.brandAnalysis.update({
+                        where: { id: existingAnalysis.id },
+                        data: {
+                            category, target, competitors,
+                            url: url || '',
+                            socialUrls: socialUrls ? JSON.stringify(socialUrls) : undefined,
+                            content: JSON.stringify({
+                                ...existingContent,
+                                targetAndTone: object.targetAndTone,
+                                // 최초 targetAndTone이 없다면 저장
+                                originalTargetAndTone: existingContent.originalTargetAndTone || object.targetAndTone
+                            })
+                        }
+                    });
+                    console.log(`[AI] Updated existing analysis for ${brandKor} (Same Description)`);
+
+                    // 새 객체 반환 시 기존 히스토리도 포함해서 리턴 (UI에서 기존 데이터를 볼 수 있도록)
+                    object.concepts = existingContent.concepts;
+                    object.conceptHistory = existingContent.conceptHistory;
+                    object.savedContents = existingContent.savedContents;
+                    object.savedStrategies = existingContent.savedStrategies;
+                } else {
+                    // 설명이 다르면(또는 최초 생성 시) 새로운 브랜드 기록으로 저장
+                    await prisma.brandAnalysis.create({
+                        data: {
+                            brandKor,
+                            brandEng,
+                            category,
+                            target,
+                            competitors,
+                            url: url || '',
+                            socialUrls: socialUrls ? JSON.stringify(socialUrls) : undefined,
+                            content: JSON.stringify({
+                                ...object,
+                                description: description, // 나중에 비교하기 위해 description 저장
+                                originalTargetAndTone: object.targetAndTone
+                            }),
+                            userId: userId
+                        }
+                    });
+                    console.log(`[AI] Created new analysis for ${brandKor} (Different Description or New)`);
+                }
             } catch (dbError) {
-                console.error("[AI] Failed to save analysis to DB:", dbError);
+                console.error("[AI] Failed to save/update analysis to DB:", dbError);
             }
         }
 
