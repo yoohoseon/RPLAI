@@ -4,6 +4,12 @@ import { signIn, auth } from '@/auth';
 import prisma from '@/lib/prisma';
 import { AuthError } from 'next-auth';
 import { revalidatePath } from 'next/cache';
+import { generateStagePersonas } from '@/app/lib/ai-da';
+import fs from 'fs';
+import path from 'path';
+import { google } from '@ai-sdk/google';
+import { generateObject } from 'ai';
+import { z } from 'zod';
 
 export async function authenticate(
     prevState: string | undefined,
@@ -434,5 +440,185 @@ export async function resetUserPassword(prevState: any, formData: FormData) {
         return { message: 'Password reset successfully', success: true };
     } catch (e) {
         return { message: 'Failed to reset password' };
+    }
+}
+
+export async function generateStagePersonasAction(stage: string, brandContext: any) {
+    return await generateStagePersonas(stage, brandContext);
+}
+
+export async function getCompetitorAdsAction(brandContext: any) {
+    try {
+        const brandName = brandContext?.brandKor || brandContext?.brandEng || '테스트 브랜드';
+        const brandCategory = brandContext?.category || '일반';
+
+        // 1. Find competitors via AI
+        const { object } = await generateObject({
+            model: google('gemini-2.5-flash'),
+            system: 'You are an expert digital marketer. Identify top 5 primary real-world competitors for the given brand. Return their names in Korean where appropriate.',
+            prompt: `Brand: ${brandName}\nCategory: ${brandCategory}\nWhat are the top 5 competitors?`,
+            schema: z.object({
+                competitors: z.array(z.string()).max(5)
+            })
+        });
+
+        // Save competitors to DB asynchronously
+        if (brandName && brandName !== '테스트 브랜드') {
+            try {
+                const latestBrandData = await prisma.brandDatas.findFirst({
+                    where: {
+                        OR: [
+                            { brandKor: brandName },
+                            { brandEng: brandName }
+                        ]
+                    },
+                    orderBy: { createdAt: 'desc' }
+                });
+
+                if (latestBrandData) {
+                    const parsedContent = JSON.parse(latestBrandData.content || '{}');
+                    parsedContent.competitors = object.competitors;
+
+                    await prisma.brandDatas.update({
+                        where: { id: latestBrandData.id },
+                        data: { content: JSON.stringify(parsedContent) }
+                    });
+                }
+            } catch (dbErr) {
+                console.error("Failed to save competitors to DB:", dbErr);
+            }
+        }
+
+        // 2. Parse mock CSV as reference ads
+        const filePath = path.join(process.cwd(), `sample_report_라네즈.csv`);
+        const fileContent = fs.readFileSync(filePath, 'utf-8');
+        const rows = fileContent.split('\n');
+
+        const ads = [];
+        for (let i = 4; i < rows.length; i++) {
+            const line = rows[i].trim();
+            if (!line || line.startsWith('""') || line.startsWith('"소재') || line.startsWith('소재유형')) break;
+
+            const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            if (cols.length >= 11) {
+                const cleanCols = cols.map(c => c.replace(/^"|"$/g, '').trim());
+                if (!isNaN(parseInt(cleanCols[0]))) {
+                    ads.push({
+                        id: parseInt(cleanCols[0]),
+                        type1: cleanCols[2],
+                        type2: cleanCols[3],
+                        copy: cleanCols[4],
+                        platform: cleanCols[6],
+                        targetGroup: cleanCols[7],
+                        startDate: cleanCols[8],
+                        endDate: cleanCols[9],
+                        days: parseInt(cleanCols[10]),
+                        spend: cleanCols[11]
+                    });
+                }
+            }
+        }
+        return {
+            competitors: object.competitors,
+            ads
+        };
+    } catch (error) {
+        console.error("Failed to call AI for competitors", error);
+        return { competitors: ["경쟁사A", "경쟁사B", "경쟁사C"], ads: [] };
+    }
+}
+
+export async function getCompetitorSpecificAdsAction(searchTerms: string, afterCursor?: string) {
+    try {
+        // 1. Fetch real ads from Meta Ads API
+        const token = "EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw";
+        const fields = "id,page_id,page_name,ad_creative_bodies,ad_creative_link_captions,ad_creation_time,ad_delivery_start_time,ad_snapshot_url";
+        const afterParam = afterCursor ? `&after=${afterCursor}` : "";
+        const url = `https://graph.facebook.com/v19.0/ads_archive?access_token=${token}&search_terms=${encodeURIComponent(searchTerms)}&ad_type=ALL&ad_reached_countries=['KR']&fields=${fields}&limit=12${afterParam}`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+
+        let realAds = data.data || [];
+        const nextCursor = data.paging?.cursors?.after || null;
+
+        if (data.error || realAds.length === 0) {
+            console.warn("[Meta Ads Warning/Error] Falling back to AI mock. Message:", data.error?.message);
+            const { object } = await generateObject({
+                model: google('gemini-2.5-flash'),
+                system: 'You are an expert digital performance marketer. Simulate the Meta Ads Library by providing realistic, current-sounding digital ad creatives actually used (or highly likely to be used) by the requested brand. Ensure absolute natural Korean phrasing.',
+                prompt: `Generate 12 realistic Meta/Instagram/Google ad creatives for the brand: ${searchTerms}.`,
+                schema: z.object({
+                    ads: z.array(z.object({
+                        type1: z.enum(['프로모션', '리뷰/UGC', '일반형']),
+                        type2: z.string(),
+                        copy: z.string(),
+                        platform: z.string(),
+                        targetGroup: z.string(),
+                        days: z.number().min(0).max(100)
+                    })).length(12)
+                })
+            });
+            const fallbackAds = object.ads.map((ad, idx) => ({
+                id: idx + 1,
+                ...ad,
+                spend: 'N/A',
+                startDate: new Date(Date.now() - ad.days * 86400000).toISOString().split('T')[0],
+                endDate: '-',
+                link: `https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=KR&q=${encodeURIComponent(searchTerms)}`
+            }));
+            return { ads: fallbackAds, nextCursor: null };
+        }
+
+        // We have real ads! Let's slice if needed and feed to AI for categorization (limit API calls)
+        realAds = realAds.slice(0, 12);
+
+        const adsForAi = realAds.map((ad: any, index: number) => ({
+            index,
+            copy: ad.ad_creative_bodies?.[0] || '이미지/영상 소재',
+        }));
+
+        const { object } = await generateObject({
+            model: google('gemini-2.5-flash'),
+            system: 'Categorize the following real ad copies into specific marketing tags.',
+            prompt: `Categorize these ${adsForAi.length} ads. 
+Ads data: ${JSON.stringify(adsForAi)}`,
+            schema: z.object({
+                categorized: z.array(z.object({
+                    index: z.number(),
+                    type1: z.enum(['프로모션', '리뷰/UGC', '일반형']),
+                    type2: z.string().describe('Detailed type (e.g., 이미지, 숏폼 비디오, 캐러셀)'),
+                    targetGroup: z.string().describe('Likely target audience (e.g., 2030 여성, 피부 민감러)')
+                }))
+            })
+        });
+
+        const categorizationMap = new Map(object.categorized.map(c => [c.index, c]));
+
+        const finalAds = realAds.map((ad: any, index: number) => {
+            const cat = categorizationMap.get(index) || { type1: '일반형', type2: '이미지', targetGroup: '불특정 다수' };
+            const startTime = ad.ad_delivery_start_time ? new Date(ad.ad_delivery_start_time) : new Date();
+            const daysActive = Math.floor((Date.now() - startTime.getTime()) / (1000 * 3600 * 24));
+
+            return {
+                id: ad.id || index + 1,
+                type1: cat.type1,
+                type2: cat.type2,
+                copy: ad.ad_creative_bodies?.[0]?.substring(0, 150) + (ad.ad_creative_bodies?.[0]?.length > 150 ? '...' : '') || '이미지/영상 소재',
+                platform: 'Meta',
+                targetGroup: cat.targetGroup,
+                days: Math.max(0, daysActive),
+                link: ad.ad_snapshot_url || '#',
+                spend: 'N/A',
+                startDate: startTime.toISOString().split('T')[0],
+                endDate: '-'
+            };
+        });
+
+        return { ads: finalAds, nextCursor };
+
+    } catch (error) {
+        console.error("Failed to fetch specific ads:", error);
+        return { ads: [], nextCursor: null };
     }
 }

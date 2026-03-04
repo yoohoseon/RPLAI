@@ -47,7 +47,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
 
     return (
         <div className="min-h-screen bg-[#F2F4F7] font-sans">
-            <div className="container mx-auto py-12 px-6 max-w-7xl space-y-10 animate-in fade-in duration-700">
+            <div className="w-full py-12 px-6 space-y-10 animate-in fade-in duration-700">
                 <div className="flex items-end justify-between border-none pb-8">
                     <div className="space-y-2">
                         <h1 className="text-3xl font-bold tracking-tight text-[#333333]">분석 이력</h1>

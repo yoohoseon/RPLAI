@@ -21,6 +21,7 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   analyses      BrandAnalysis[]
+  brandDatas    BrandDatas[]
 }
 
 model BrandAnalysis {
@@ -40,6 +41,22 @@ model BrandAnalysis {
   @@index([userId])
 }
 
+model BrandDatas {
+  id          String   @id @default(cuid())
+  brandKor    String
+  brandEng    String
+  socialUrls  String?
+  url         String
+  category    String
+  description String?
+  content     String   @default("{}")
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
+
 model Team {
   id          String   @id @default(cuid())
   name        String
@@ -49,3 +66,29 @@ model Team {
   updatedAt   DateTime @updatedAt
 }
 
+model Persona {
+  id        String   @id @default(cuid())
+  ageGroup  Int      // 10, 20, 30...
+  gender    String   // "M" or "F"
+  type      Int      // 1 or 2
+  name      String   
+  imagePath String   
+  createdAt DateTime @default(now())
+
+  @@unique([ageGroup, gender, type])
+}
+
+model BrandCategory {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  sortOrder Int      @default(0)
+}
+
+
+model MetaPage {
+  id        String   @id @default(cuid())
+  brandName String   @unique
+  pageId    String
+  pageName  String
+  createdAt DateTime @default(now())
+}

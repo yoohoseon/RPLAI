@@ -53,7 +53,7 @@ export function BrandRegistrationForm() {
 
     const proceedToAnalysis = (data: any = formData) => {
         const params = new URLSearchParams();
-        params.set("model", "gemini-2.0-flash");
+        params.set("model", "gemini-2.5-flash");
         params.set("brandKor", data.brandKor || "");
         params.set("brandEng", data.brandEng || "");
         params.set("url", data.url || "");
@@ -82,7 +82,7 @@ export function BrandRegistrationForm() {
     return (
         <>
             <form onSubmit={handleSubmit} className="space-y-8">
-                <input type="hidden" name="model" value="gemini-2.0-flash" />
+                <input type="hidden" name="model" value="gemini-2.5-flash" />
 
                 <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-3">

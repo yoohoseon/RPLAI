@@ -56,7 +56,7 @@ export default async function StrategyPage(props: StrategyPageProps) {
         <div className="relative min-h-screen pb-32 font-sans bg-[#F2F4F7]">
             {/* Header & Step Bar */}
             <div className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md shadow-sm border-none transition-all py-1">
-                <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="w-full px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="flex items-baseline gap-3">
                         <h1 className="text-2xl font-bold tracking-tight text-[#333333] truncate max-w-[200px] sm:max-w-none">
                             {brandRecord.brandKor} <span className="text-[#4E5968] text-lg font-medium tracking-normal ml-2">{brandRecord.brandEng}</span>
@@ -85,7 +85,7 @@ export default async function StrategyPage(props: StrategyPageProps) {
                 </div>
             </div>
 
-            <main className="container max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-12 animate-in slide-in-from-bottom-8 fade-in duration-1000">
+            <main className="w-full py-10 px-4 sm:px-6 lg:px-8 space-y-12 animate-in slide-in-from-bottom-8 fade-in duration-1000">
                 <StrategyDashboard concept={concept} message={message} availableConcepts={allConcepts} analysisId={analysisId} savedStrategies={savedStrategies} />
             </main>
         </div>

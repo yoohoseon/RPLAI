@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 
 export default function Loading() {
     return (
-        <div className="container mx-auto py-10 px-4 space-y-12 animate-in fade-in duration-500">
+        <div className="w-full py-10 px-4 space-y-12 animate-in fade-in duration-500">
             {/* Header Skeleton */}
             <div className="space-y-4">
                 <div className="space-y-2">

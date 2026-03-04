@@ -7,11 +7,11 @@ export default function MainLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="flex flex-col min-h-screen bg-[#F9FAFB] pt-16">
+        <div className="flex flex-col min-h-screen bg-[#F2F4F7] pt-16">
             <div className="relative z-10">
                 <DashboardHeader />
             </div>
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 flex flex-col">{children}</main>
             <Footer />
         </div>
     );

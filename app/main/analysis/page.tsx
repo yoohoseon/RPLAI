@@ -125,7 +125,7 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
         <div id="analysis-report" className="relative min-h-screen pb-32 font-sans bg-[#F2F4F7]">
             {/* 1. Sticky Header Hero section */}
             <div className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md shadow-sm border-none transition-all py-1">
-                <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="w-full px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="flex items-baseline gap-3">
                         <h1 className="text-2xl font-bold tracking-tight text-[#333333] truncate max-w-[200px] sm:max-w-none">
                             {brandKor} <span className="text-[#4E5968] text-lg font-medium tracking-normal ml-2">{brandEng}</span>
@@ -154,7 +154,7 @@ export default async function AnalysisPage(props: AnalysisPageProps) {
                 </div>
             </div>
 
-            <div className="container max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-12 animate-in slide-in-from-bottom-8 fade-in duration-1000">
+            <div className="w-full py-10 px-4 sm:px-6 lg:px-8 space-y-12 animate-in slide-in-from-bottom-8 fade-in duration-1000">
 
 
 

@@ -175,6 +175,23 @@ export async function deleteBrandAnalysis(analysisId: string) {
     }
 }
 
+export async function deleteBrandDaAnalysis(analysisId: string) {
+    if (!analysisId) return { success: false, error: "No analysis ID provided" };
+
+    try {
+        await prisma.brandDatas.delete({
+            where: { id: analysisId }
+        });
+
+        revalidatePath('/main/da/history');
+
+        return { success: true };
+    } catch (error: any) {
+        console.error("Failed to delete brand DA analysis:", error);
+        return { success: false, error: error.message };
+    }
+}
+
 export async function checkBrandExistsAction(brandKor: string, brandEng: string) {
     if (!brandKor && !brandEng) return { exists: false };
 
@@ -210,5 +227,93 @@ export async function checkBrandExistsAction(brandKor: string, brandEng: string)
     } catch (error: any) {
         console.error("Failed to check existing brand:", error);
         return { exists: false, error: error.message };
+    }
+}
+
+export async function checkBrandDaExistsAction(brandKor: string, brandEng: string) {
+    if (!brandKor && !brandEng) return { exists: false };
+
+    try {
+        const record = await prisma.brandDatas.findFirst({
+            where: {
+                OR: [
+                    { brandKor: brandKor },
+                    { brandEng: brandEng }
+                ]
+            },
+            include: { user: { select: { name: true } } },
+            orderBy: { createdAt: 'desc' },
+        });
+
+        if (record) {
+            return {
+                exists: true,
+                data: {
+                    id: record.id,
+                    brandKor: record.brandKor,
+                    brandEng: record.brandEng,
+                    category: record.category,
+                    url: record.url,
+                    description: record.description,
+                    creatorName: record.user?.name || '알 수 없음',
+                    createdAt: record.createdAt.toISOString()
+                }
+            };
+        }
+        return { exists: false };
+    } catch (error: any) {
+        console.error("Failed to check existing DA brand:", error);
+        return { exists: false, error: error.message };
+    }
+}
+
+export async function generatePinterestKeywords(brandName: string, concept: string) {
+    const prompt = `
+    당신은 트렌디하고 감각적인 브랜드 비주얼 마케터이자 디자이너입니다.
+    사용자가 제시한 브랜드명과 핵심 컨셉을 바탕으로, 핀터레스트(Pinterest)에서 검색하면 
+    핵심 무드를 가장 잘 보여줄 수 있는 고품질의 감성적인 이미지들이 나올법한 
+    '영문 검색 키워드' 5개를 추천해주세요.
+    
+    [입력]
+    - 브랜드명: ${brandName}
+    - 핵심 컨셉: ${concept}
+    
+    [키워드 도출 가이드 - 마케터 실무 방식]
+    1. 브랜드를 한 단어나 형용사로 표현하기 (예: "warm", "calm", "luxurious", "vibrant")
+    2. 컬러와 톤앤매너 정리하기 (예: "muted beige", "dark monochrome", "pastel blue")
+    3. 일반적인 검색어가 아닌, 실무 디자이너/마케터들이 레퍼런스(포스터, 메뉴, 타이포 등)를 찾을 때 쓰는 구체적이고 디테일한 키워드 포함 (예: "red big typography", "menu poster", "editorial photography", "refined b-grade aesthetic", "product flatlay texture")
+    4. 위 요소들을 조합하여 핀터레스트 검색 시 즉시 영감이 되는 강력한 무드보드 키워드를 만드세요.
+    
+    [조건]
+    - 반드시 영어 키워드 조합으로 작성 (핀터레스트는 영어가 가장 퀄리티가 높음)
+    - 추상적인 단어 나열이 아닌, 이미지의 '형태', '질감', '매체'가 연상되는 구체적인 검색어 제공
+    - 예시: "warm beige editorial skincare photography", "red big typography branding aesthetics", "dark moody menu poster design"
+    `;
+
+    try {
+        const { object } = await generateObject({
+            model: google('models/gemini-2.5-flash'),
+            schema: z.object({
+                keywords: z.array(z.string()).length(5).describe("핀터레스트 영문 검색 키워드 모음 (5개)")
+            }),
+            prompt,
+        });
+
+        return { success: true, keywords: object.keywords };
+    } catch (error: any) {
+        console.error("Keyword generation failed:", error);
+        return { success: false, error: error.message };
+    }
+}
+
+export async function getBrandCategoriesAction() {
+    try {
+        const categories = await prisma.brandCategory.findMany({
+            orderBy: { sortOrder: 'asc' }
+        });
+        return { success: true, data: categories.map((c: any) => c.name) };
+    } catch (error: any) {
+        console.error("Failed to get brand categories:", error);
+        return { success: false, error: error.message };
     }
 }

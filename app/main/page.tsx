@@ -3,7 +3,7 @@ import { BrandRegistrationForm } from "@/components/home/brand-registration-form
 export default function MainPage() {
     return (
         <div className="relative min-h-[calc(100vh-4rem)] bg-transparent flex items-center justify-center p-6 md:p-10 font-sans">
-            <div className="container mx-auto grid lg:grid-cols-2 gap-16 items-center max-w-7xl">
+            <div className="w-full grid lg:grid-cols-2 gap-16 items-center px-4 sm:px-6 lg:px-8">
                 {/* Left Column: Hero Text */}
                 <div className="space-y-8 text-center lg:text-left animate-in fade-in slide-in-from-left-5 duration-1000">
                     <div className="space-y-4">

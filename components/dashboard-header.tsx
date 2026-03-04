@@ -11,7 +11,7 @@ export default async function DashboardHeader() {
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 border-none shadow-sm bg-white/90 backdrop-blur-md transition-all duration-300">
-            <div className="flex h-16 items-center px-6 justify-between max-w-7xl mx-auto">
+            <div className="flex h-16 items-center px-6 justify-between w-full">
                 <div className="font-bold text-xl shrink-0">
                     <Link href="/main" className="hover:opacity-80 transition-opacity flex items-center">
                         <div className="relative w-24 h-8">

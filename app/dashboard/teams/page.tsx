@@ -50,7 +50,7 @@ export default async function TeamsPage({
 
     return (
         <div className="min-h-screen bg-[#F9FAFB] font-sans">
-            <div className="container mx-auto py-12 px-6 max-w-7xl space-y-10 animate-in fade-in duration-700">
+            <div className="w-full py-12 px-6 space-y-10 animate-in fade-in duration-700">
                 {/* Header */}
                 <div className="flex items-end justify-between border-b border-[#F2F4F6] pb-8">
                     <div className="space-y-2">
