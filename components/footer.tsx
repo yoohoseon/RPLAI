@@ -1,9 +1,16 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { usePathname } from 'next/navigation';
 
 export function Footer() {
+    const pathname = usePathname();
     const footerText = "© 2026 RPLAI. Powered by Goldenax. All rights reserved.";
+
+    // Hide footer on analysis page since we show it in the sidebar
+    if (pathname?.includes('/main/da/analysis')) {
+        return null;
+    }
 
     // 글자 하나하나에 적용될 애니메이션
     const letterVariants = {

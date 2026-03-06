@@ -1,0 +1,6 @@
+{
+  "request_url": "https://graph.facebook.com/v19.0/ads_archive?access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw&search_terms=Kyochon%20Chicken%20(%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8)&ad_type=ALL&ad_reached_countries=['KR']&fields=id,page_id,page_name,ad_creative_bodies,ad_creative_link_captions,ad_creation_time,ad_delivery_start_time,ad_snapshot_url,impressions,spend,demographic_distribution,publisher_platforms&limit=40",
+  "response": {
+    "data": []
+  }
+}

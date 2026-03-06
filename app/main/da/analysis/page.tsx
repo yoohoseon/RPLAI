@@ -69,7 +69,7 @@ export default async function DaAnalysisPage(props: DaAnalysisPageProps) {
 
     return (
         <div className="flex flex-col flex-1 font-sans bg-transparent">
-            <div className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md shadow-sm border-none transition-all py-1">
+            <div className="sticky top-16 z-50 w-full bg-white/90 backdrop-blur-md shadow-sm border-none transition-all py-1">
                 <div className="w-full px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="flex items-baseline gap-3">
                         <h1 className="text-2xl font-bold tracking-tight text-[#333333] truncate max-w-[200px] sm:max-w-none">

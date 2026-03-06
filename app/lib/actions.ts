@@ -10,6 +10,7 @@ import path from 'path';
 import { google } from '@ai-sdk/google';
 import { generateObject } from 'ai';
 import { z } from 'zod';
+import { scrapeMetaAds } from '@/app/lib/scraper';
 
 export async function authenticate(
     prevState: string | undefined,
@@ -452,7 +453,7 @@ export async function getCompetitorAdsAction(brandContext: any) {
         const brandName = brandContext?.brandKor || brandContext?.brandEng || '테스트 브랜드';
         const brandCategory = brandContext?.category || '일반';
 
-        // 1. Find competitors via AI
+        // 1. Find competitors via AI(상위 경쟁 브랜드 5가지 검색 gemini-2.5-flash 기반)
         const { object } = await generateObject({
             model: google('gemini-2.5-flash'),
             system: 'You are an expert digital marketer. Identify top 5 primary real-world competitors for the given brand. Return their names in Korean where appropriate.',
@@ -530,47 +531,30 @@ export async function getCompetitorAdsAction(brandContext: any) {
 
 export async function getCompetitorSpecificAdsAction(searchTerms: string, afterCursor?: string) {
     try {
-        // 1. Fetch real ads from Meta Ads API
-        const token = "EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw";
-        const fields = "id,page_id,page_name,ad_creative_bodies,ad_creative_link_captions,ad_creation_time,ad_delivery_start_time,ad_snapshot_url";
-        const afterParam = afterCursor ? `&after=${afterCursor}` : "";
-        const url = `https://graph.facebook.com/v19.0/ads_archive?access_token=${token}&search_terms=${encodeURIComponent(searchTerms)}&ad_type=ALL&ad_reached_countries=['KR']&fields=${fields}&limit=12${afterParam}`;
+        console.log(`[getCompetitorSpecificAdsAction] Scraping for: ${searchTerms}`);
+        // Use custom scraper. Pass "" for pageId, and searchTerms for keyword.
+        const scrapedResult = await scrapeMetaAds("", searchTerms);
 
-        const response = await fetch(url);
-        const data = await response.json();
-
-        let realAds = data.data || [];
-        const nextCursor = data.paging?.cursors?.after || null;
-
-        if (data.error || realAds.length === 0) {
-            console.warn("[Meta Ads Warning/Error] Falling back to AI mock. Message:", data.error?.message);
-            const { object } = await generateObject({
-                model: google('gemini-2.5-flash'),
-                system: 'You are an expert digital performance marketer. Simulate the Meta Ads Library by providing realistic, current-sounding digital ad creatives actually used (or highly likely to be used) by the requested brand. Ensure absolute natural Korean phrasing.',
-                prompt: `Generate 12 realistic Meta/Instagram/Google ad creatives for the brand: ${searchTerms}.`,
-                schema: z.object({
-                    ads: z.array(z.object({
-                        type1: z.enum(['프로모션', '리뷰/UGC', '일반형']),
-                        type2: z.string(),
-                        copy: z.string(),
-                        platform: z.string(),
-                        targetGroup: z.string(),
-                        days: z.number().min(0).max(100)
-                    })).length(12)
-                })
-            });
-            const fallbackAds = object.ads.map((ad, idx) => ({
-                id: idx + 1,
-                ...ad,
-                spend: 'N/A',
-                startDate: new Date(Date.now() - ad.days * 86400000).toISOString().split('T')[0],
-                endDate: '-',
-                link: `https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=KR&q=${encodeURIComponent(searchTerms)}`
-            }));
-            return { ads: fallbackAds, nextCursor: null };
+        let realAds: any[] = [];
+        if (scrapedResult && !scrapedResult.error && scrapedResult.response?.data) {
+            realAds = scrapedResult.response.data;
         }
 
-        // We have real ads! Let's slice if needed and feed to AI for categorization (limit API calls)
+        if (realAds.length === 0) {
+            console.warn("[Meta Ads Warning] No results from custom scraper");
+            return { ads: [], nextCursor: null };
+        }
+
+        // We have real ads! 
+        // 1. Sort locally by impressions or fallback to oldest active days
+        // (Since scraper doesn't have real impressions, we rely mostly on the scraper's native ordering or time)
+        realAds.sort((a: any, b: any) => {
+            const timeA = a.ad_delivery_start_time ? new Date(a.ad_delivery_start_time).getTime() : Date.now();
+            const timeB = b.ad_delivery_start_time ? new Date(b.ad_delivery_start_time).getTime() : Date.now();
+            return timeA - timeB;
+        });
+
+        // Slice to top 12 to save AI tokens and match UI mapping
         realAds = realAds.slice(0, 12);
 
         const adsForAi = realAds.map((ad: any, index: number) => ({
@@ -600,25 +584,83 @@ Ads data: ${JSON.stringify(adsForAi)}`,
             const startTime = ad.ad_delivery_start_time ? new Date(ad.ad_delivery_start_time) : new Date();
             const daysActive = Math.floor((Date.now() - startTime.getTime()) / (1000 * 3600 * 24));
 
+            let platforms = 'Meta';
+            if (ad.publisher_platforms && Array.isArray(ad.publisher_platforms)) {
+                platforms = ad.publisher_platforms.map((p: string) => p.charAt(0).toUpperCase() + p.slice(1)).join(', ');
+            }
+
             return {
                 id: ad.id || index + 1,
                 type1: cat.type1,
                 type2: cat.type2,
                 copy: ad.ad_creative_bodies?.[0]?.substring(0, 150) + (ad.ad_creative_bodies?.[0]?.length > 150 ? '...' : '') || '이미지/영상 소재',
-                platform: 'Meta',
+                platform: platforms,
                 targetGroup: cat.targetGroup,
                 days: Math.max(0, daysActive),
-                link: ad.ad_snapshot_url || '#',
-                spend: 'N/A',
+                // Custom UI requires the URL to point directly to Meta Ad Library Creative page:
+                link: `https://www.facebook.com/ads/library/?id=${ad.id || ''}`,
+                spend: 'N/A', // Not supported by scraper for commercial ads
+                impressions: null, // Not supported by scraper for commercial ads
                 startDate: startTime.toISOString().split('T')[0],
-                endDate: '-'
+                endDate: '-',
+                // We'll pass media URL generated by the scraper
+                mediaUrl: ad.ad_snapshot_url,
+                profileLogo: ad.profile_logo_url,
+                pageName: ad.page_name
             };
         });
 
-        return { ads: finalAds, nextCursor };
+        // The scraper doesn't support pagination easily initially, so we just set null. 
+        // If it supports loading more via DOM tricks, we'd adjust it.
+        return { ads: finalAds, nextCursor: null };
 
     } catch (error) {
         console.error("Failed to fetch specific ads:", error);
         return { ads: [], nextCursor: null };
+    }
+}
+
+export async function testMetaAdsApiRaw(params: {
+    searchTerms: string;
+    adType: string;
+    countries: string;
+    fields: string;
+    limit: number;
+    searchPageIds?: string;
+    deliveryDateMin?: string;
+    deliveryDateMax?: string;
+}) {
+    try {
+        const token = "EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw";
+        let url = `https://graph.facebook.com/v19.0/ads_archive?access_token=${token}&ad_type=${params.adType}&ad_reached_countries=[${params.countries}]&fields=${params.fields}&limit=${params.limit}`;
+
+        if (params.searchTerms) {
+            url += `&search_terms=${encodeURIComponent(params.searchTerms)}`;
+        }
+        if (params.searchPageIds) {
+            url += `&search_page_ids=${encodeURIComponent(params.searchPageIds)}`;
+        }
+        if (params.deliveryDateMin) {
+            url += `&ad_delivery_date_min=${params.deliveryDateMin}`;
+        }
+        if (params.deliveryDateMax) {
+            url += `&ad_delivery_date_max=${params.deliveryDateMax}`;
+        }
+
+        const response = await fetch(url);
+        const data = await response.json();
+        return { request_url: url, response: data };
+    } catch (error: any) {
+        return { error: error.message || "Failed to fetch from Meta API" };
+    }
+}
+
+export async function testMetaAdsApiDirectUrl(url: string) {
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        return { request_url: url, response: data };
+    } catch (error: any) {
+        return { error: error.message || "Failed to fetch from Meta API" };
     }
 }

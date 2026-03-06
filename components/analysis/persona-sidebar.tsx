@@ -4,57 +4,30 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { UserCircle2, ChevronDown, ChevronLeft, ChevronRight, User, MapPin, Search, X, Loader2, Target, Zap, Activity, ImageIcon } from 'lucide-react';
 import { generateStagePersonasAction, getCompetitorAdsAction, getCompetitorSpecificAdsAction } from '@/app/lib/actions';
+import { motion } from 'framer-motion';
 
-function AdImage({ link }: { link: string }) {
-    const [imgSrc, setImgSrc] = useState<string | null>(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        if (!link || link === '#') {
-            setLoading(false);
-            return;
-        }
-
-        const fetchImage = async () => {
-            try {
-                const res = await fetch(`/api/scrape-meta-image?url=${encodeURIComponent(link)}`);
-                const data = await res.json();
-                if (data.url) {
-                    setImgSrc(data.url);
-                }
-            } catch (err) {
-                console.error("Failed to load ad image:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchImage();
-    }, [link]);
-
-    if (loading) {
+function AdImage({ mediaUrl, link }: { mediaUrl?: string, link: string }) {
+    if (!mediaUrl || mediaUrl.includes('No+Media')) {
         return (
-            <div className="w-full aspect-square bg-[#F9FAFB] border border-[#E5E8EB] rounded-xl mb-5 flex flex-col items-center justify-center relative overflow-hidden shrink-0 animate-pulse">
-                <Loader2 className="w-6 h-6 text-[#AEB5BC] animate-spin mb-2" />
-                <p className="text-[12px] text-[#AEB5BC] font-medium">소재 이미지 분석 중...</p>
+            <div className="w-full aspect-square bg-[#F9FAFB] border border-[#E5E8EB] rounded-xl mb-5 flex flex-col items-center justify-center relative overflow-hidden group-hover:bg-[#F2F4F7] transition-colors shrink-0">
+                <ImageIcon className="w-8 h-8 text-[#AEB5BC] mb-3" />
+                <p className="text-[13px] font-bold text-[#8B95A1] z-10">미디어 없음</p>
             </div>
         );
     }
 
-    if (!imgSrc) {
+    // Check if it's a video
+    if (mediaUrl.includes('.mp4') || mediaUrl.includes('.webm')) {
         return (
-            <div className="w-full aspect-square bg-[#F9FAFB] border border-[#E5E8EB] rounded-xl mb-5 flex flex-col items-center justify-center relative overflow-hidden group-hover:bg-[#F2F4F7] transition-colors shrink-0">
-                <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, black 1px, transparent 0)', backgroundSize: '16px 16px' }} />
-                <ImageIcon className="w-8 h-8 text-[#AEB5BC] mb-3" />
-                <p className="text-[13px] font-bold text-[#8B95A1] z-10">Meta API 보안</p>
-                <p className="text-[11px] text-[#AEB5BC] z-10 px-6 text-center mt-1 break-keep">이미지를 실시간으로 분석할 수 없습니다. 원본은 하단 링크를 참조하세요.</p>
+            <div className="w-full aspect-square mb-5 rounded-xl border border-[#E5E8EB] overflow-hidden relative shrink-0">
+                <video src={mediaUrl} autoPlay muted loop playsInline className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
         );
     }
 
     return (
         <div className="w-full aspect-square mb-5 rounded-xl border border-[#E5E8EB] overflow-hidden relative shrink-0">
-            <img src={imgSrc} alt="광고 소재" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            <img src={mediaUrl} alt="광고 소재" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
         </div>
     );
 }
@@ -89,6 +62,76 @@ export function PersonaSidebar({
     const [isLoadingAds, setIsLoadingAds] = useState<boolean>(false);
     const [hasAnalyzed, setHasAnalyzed] = useState<boolean>((initialCompetitors && initialCompetitors.length > 0) || false);
     const [newCompetitorInput, setNewCompetitorInput] = useState<string>('');
+    const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+    const [isVerifyingAds, setIsVerifyingAds] = useState<boolean>(false);
+    const [invalidAdIds, setInvalidAdIds] = useState<Set<string>>(new Set());
+
+    const updateAndVerifyAds = async (fetchedAds: any[], keyword: string, isLoadMore = false) => {
+        if (isLoadMore) {
+            setCompetitorAds(prev => [...prev, ...fetchedAds]);
+        } else {
+            setCompetitorAds(fetchedAds);
+        }
+
+        if (fetchedAds.length === 0) return;
+
+        setIsVerifyingAds(true);
+
+        // Calculate frequency of page_name
+        const countMap: Record<string, number> = {};
+        const combinedAds = isLoadMore ? [...competitorAds, ...fetchedAds] : fetchedAds;
+
+        combinedAds.forEach(ad => {
+            const name = ad.pageName || "";
+            countMap[name] = (countMap[name] || 0) + 1;
+        });
+
+        // Prefer names containing the keyword first
+        let bestName = "";
+        let maxScore = -1;
+
+        for (const [name, count] of Object.entries(countMap)) {
+            let score = count;
+            if (name.toLowerCase().includes(keyword.toLowerCase())) {
+                score += 1000;
+            }
+            if (score > maxScore) {
+                maxScore = score;
+                bestName = name;
+            }
+        }
+
+        const invalidSet = new Set<string>();
+        combinedAds.forEach((ad) => {
+            if ((ad.pageName || "") !== bestName) {
+                invalidSet.add(ad.id);
+            }
+        });
+
+        if (invalidSet.size > 0) {
+            // Wait 1.5s for visual "verifying" feel
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            setInvalidAdIds(invalidSet);
+            // Wait another 0.8s for fade out animation
+            await new Promise(resolve => setTimeout(resolve, 800));
+            setCompetitorAds(combinedAds.filter(ad => !invalidSet.has(ad.id)));
+            setInvalidAdIds(new Set());
+        } else {
+            // Quick delay just to let user read the message
+            await new Promise(resolve => setTimeout(resolve, 800));
+        }
+
+        setIsVerifyingAds(false);
+    };
+
+    const footerText = "© 2026 RPLAI. Powered by Goldenax. All rights reserved.";
+    const letterVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: { duration: 0.1 }
+        }
+    };
 
     const handleToggleCompetitor = async () => {
         setIsCompetitorAccordionOpen(!isCompetitorAccordionOpen);
@@ -99,7 +142,7 @@ export function PersonaSidebar({
         setIsLoadMore(true);
         try {
             const { ads, nextCursor } = await getCompetitorSpecificAdsAction(selectedCompetitor, nextAdCursor);
-            setCompetitorAds(prev => [...prev, ...ads]);
+            await updateAndVerifyAds(ads, selectedCompetitor, true);
             setNextAdCursor(nextCursor);
         } catch (e) {
             console.error(e);
@@ -158,230 +201,257 @@ export function PersonaSidebar({
 
     return (
         <>
-            <div className="w-full lg:w-[540px] shrink-0 bg-white border-r border-[#E5E8EB] shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-10 flex flex-col">
-                <div className="p-8 sm:p-10 sticky top-[88px] max-h-[calc(100vh-88px)] overflow-y-auto w-full scrollbar-hide">
+            <div className={`sticky top-[144px] h-[calc(100vh-144px)] shrink-0 bg-white border-r border-[#E5E8EB] shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-20 flex flex-col transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-full lg:w-[540px]' : 'w-0'}`}>
 
-                    <div className="flex flex-col gap-1 mb-6 mt-2">
-                        <button
-                            className="flex items-center justify-between w-full text-left"
-                            onClick={() => setIsMainAccordionOpen(!isMainAccordionOpen)}
-                        >
-                            <h2 className="text-[18px] font-bold text-[#333333] flex items-center gap-2">
-                                디지털 핵심 타겟 페르소나
-                            </h2>
-                            <ChevronDown className={`w-5 h-5 text-[#8B95A1] transition-transform duration-300 ${isMainAccordionOpen ? '-rotate-180' : ''}`} />
-                        </button>
-                    </div>
+                {/* 접기/펴기 토글 버튼 */}
+                <button
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    className="absolute top-1/2 -right-5 z-50 flex items-center justify-center w-5 h-20 bg-white border border-[#E5E8EB] border-l-0 shadow-[2px_0_8px_rgba(0,0,0,0.04)] rounded-r-xl transition-all hover:bg-gray-50 text-[#8B95A1] hover:text-[#333333] transform -translate-y-1/2"
+                >
+                    {isSidebarOpen ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4 ml-[2px]" />}
+                </button>
 
-                    {isMainAccordionOpen && (
-                        <div className="border-t border-[#E5E8EB] divide-y divide-[#F2F4F6] flex flex-col pt-2 animate-in fade-in slide-in-from-top-4 duration-500">
-                            {stages.map((stage) => {
-                                const isOpen = activeStage === stage.id;
-                                const isLoaded = !!stagePersonas[stage.id];
-                                const isLoading = isLoadingStage[stage.id];
-                                const currentStagePersonas = stagePersonas[stage.id] || [];
+                <div className={`w-full h-full overflow-hidden transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100 delay-100' : 'opacity-0'}`}>
+                    <div className="w-[100vw] lg:w-[539px] h-full p-8 sm:p-10 pb-32 overflow-y-auto scrollbar-hide">
 
-                                return (
-                                    <div key={stage.id} className="overflow-hidden bg-white transition-all duration-300">
-                                        <button
-                                            onClick={() => handleToggleStage(stage.id)}
-                                            className={`w-full flex items-center justify-between py-5 px-2 transition-colors hover:bg-gray-50/50 rounded-xl mb-1`}
-                                        >
-                                            <div className="flex items-center gap-3">
-                                                {stage.icon}
-                                                <h3 className={`font-bold text-[17px] ${isOpen ? stage.color : 'text-[#333333]'}`}>{stage.label}</h3>
-                                            </div>
-                                            {isLoading ? (
-                                                <Loader2 className="w-5 h-5 text-[#8B95A1] animate-spin shrink-0" />
-                                            ) : (
-                                                <ChevronDown className={`w-5 h-5 text-[#8B95A1] transition-transform duration-300 shrink-0 ${isOpen ? '-rotate-180' : ''}`} />
-                                            )}
-                                        </button>
+                        <div className="flex flex-col gap-1 mb-6 mt-2">
+                            <button
+                                className="flex items-center justify-between w-full text-left"
+                                onClick={() => setIsMainAccordionOpen(!isMainAccordionOpen)}
+                            >
+                                <h2 className="text-[18px] font-bold text-[#333333] flex items-center gap-2">
+                                    디지털 핵심 타겟 페르소나
+                                </h2>
+                                <ChevronDown className={`w-5 h-5 text-[#8B95A1] transition-transform duration-300 ${isMainAccordionOpen ? '-rotate-180' : ''}`} />
+                            </button>
+                        </div>
 
-                                        {isOpen && (
-                                            <div className="pb-6 pt-2 px-1 bg-white">
+                        {isMainAccordionOpen && (
+                            <div className="border-t border-[#E5E8EB] divide-y divide-[#F2F4F6] flex flex-col pt-2 animate-in fade-in slide-in-from-top-4 duration-500">
+                                {stages.map((stage) => {
+                                    const isOpen = activeStage === stage.id;
+                                    const isLoaded = !!stagePersonas[stage.id];
+                                    const isLoading = isLoadingStage[stage.id];
+                                    const currentStagePersonas = stagePersonas[stage.id] || [];
+
+                                    return (
+                                        <div key={stage.id} className="overflow-hidden bg-white transition-all duration-300">
+                                            <button
+                                                onClick={() => handleToggleStage(stage.id)}
+                                                className={`w-full flex items-center justify-between py-5 px-2 transition-colors hover:bg-gray-50/50 rounded-xl mb-1`}
+                                            >
+                                                <div className="flex items-center gap-3">
+                                                    {stage.icon}
+                                                    <h3 className={`font-bold text-[17px] ${isOpen ? stage.color : 'text-[#333333]'}`}>{stage.label}</h3>
+                                                </div>
                                                 {isLoading ? (
-                                                    <div className="py-12 flex flex-col items-center justify-center gap-3">
-                                                        <Loader2 className="w-8 h-8 text-[#0064FF] animate-spin" />
-                                                        <p className="text-[14px] font-medium text-[#4E5968]">AI가 해당 단계의 페르소나를 예측 중입니다...</p>
-                                                    </div>
-                                                ) : isLoaded && currentStagePersonas.length > 0 ? (
-                                                    <div className="space-y-4 mt-5 animate-in fade-in slide-in-from-top-4 duration-500 pb-2">
-                                                        {currentStagePersonas.map((p: any, i: number) => {
-                                                            const pDb = p.dbPersona;
-                                                            return (
-                                                                <div
-                                                                    onClick={() => {
-                                                                        setSelectedPersona({ ...p, index: i, stageId: stage.id });
-                                                                        setSelectedCompetitor(null);
-                                                                    }}
-                                                                    className={`flex flex-col gap-4 p-5 rounded-[1.25rem] transition-all cursor-pointer group/card ${selectedPersona?.stageId === stage.id && selectedPersona?.index === i ? 'bg-[#F2F8FF] border-[2px] border-[#0064FF] shadow-sm transform scale-[1.01]' : 'bg-white border border-[#E5E8EB] hover:border-[#0064FF]/30 hover:shadow-md'}`}
-                                                                >
-                                                                    <div className="flex items-center gap-4 border-none">
-                                                                        <div className="w-[64px] h-[64px] shrink-0 bg-[#E5E8EB] rounded-full overflow-hidden relative shadow-sm group-hover/card:scale-[1.02] transition-transform">
-                                                                            <Image src={pDb?.imagePath || '/avatars/01.png'} alt={p.name} fill className="object-cover" />
-                                                                        </div>
-                                                                        <div className="flex-1 min-w-0">
-                                                                            <div className="flex items-center justify-between mb-1.5">
-                                                                                <h3 className="text-[#333333] font-bold text-[16px] truncate pr-2">{p.name}</h3>
-                                                                                <span className="text-[#0064FF] font-black text-[14px] whitespace-nowrap bg-[#0064FF]/10 px-2.5 py-0.5 rounded-lg border border-[#0064FF]/20">{p.percentage}%</span>
-                                                                            </div>
-                                                                            <div className="text-[#8B95A1] text-[13px] font-medium flex items-center gap-1.5">
-                                                                                <span className="bg-white px-2 py-0.5 rounded-md border border-[#E5E8EB]">#{i + 1} 핵심군</span>
-                                                                                <span>·</span>
-                                                                                <span>{pDb?.ageGroup}대 {pDb?.gender === 'M' ? '남성' : '여성'}</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="w-full bg-[#F9FAFB] p-3.5 rounded-xl border border-[#F2F4F6]">
-                                                                        <p className="text-[14px] text-[#4E5968] leading-relaxed break-keep line-clamp-2">
-                                                                            {p.behavior}
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            );
-                                                        })}
-                                                    </div>
+                                                    <Loader2 className="w-5 h-5 text-[#8B95A1] animate-spin shrink-0" />
                                                 ) : (
-                                                    <div className="py-10 text-center text-[#8B95A1] text-[14px]">
-                                                        페르소나 데이터가 없습니다.
-                                                    </div>
+                                                    <ChevronDown className={`w-5 h-5 text-[#8B95A1] transition-transform duration-300 shrink-0 ${isOpen ? '-rotate-180' : ''}`} />
+                                                )}
+                                            </button>
+
+                                            {isOpen && (
+                                                <div className="pb-6 pt-2 px-1 bg-white">
+                                                    {isLoading ? (
+                                                        <div className="py-12 flex flex-col items-center justify-center gap-3">
+                                                            <Loader2 className="w-8 h-8 text-[#0064FF] animate-spin" />
+                                                            <p className="text-[14px] font-medium text-[#4E5968]">AI가 해당 단계의 페르소나를 예측 중입니다...</p>
+                                                        </div>
+                                                    ) : isLoaded && currentStagePersonas.length > 0 ? (
+                                                        <div className="space-y-4 mt-5 animate-in fade-in slide-in-from-top-4 duration-500 pb-2">
+                                                            {currentStagePersonas.map((p: any, i: number) => {
+                                                                const pDb = p.dbPersona;
+                                                                return (
+                                                                    <div
+                                                                        onClick={() => {
+                                                                            setSelectedPersona({ ...p, index: i, stageId: stage.id });
+                                                                            setSelectedCompetitor(null);
+                                                                        }}
+                                                                        className={`flex flex-col gap-4 p-5 rounded-[1.25rem] transition-all cursor-pointer group/card ${selectedPersona?.stageId === stage.id && selectedPersona?.index === i ? 'bg-[#F2F8FF] border-[2px] border-[#0064FF] shadow-sm transform scale-[1.01]' : 'bg-white border border-[#E5E8EB] hover:border-[#0064FF]/30 hover:shadow-md'}`}
+                                                                    >
+                                                                        <div className="flex items-center gap-4 border-none">
+                                                                            <div className="w-[64px] h-[64px] shrink-0 bg-[#E5E8EB] rounded-full overflow-hidden relative shadow-sm group-hover/card:scale-[1.02] transition-transform">
+                                                                                <Image src={pDb?.imagePath || '/avatars/01.png'} alt={p.name} fill className="object-cover" />
+                                                                            </div>
+                                                                            <div className="flex-1 min-w-0">
+                                                                                <div className="flex items-center justify-between mb-1.5">
+                                                                                    <h3 className="text-[#333333] font-bold text-[16px] truncate pr-2">{p.name}</h3>
+                                                                                    <span className="text-[#0064FF] font-black text-[14px] whitespace-nowrap bg-[#0064FF]/10 px-2.5 py-0.5 rounded-lg border border-[#0064FF]/20">{p.percentage}%</span>
+                                                                                </div>
+                                                                                <div className="text-[#8B95A1] text-[13px] font-medium flex items-center gap-1.5">
+                                                                                    <span className="bg-white px-2 py-0.5 rounded-md border border-[#E5E8EB]">#{i + 1} 핵심군</span>
+                                                                                    <span>·</span>
+                                                                                    <span>{pDb?.ageGroup}대 {pDb?.gender === 'M' ? '남성' : '여성'}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="w-full bg-[#F9FAFB] p-3.5 rounded-xl border border-[#F2F4F6]">
+                                                                            <p className="text-[14px] text-[#4E5968] leading-relaxed break-keep line-clamp-2">
+                                                                                {p.behavior}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    ) : (
+                                                        <div className="py-10 text-center text-[#8B95A1] text-[14px]">
+                                                            페르소나 데이터가 없습니다.
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+
+                        <div className="flex flex-col gap-1 mb-6 mt-8">
+                            <button
+                                className="flex items-center justify-between w-full text-left"
+                                onClick={handleToggleCompetitor}
+                            >
+                                <h2 className="text-[17px] font-bold text-[#333333] flex items-center gap-2">
+                                    경쟁사 분석
+                                </h2>
+                                <ChevronDown className={`w-5 h-5 text-[#8B95A1] transition-transform duration-300 ${isCompetitorAccordionOpen ? '-rotate-180' : ''}`} />
+                            </button>
+                        </div>
+
+                        {isCompetitorAccordionOpen && (
+                            <div className="border-t border-[#E5E8EB] flex flex-col pt-6 pb-4 animate-in fade-in slide-in-from-top-4 duration-500">
+
+                                {!hasAnalyzed ? (
+                                    <div className="bg-[#F9FAFB] rounded-xl p-6 text-center border border-[#E5E8EB]">
+                                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-[#E5E8EB]">
+                                            <Search className="w-6 h-6 text-[#0064FF]" />
+                                        </div>
+                                        <h3 className="text-[16px] font-bold text-[#333333] mb-2">경쟁사 광고 소재 분석</h3>
+                                        <p className="text-[13px] text-[#4E5968] mb-5 break-keep">
+                                            현재 브랜드와 매칭되는 주요 경쟁사들의 Meta 광고 라이브러리를 스크래핑하여 주력 소재를 분석합니다.
+                                        </p>
+                                        <button
+                                            onClick={runCompetitorAnalysis}
+                                            className="w-full bg-[#0064FF] hover:bg-[#0052D4] text-white font-bold text-[14px] py-3 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2"
+                                        >
+                                            <Activity className="w-4 h-4" />
+                                            경쟁사 분석하기
+                                        </button>
+                                    </div>
+                                ) : isLoadingAds ? (
+                                    <div className="py-12 flex flex-col items-center justify-center gap-3">
+                                        <Loader2 className="w-8 h-8 text-[#0064FF] animate-spin" />
+                                        <div className="text-center">
+                                            <p className="text-[14px] font-bold text-[#333333] mb-1">AI가 최신 광고 소재를 분석 중입니다...</p>
+                                            <p className="text-[12px] text-[#8B95A1]">경쟁사의 주력 타겟과 크리에이티브를 추출하고 있어요</p>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div className="flex flex-col mb-2 gap-2">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <h3 className="text-[15px] font-bold text-[#333333] flex items-center gap-1.5">
+                                                    <div className="w-2 h-2 rounded-full bg-[#03C75A]" />
+                                                    메인 경쟁사 Top 5
+                                                </h3>
+                                            </div>
+                                            <div className="flex flex-col gap-2">
+                                                {competitorList.map((comp, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        onClick={async () => {
+                                                            setSelectedCompetitor(comp);
+                                                            setSelectedPersona(null);
+                                                            setIsLoadingSpecificAds(true);
+                                                            setCompetitorAds([]);
+                                                            setNextAdCursor(null);
+                                                            try {
+                                                                const { ads, nextCursor } = await getCompetitorSpecificAdsAction(comp);
+                                                                await updateAndVerifyAds(ads, comp);
+                                                                setNextAdCursor(nextCursor);
+                                                            } catch (e) {
+                                                                console.error(e);
+                                                            } finally {
+                                                                setIsLoadingSpecificAds(false);
+                                                            }
+                                                        }}
+                                                        className={`w-full text-left bg-white border ${selectedCompetitor === comp ? 'border-[#0064FF] ring-1 ring-[#0064FF]' : 'border-[#E5E8EB]'} shadow-sm px-4 py-3 rounded-xl text-[14px] font-bold text-[#333333] hover:border-[#0064FF] transition-all`}
+                                                    >
+                                                        <div className="flex items-center justify-between">
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="w-1.5 h-1.5 rounded-full bg-[#03C75A]" />
+                                                                {comp}
+                                                            </div>
+                                                            <ChevronRight className="w-4 h-4 text-[#8B95A1]" />
+                                                        </div>
+                                                    </button>
+                                                ))}
+                                                {competitorList.length === 0 && (
+                                                    <span className="bg-white border border-[#E5E8EB] shadow-sm px-3 py-1 rounded-full text-[13px] font-medium text-[#4E5968]">AI 분석 오류</span>
                                                 )}
                                             </div>
-                                        )}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
-
-                    <div className="flex flex-col gap-1 mb-6 mt-8">
-                        <button
-                            className="flex items-center justify-between w-full text-left"
-                            onClick={handleToggleCompetitor}
-                        >
-                            <h2 className="text-[17px] font-bold text-[#333333] flex items-center gap-2">
-                                경쟁사 분석
-                            </h2>
-                            <ChevronDown className={`w-5 h-5 text-[#8B95A1] transition-transform duration-300 ${isCompetitorAccordionOpen ? '-rotate-180' : ''}`} />
-                        </button>
-                    </div>
-
-                    {isCompetitorAccordionOpen && (
-                        <div className="border-t border-[#E5E8EB] flex flex-col pt-6 pb-4 animate-in fade-in slide-in-from-top-4 duration-500">
-
-                            {!hasAnalyzed ? (
-                                <div className="bg-[#F9FAFB] rounded-xl p-6 text-center border border-[#E5E8EB]">
-                                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-[#E5E8EB]">
-                                        <Search className="w-6 h-6 text-[#0064FF]" />
-                                    </div>
-                                    <h3 className="text-[16px] font-bold text-[#333333] mb-2">경쟁사 광고 소재 분석</h3>
-                                    <p className="text-[13px] text-[#4E5968] mb-5 break-keep">
-                                        현재 브랜드와 매칭되는 주요 경쟁사들의 Meta 광고 라이브러리를 스크래핑하여 주력 소재를 분석합니다.
-                                    </p>
-                                    <button
-                                        onClick={runCompetitorAnalysis}
-                                        className="w-full bg-[#0064FF] hover:bg-[#0052D4] text-white font-bold text-[14px] py-3 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2"
-                                    >
-                                        <Activity className="w-4 h-4" />
-                                        경쟁사 분석하기
-                                    </button>
-                                </div>
-                            ) : isLoadingAds ? (
-                                <div className="py-12 flex flex-col items-center justify-center gap-3">
-                                    <Loader2 className="w-8 h-8 text-[#0064FF] animate-spin" />
-                                    <div className="text-center">
-                                        <p className="text-[14px] font-bold text-[#333333] mb-1">AI가 최신 광고 소재를 분석 중입니다...</p>
-                                        <p className="text-[12px] text-[#8B95A1]">경쟁사의 주력 타겟과 크리에이티브를 추출하고 있어요</p>
-                                    </div>
-                                </div>
-                            ) : (
-                                <>
-                                    <div className="flex flex-col mb-2 gap-2">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <h3 className="text-[15px] font-bold text-[#333333] flex items-center gap-1.5">
-                                                <div className="w-2 h-2 rounded-full bg-[#03C75A]" />
-                                                메인 경쟁사 Top 5
-                                            </h3>
-                                        </div>
-                                        <div className="flex flex-col gap-2">
-                                            {competitorList.map((comp, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    onClick={async () => {
-                                                        setSelectedCompetitor(comp);
-                                                        setSelectedPersona(null);
-                                                        setIsLoadingSpecificAds(true);
-                                                        setCompetitorAds([]);
-                                                        setNextAdCursor(null);
-                                                        try {
-                                                            const { ads, nextCursor } = await getCompetitorSpecificAdsAction(comp);
-                                                            setCompetitorAds(ads);
-                                                            setNextAdCursor(nextCursor);
-                                                        } catch (e) {
-                                                            console.error(e);
-                                                        } finally {
-                                                            setIsLoadingSpecificAds(false);
+                                            <div className="flex items-center gap-2 mt-2">
+                                                <input
+                                                    type="text"
+                                                    placeholder="경쟁사 추가 입력"
+                                                    value={newCompetitorInput}
+                                                    onChange={(e) => setNewCompetitorInput(e.target.value)}
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === 'Enter' && newCompetitorInput.trim()) {
+                                                            const newVal = newCompetitorInput.trim();
+                                                            if (!competitorList.includes(newVal)) {
+                                                                setCompetitorList([...competitorList, newVal]);
+                                                            }
+                                                            setNewCompetitorInput('');
                                                         }
                                                     }}
-                                                    className={`w-full text-left bg-white border ${selectedCompetitor === comp ? 'border-[#0064FF] ring-1 ring-[#0064FF]' : 'border-[#E5E8EB]'} shadow-sm px-4 py-3 rounded-xl text-[14px] font-bold text-[#333333] hover:border-[#0064FF] transition-all`}
+                                                    className="w-full h-10 px-3 py-2 text-[13px] bg-white border border-[#E5E8EB] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0064FF]/20 focus:border-[#0064FF] transition-all"
+                                                />
+                                                <button
+                                                    onClick={() => {
+                                                        if (newCompetitorInput.trim()) {
+                                                            const newVal = newCompetitorInput.trim();
+                                                            if (!competitorList.includes(newVal)) {
+                                                                setCompetitorList([...competitorList, newVal]);
+                                                            }
+                                                            setNewCompetitorInput('');
+                                                        }
+                                                    }}
+                                                    className="shrink-0 bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#4E5968] active:scale-95 transition-all text-[13px] font-bold h-10 px-4 rounded-lg flex items-center justify-center"
                                                 >
-                                                    <div className="flex items-center justify-between">
-                                                        <div className="flex items-center gap-2">
-                                                            <div className="w-1.5 h-1.5 rounded-full bg-[#03C75A]" />
-                                                            {comp}
-                                                        </div>
-                                                        <ChevronRight className="w-4 h-4 text-[#8B95A1]" />
-                                                    </div>
+                                                    추가
                                                 </button>
-                                            ))}
-                                            {competitorList.length === 0 && (
-                                                <span className="bg-white border border-[#E5E8EB] shadow-sm px-3 py-1 rounded-full text-[13px] font-medium text-[#4E5968]">AI 분석 오류</span>
-                                            )}
+                                            </div>
+                                            <p className="text-[12px] text-[#8B95A1] mt-3 mb-1">* 각 브랜드를 클릭하면 광고 크리에이티브 샘플을 볼 수 있습니다.</p>
                                         </div>
-                                        <div className="flex items-center gap-2 mt-2">
-                                            <input
-                                                type="text"
-                                                placeholder="경쟁사 추가 입력"
-                                                value={newCompetitorInput}
-                                                onChange={(e) => setNewCompetitorInput(e.target.value)}
-                                                onKeyDown={(e) => {
-                                                    if (e.key === 'Enter' && newCompetitorInput.trim()) {
-                                                        const newVal = newCompetitorInput.trim();
-                                                        if (!competitorList.includes(newVal)) {
-                                                            setCompetitorList([...competitorList, newVal]);
-                                                        }
-                                                        setNewCompetitorInput('');
-                                                    }
-                                                }}
-                                                className="w-full h-10 px-3 py-2 text-[13px] bg-white border border-[#E5E8EB] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0064FF]/20 focus:border-[#0064FF] transition-all"
-                                            />
-                                            <button
-                                                onClick={() => {
-                                                    if (newCompetitorInput.trim()) {
-                                                        const newVal = newCompetitorInput.trim();
-                                                        if (!competitorList.includes(newVal)) {
-                                                            setCompetitorList([...competitorList, newVal]);
-                                                        }
-                                                        setNewCompetitorInput('');
-                                                    }
-                                                }}
-                                                className="shrink-0 bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#4E5968] active:scale-95 transition-all text-[13px] font-bold h-10 px-4 rounded-lg flex items-center justify-center"
-                                            >
-                                                추가
-                                            </button>
-                                        </div>
-                                        <p className="text-[12px] text-[#8B95A1] mt-3 mb-1">* 각 브랜드를 클릭하면 광고 크리에이티브 샘플을 볼 수 있습니다.</p>
-                                    </div>
-                                </>
-                            )}
+                                    </>
+                                )}
+                            </div>
+                        )}
+
+                        <div className="mt-20 flex justify-center pb-24">
+                            <motion.p
+                                className="text-center text-[#8B95A1] text-[13px] font-normal"
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: false }}
+                                transition={{ staggerChildren: 0.03 }}
+                            >
+                                {footerText.split("").map((char, index) => (
+                                    <motion.span key={index} variants={letterVariants}>
+                                        {char}
+                                    </motion.span>
+                                ))}
+                            </motion.p>
                         </div>
-                    )}
+                    </div>
                 </div>
-            </div >
+            </div>
 
             {
-                selectedPersona ? (
+                selectedPersona && !selectedCompetitor ? (
                     <div className="flex-1 min-w-0 py-10 px-4 sm:px-8 lg:px-12 xl:px-16 space-y-8 bg-[#F2F4F7]" >
                         <div className="flex items-center justify-between">
                             <h2 className="text-3xl font-bold text-[#333333]">타겟 페르소나 상세 정보</h2>
@@ -662,12 +732,19 @@ export function PersonaSidebar({
                     </div>
                 ) : selectedCompetitor ? (
                     <div className="flex-1 min-w-0 py-10 px-4 sm:px-8 lg:px-12 xl:px-16 space-y-8 bg-[#F2F4F7]" >
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-start justify-between">
                             <div>
                                 <h2 className="text-3xl font-bold text-[#333333] mb-2">{selectedCompetitor} 주요 소재 분석</h2>
                                 <p className="text-[15px] text-[#4E5968]">AI와 Meta Ad Library 데이터를 융합하여 수집된 최근 광고 트렌드와 전략을 살펴봅니다.</p>
+
+                                {isVerifyingAds && (
+                                    <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 bg-rose-50 text-rose-500 rounded-full font-bold text-[13px] animate-pulse">
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        검색어 유사도 기반 2차 노이즈 제거 분석 중...
+                                    </div>
+                                )}
                             </div>
-                            <button onClick={() => setSelectedCompetitor(null)} className="w-10 h-10 rounded-full bg-white border border-[#E5E8EB] flex items-center justify-center text-[#8B95A1] hover:text-[#333333] hover:shadow-sm transition-all shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+                            <button onClick={() => setSelectedCompetitor(null)} className="w-10 h-10 rounded-full bg-white border border-[#E5E8EB] flex items-center justify-center text-[#8B95A1] hover:text-[#333333] hover:shadow-sm transition-all shadow-[0_2px_10px_rgba(0,0,0,0.02)] shrink-0">
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
@@ -680,52 +757,88 @@ export function PersonaSidebar({
                                     <p className="text-[14px] text-[#8B95A1]">Meta 및 Google 광고 라이브러리에서 최신 데이터를 가져오고 있습니다.</p>
                                 </div>
                             </div>
+                        ) : competitorAds.length === 0 ? (
+                            <div className="w-full py-32 flex flex-col items-center justify-center gap-4 bg-white rounded-[2rem] border border-[#E5E8EB]">
+                                <div className="w-16 h-16 bg-[#F2F4F7] rounded-full flex items-center justify-center mb-2">
+                                    <Search className="w-8 h-8 text-[#AEB5BC]" />
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-[18px] font-bold text-[#333333] mb-2">집행 중인 광고가 없습니다</p>
+                                    <p className="text-[14px] text-[#8B95A1] max-w-[300px] break-keep">현재 Meta (Facebook/Instagram) 광고 라이브러리에서 해당 브랜드로 활성화된 공식 광고 데이터를 찾을 수 없습니다.</p>
+                                </div>
+                            </div>
                         ) : (
                             <>
                                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                                     {competitorAds.map((ad, idx) => (
-                                        <div key={idx} className="bg-white border border-[#E5E8EB] rounded-[1.5rem] p-6 shadow-sm flex flex-col h-full hover:border-[#0064FF]/30 transition-all group overflow-hidden">
-                                            {/* Dynamic Image from Puppeteer API */}
-                                            <AdImage link={ad.link} />
-
-                                            <div className="flex items-center justify-between mb-4">
-                                                <div className="flex items-center gap-2">
-                                                    <span className={`text-[12px] font-bold px-2.5 py-1 rounded-md ${ad.type1 === '프로모션' ? 'text-[#0064FF] bg-[#0064FF]/10' :
-                                                        ad.type1 === '리뷰/UGC' ? 'text-[#FF4785] bg-[#FF4785]/10' :
-                                                            'text-[#8B95A1] bg-[#F2F4F6]'
-                                                        }`}>
-                                                        {ad.type1}
-                                                    </span>
-                                                    <span className="text-[12px] font-medium text-[#4E5968] bg-[#F2F4F6] px-2.5 py-1 rounded-md">
-                                                        {ad.type2 !== '-' ? ad.type2 : '일반형'}
+                                        <div key={idx} className={`bg-white border border-[#E5E8EB] rounded-[1.5rem] p-6 shadow-sm flex flex-col h-full hover:border-[#0064FF]/30 transition-all group overflow-hidden ${invalidAdIds.has(ad.id) ? 'opacity-30 scale-95 grayscale duration-700' : 'duration-300'}`}>
+                                            {/* Meta Ad Library Card Style Render */}
+                                            {/* Top Metadata */}
+                                            <div className="mb-4 space-y-2">
+                                                <div className="flex items-center justify-between">
+                                                    <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-[#E8FFF0] text-[#00A650] text-[12px] font-bold rounded-md">
+                                                        <div className="w-1.5 h-1.5 bg-[#00A650] rounded-full" />
+                                                        활성
                                                     </span>
                                                 </div>
-                                                <div className="flex items-center gap-1.5 text-[13px] font-bold text-[#333333]">
-                                                    <Activity className="w-4 h-4 text-[#0064FF]" />
-                                                    {ad.platform.split(',')[0]}
+                                                <div className="text-[13px] text-[#4E5968]">라이브러리 ID: {ad.id}</div>
+                                                <div className="text-[13px] text-[#4E5968]">{ad.startDate}에 게재 시작함</div>
+                                                <div className="text-[13px] text-[#4E5968] flex items-center gap-1">
+                                                    플랫폼 <span className="font-semibold">{ad.platform}</span>
                                                 </div>
                                             </div>
-                                            <h4 className="text-[16px] text-[#333333] font-bold leading-relaxed mb-6 break-keep flex-1">
-                                                &quot;{ad.copy}&quot;
-                                            </h4>
-                                            <div className="flex flex-col gap-4 border-t border-[#F2F4F6] pt-4 mt-auto">
-                                                <div className="flex items-center justify-between text-[13px] text-[#4E5968]">
-                                                    <div className="flex items-center gap-1.5 bg-[#F9FAFB] px-2.5 py-1.5 rounded-lg border border-[#E5E8EB]">
-                                                        <Target className="w-4 h-4 text-[#8B95A1]" />
-                                                        <span className="font-semibold">{ad.targetGroup}</span>
+
+                                            {/* 광고 상세 정보 보기 버튼 */}
+                                            <a href={ad.link} target="_blank" rel="noreferrer" className="w-full py-2 bg-[#F2F4F6] hover:bg-[#E5E8EB] text-[#333333] font-bold text-[13px] rounded-lg text-center transition-colors mb-4 block">
+                                                광고 소재 및 상세 정보 보기
+                                            </a>
+
+                                            <div className="h-[1px] w-full bg-[#E5E8EB] mb-4" />
+
+                                            {/* 브랜드 프로필 & 이름 */}
+                                            <div className="flex items-center gap-3 mb-4">
+                                                {ad.profileLogo ? (
+                                                    <img src={ad.profileLogo} alt={ad.pageName || 'Brand'} className="w-10 h-10 rounded-full border border-[#E5E8EB] object-cover shrink-0" />
+                                                ) : (
+                                                    <div className="w-10 h-10 rounded-full bg-[#F2F4F6] flex items-center justify-center shrink-0 border border-[#E5E8EB]">
+                                                        <User className="w-5 h-5 text-[#8B95A1]" />
                                                     </div>
-                                                    <div className="flex items-center gap-1.5">
-                                                        <span className={`font-bold ${ad.days === 0 ? 'text-[#0064FF]' : 'text-[#FF4785]'}`}>
-                                                            {ad.days === 0 ? '신규 집행 (0일차)' : `${ad.days}일째 라이브`}
+                                                )}
+                                                <div>
+                                                    <h3 className="font-bold text-[#333333] text-[15px]">{ad.pageName || selectedCompetitor}</h3>
+                                                    <p className="text-[13px] text-[#8B95A1]">광고</p>
+                                                </div>
+                                            </div>
+
+                                            {/* 광고 본문 내용 */}
+                                            <h4 className="text-[14px] text-[#333333] leading-relaxed break-keep whitespace-pre-wrap mb-4 shrink-0">
+                                                {ad.copy}
+                                            </h4>
+
+                                            {/* Dynamic Image/Video from our local scraper */}
+                                            <AdImage mediaUrl={ad.mediaUrl} link={ad.link} />
+
+                                            <div className="flex flex-col gap-4 border-t border-[#F2F4F6] pt-4 mt-auto">
+                                                {/* AI Analysis Badges */}
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className={`text-[11px] font-bold px-2 py-1 rounded-md ${ad.type1 === '프로모션' ? 'text-[#0064FF] bg-[#0064FF]/10' :
+                                                            ad.type1 === '리뷰/UGC' ? 'text-[#FF4785] bg-[#FF4785]/10' :
+                                                                'text-[#8B95A1] bg-[#F2F4F6]'
+                                                            }`}>
+                                                            {ad.type1}
+                                                        </span>
+                                                        <span className="text-[11px] font-medium text-[#4E5968] bg-[#F2F4F6] px-2 py-1 rounded-md">
+                                                            {ad.type2 !== '-' ? ad.type2 : '일반형'}
                                                         </span>
                                                     </div>
                                                 </div>
-                                                {ad.link && (
-                                                    <a href={ad.link} target="_blank" rel="noreferrer" className="w-full py-2.5 bg-[#F2F4F6] group-hover:bg-[#E5E8EB] text-[#4E5968] group-hover:text-[#333333] font-bold text-[13px] rounded-xl text-center transition-colors flex items-center justify-center gap-2">
-                                                        크리에이티브 페이지 보기
-                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-                                                    </a>
-                                                )}
+
+                                                <div className="flex items-start gap-1.5 bg-[#F9FAFB] px-2.5 py-2 rounded-lg border border-[#E5E8EB] text-[13px] text-[#4E5968]">
+                                                    <Target className="w-4 h-4 text-[#8B95A1] shrink-0 mt-0.5" />
+                                                    <span className="font-semibold break-keep leading-snug">{ad.targetGroup}</span>
+                                                </div>
+
                                             </div>
                                         </div>
                                     ))}

@@ -1,0 +1,156 @@
+{
+  "request_url": "https://graph.facebook.com/v19.0/ads_archive?access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw&search_terms=%EC%9D%B4%EB%8B%88%EC%8A%A4%ED%94%84%EB%A6%AC&ad_type=ALL&ad_reached_countries=['KR']&fields=id,page_id,page_name,ad_creative_bodies,ad_creative_link_captions,ad_creation_time,ad_delivery_start_time,ad_snapshot_url,impressions,spend,demographic_distribution,publisher_platforms&limit=40",
+  "response": {
+    "data": [
+      {
+        "id": "1301742795129915",
+        "page_id": "289955041017153",
+        "page_name": "Innisfree (이니스프리)",
+        "ad_creative_bodies": [
+          "재구매율 1위* 이니스프리 수분크림\n👉 지금 1+1 더블기획으로 겨울철 피부 고민 끝!\n\n겨울에 당기고 푸석해진 피부엔,\n💧 수분은 속까지 깊게 채워주고\n🌿 예민해진 피부는 부드럽게 진정! \n\n끈적임 없이 산뜻하게 스며들어서\n남녀 누구나, 아침·저녁 루틴에 부담 없이 쓰기 좋은 데일리 수분크림\n\n*2020.01~2025.06 국내 이니스프리 크림류 내 재구매율 1위"
+        ],
+        "ad_creative_link_captions": [
+          "oy.run"
+        ],
+        "ad_creation_time": "2025-12-30",
+        "ad_delivery_start_time": "2025-12-30",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1301742795129915&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "threads"
+        ]
+      },
+      {
+        "id": "610136901964947",
+        "page_id": "137493096106466",
+        "page_name": "카밍의아뜰리에",
+        "ad_creative_bodies": [
+          "#광고\n\n요즘 피부 톤업 고민하신다면 이니스프리 비타민C 캡슐 세럼 꼭 주목해보셔야 해요. ✨\n바르는 순간 은은한 광채가 살아나고, 꾸준히 쓰면 맑고 환한 피부로 케어되는 느낌이더라구요.\n\n특히 8월 올리브영 프로모션 기간이라 부담 없이 만나볼 수 있어서 더 좋은 타이밍이에요. 데일리로 쓰기 가볍고, 톤업 & 미백 소구까지 확실하게 챙길 수 있는 세럼이라 요즘 제 루틴에 자주 손이 가고 있어요.\n\n#이니스프리 #비타민C캡슐세럼 #톤업 #미백 #톤업세럼 #올리브영추천"
+        ],
+        "ad_creative_link_captions": [
+          "instagram.com"
+        ],
+        "ad_creation_time": "2025-08-21",
+        "ad_delivery_start_time": "2025-08-21",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=610136901964947&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ]
+      },
+      {
+        "id": "777973964662185",
+        "page_id": "102420194562743",
+        "page_name": "yj_mark",
+        "ad_creative_bodies": [
+          "#광고 8월에 #올리브영 🫒 가야하는 이유!! ✨\n\n🌿 : @innisfreeofficial \n🫒 : @oliveyoung_official \n\n모공 고민 있는 남자들, 이거 그냥 써봐요.\n이니스프리 포레스트포맨 올인원 에센스\n✔ 스킨+로션+에센스 한 병에\n✔ 피지·모공 고민 한 번에 정리\n✔ 끈적임 없이 산뜻하게, 바쁜 아침에도 간편하게\n\n특히 저는 “포어케어” 타입 강추! 💚\n번들거림 많고 피부가 답답한 분들께 딱이에요.\n\n피부 고민별로 고를 수 있는 3가지 타입:\n✔ 포어케어 – 피지&모공 고민 많은 지성 피부용\n✔ 안티에이징 – 탄력 & 건조한 피부 케어\n✔ 센서티브 – 민감 피부도 안심 사용 가능\n\n💡 지금 올리브영 가면, 8월 한정 1만원대 구매 가능!\n+ 스페셜 트레블 키트 쉐이빙폼이랑 에센스도 💚\n고민할 시간에 피부 바꾸는 게 빠릅니다.\n테스터 먼저 써보고, 괜찮으면 바로 올영가서 ‘GET‘ 하세요.\n\n#이니스프리 #포레스트포맨올인원에센스 #포레스트포맨에센스\n#포레스트포맨포어케어올인원에센스 #포레스트포맨 #올인원에센스\n#남자스킨케어 #맨즈뷰티 #올인원에센스추천 #남자스킨케어추천\n#원샷케어 #피지컷 #포어케어 #청량수분젤 #올리브영\n#올리브영에센스 #올영에센스추천 #올영남자에센스 #민규에센스"
+        ],
+        "ad_creative_link_captions": [
+          "instagram.com"
+        ],
+        "ad_creation_time": "2025-07-28",
+        "ad_delivery_start_time": "2025-07-28",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=777973964662185&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "instagram"
+        ]
+      },
+      {
+        "id": "1741427029835781",
+        "page_id": "443954668797760",
+        "page_name": "뮤탱",
+        "ad_creative_bodies": [
+          "#광고 깃털처럼 가볍게 발리는 선크림..?\n@innisfreeofficial\n\n자외선은 점점 강해지는데 선크림은 무조건 발라야하잖아요.\n근데 이때 끈적임이 있거나 답답하게 발리는 제품은 오히려 손이 잘 안 가더라구요.\n\n이니스프리 그린티 선세럼은 백탁도 없는데 흡수가 빠른 편에\n정말 깃털처럼 가볍고 촉촉, 산뜻하게 발리는 선크림이라 지금 바르기 완전 딱이에요!\n\n자외선과 열로 손상받은 피부를 즉각적으로 진정시켜주는 것뿐만 아니라 사용한 지 7일 후 피부 탄력, 장벽이 무려 15% 개선되었다는 결과도 있는 제품.\n\n사용 후 피부가 진정되면서 편안한 느낌이 있었고, 제형 자체가 워낙 촉촉하다 보니 사계절 내내 사용하기에도 괜찮았어요.\n\n저는 메이크업 전에도 바르고 있는데요.\n촉촉, 빠른 흡수력에 메이크업 전에 발라도 밀림이 없었으며 또 발랐을 때 피부 온도를 낮춰줘서 좋았어요.\n\n촉촉하고 깃털처럼 가볍게 발리는 선크림을 찾고 계셨다면\n이니스프리의 그린티 선세럼 어떠세요💚\n\n올리브영에서 만나보세요!\n\n* 사용후기 사진은 촬영 환경, 조명 등에 따라 달라질 수 있으며, 개인차가 있음\n\n#이니스프리 #그린티진정수분선세럼 #수분핏선세럼 #그린티선세럼\n#그린티수분선세럼 #깃털선세럼 #선크림추천 #선세럼추천"
+        ],
+        "ad_creative_link_captions": [
+          "instagram.com"
+        ],
+        "ad_creation_time": "2025-07-08",
+        "ad_delivery_start_time": "2025-07-08",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1741427029835781&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ]
+      },
+      {
+        "id": "1163963868384036",
+        "page_id": "137493096106466",
+        "page_name": "카밍의아뜰리에",
+        "ad_creative_bodies": [
+          "@innisfreeofficial\n \n#광고\n겨울 내내 열심히 피부 톤업 관리했는데\n봄 되니까 왜 이렇게 칙칙해지는 거죠…? 🥲\n\n특히 햇빛 살짝만 받아도\n잡티가 올라올 것 같은 불안감 느껴본 사람 ✋\n\n그래서 바로 준비했어요.\n[7일 잡티 방어 루틴]\n\n✨ 아침저녁으로 비타민C 7일 톤업 세럼\n(그린티 엔자임 덕분에 비타민C 흡수 업!)\n\n✨ 아침엔 피치빛 비타민C 잡티 톤업 선크림으로\n자외선 차단 + 잡티 흔적 개선까지.\n\n이번에 베트남 여행 가서도 7일 루틴 꾸준히 했더니,\n피부가 탄 게 아니라 오히려 더 밝아졌어요 🌞\n\n4월 한정! 올리브영에서\n비타민C 잡티 톤업 선크림 1+1\n비타민C 7일 톤업 세럼X트위티 콜라보 1+1 리필 기획세트까지!\n\n놓치면 진짜 손해.\n지금이 잡티 골든타임⏰\n\n#이니스프리 #올리브영 #비타민C7일톤업세럼 #비타민C잡티톤업선 #톤업세럼 #잡티세럼 #비타민세럼 #잡티톤업선 #비타민톤업선 #올리브영추천 #올리브영비타민C세럼 #올리브영톤업선"
+        ],
+        "ad_creative_link_captions": [
+          "instagram.com"
+        ],
+        "ad_creation_time": "2025-04-10",
+        "ad_delivery_start_time": "2025-04-10",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1163963868384036&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ]
+      },
+      {
+        "id": "1351203722759737",
+        "page_id": "108768134222056",
+        "page_name": "랏뚜 비즈니스 08/18",
+        "ad_creative_bodies": [
+          "#광고 @innisfreeofficial\n⠀\n자외선 차단은 기본, 잡티케어까지 가능한!\n바를수록 피부톤이랑 잡티가 환해지는\n이니스프리 NEW 비타민C 잡티 톤업 선크림! ✨\n”선크림 바를 때마다 스킨케어까지 된다면?“\n이제 고민할 필요 없죠! 💛☀️\n\n⠀\n⠀\n🔻이니스프리 비타민C 잡티 톤업 선크림\n기존 자외선 차단제는 피부를 건조하게 만들거나\n시간이 지나면 밀림 & 들뜸이 발생하기 쉬워요! 😭\n⠀\n비타민C 잡티 톤업 선은 트리플 비타민 시너지 포뮬라의 멜라닌 케어!\n✔️ 텁텁함 NO! 끈적임 NO! 매끈뽀용한 텍스처!\n⠀\n👉 선크림 하나만 발라도 피부가 자연스럽게 피치 톤업\nSPF50+ PA++++의 강력한 차단력으로\n자외선으로 인한 잡티, 기미 생성을 예방! ☀️\n⠀\n👉 비타민C + 강력한 자외선 차단의 완벽한 조합!\n👉 선크림을 바를 때마다 트리플 비타민 시너지 포뮬라가\n멜라닌 케어를 도와줘서 낮에도 잡티 자동사냥!\n⠀\n⠀\n\n💛 NEW 비타민C 잡티 톤업 선크림\n📍 4월, 단독 출시! 1+1 기획세트에 할인까지 한다고 하니 얼른 만나보세요☺\n\n🏃‍♀️ 올리브영에서 얼른 만나보세요! GO! GO!\n⠀\n\n⠀\n#이니스프리 #비타민C잡티톤업선 #잡티톤업선\n#비타민C톤업선 #올리브영 #올리브영추천 #올리브영선크림\n#올리브영선크림추천 #올영선크림"
+        ],
+        "ad_creative_link_captions": [
+          "instagram.com"
+        ],
+        "ad_creation_time": "2025-04-07",
+        "ad_delivery_start_time": "2025-04-07",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1351203722759737&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ]
+      },
+      {
+        "id": "681209517746227",
+        "page_id": "101366291344991",
+        "page_name": "kim.moo.n",
+        "ad_creative_bodies": [
+          "#광고 @innisfreeofficial\n\n7일만에 피부톤이 밝아지는\n선크림이 있다구?🤔\n\n바로 이니스프리 NEW\n비타민C 잡티 톤업 선크림인데요\n순수비타민C*와 나이아신아마이드**,토코페롤***이\n함유가 되어 있어 선크림을 바르는 낮 동안에도 \n잡티 케어와 톤업 효과를 느끼게 해준다고 해요\n\n우려 사용 후 6일만에 \n겉 잡티 41%, 피부톤 균일도 6.6%, 속 잡티 수 26.3%,\n속 잡티 면적 9.1% 개선****이 되었다고 하는데요\n진짜 7일동안 열심히 사용해주었더니\n달라지는 피부톤이 보이더라구요\n\nUVS&UVB, LONG UVA까지 차단해주고 \n생기있는 피치톤업과 잡티 붉은기 커버까지 \n올라오는 잡티 케어는 물론 \n자외선 차단까지 완벽하게 하고 싶으신\n분들은 이니스프리 비타민C 잡티 톤업 선크림과 \n잡티케어의 골든타임을 함께 잡아보세요! \n\n4월 한달간 올영에서 1+1 기획세트에 \n특별한 할인 혜택으로 구매 가능하다고 하니까 꼭 사용해 보세요!💛\n\n#이니스프리 #비타민C잡티톤업선 #잡티톤업선\n#비타민C톤업선 #올리브영 #올리브영추천\n#올리브영선크림 #올리브영선크림추천 #올영선크림"
+        ],
+        "ad_creative_link_captions": [
+          "instagram.com"
+        ],
+        "ad_creation_time": "2025-04-01",
+        "ad_delivery_start_time": "2025-04-01",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=681209517746227&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "instagram"
+        ]
+      },
+      {
+        "id": "944004961051345",
+        "page_id": "101366291344991",
+        "page_name": "kim.moo.n",
+        "ad_creative_bodies": [
+          "이렇게 예쁜 팩 보셨어요?🫢\n\n처음에는 팩 클렌저인 줄 알았는데 \n이게 모공팩이래요 \n\n이니스프리 화산송이 모공 듀얼 마스크🩵 \n\n하늘색은 수분팩이고\n베이지색은 화산송이 클레이로 \n일반 모공팩을 사용하면 느껴졌던\n당김이 느껴지지 않고 \n촉촉하지만 각질, 모공 케어는\n확실하게 해준다고 하는데요!\n\n처음에는 당기는 느낌이 없어서\n좀 어색하긴 했는데 각질제거가\n돼서 피지가 빠져나오려는게\n눈에 보이더라구요?\n\n한 번해서 모공 변화가\n있는지는 잘 모르겠는데\n일단 편하니까 조금 더 써볼게요🤗\n\nInnisfree new pore pack🩵\n\nHave you ever seen such a pretty pack?\nAt first I thought it was a pack cleanser,\nbut it's a pore pack.\n\nNovo pacote de poros Innisfree🩵\n\nVocê já viu um pacote tão bonito?\nNo começo pensei que fosse um limpador de mochila\nEste é um pacote de poros\n\n@innisfreeofficial\n\n#이니스프리 #모공팩 \n#innsfree #모공관리 #모공케어 \n#이니스프리화산송이 #이니스프리화산송이듀얼마스크 \n#모공 #pore"
+        ],
+        "ad_creative_link_captions": [
+          "instagram.com"
+        ],
+        "ad_creation_time": "2025-03-12",
+        "ad_delivery_start_time": "2025-03-12",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=944004961051345&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "instagram"
+        ]
+      }
+    ],
+    "paging": {
+      "cursors": {
+        "after": "c2NyYXBpbmdfY3Vyc29yOk1UYzBNVGd3TXpRNE9EbzVORFF3TURRNU5qRXdOVEV6TkRVPQZDZD"
+      },
+      "next": "https://graph.facebook.com/v25.0/ads_archive?access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw&search_terms=%EC%9D%B4%EB%8B%88%EC%8A%A4%ED%94%84%EB%A6%AC&ad_type=ALL&ad_reached_countries=[%27KR%27]&fields=id,page_id,page_name,ad_creative_bodies,ad_creative_link_captions,ad_creation_time,ad_delivery_start_time,ad_snapshot_url,impressions,spend,demographic_distribution,publisher_platforms&limit=40&after=c2NyYXBpbmdfY3Vyc29yOk1UYzBNVGd3TXpRNE9EbzVORFF3TURRNU5qRXdOVEV6TkRVPQZDZD"
+    }
+  }
+}

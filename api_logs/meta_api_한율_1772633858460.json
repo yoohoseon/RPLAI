@@ -1,0 +1,819 @@
+{
+  "request_url": "https://graph.facebook.com/v19.0/ads_archive?access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw&search_terms=%ED%95%9C%EC%9C%A8&ad_type=ALL&ad_reached_countries=['KR']&fields=id,page_id,page_name,ad_creative_bodies,ad_creative_link_captions,ad_creation_time,ad_delivery_start_time,ad_snapshot_url,impressions,spend,demographic_distribution,publisher_platforms&limit=40",
+  "response": {
+    "data": [
+      {
+        "id": "736482435888390",
+        "page_id": "507595852446412",
+        "page_name": "Reelstv",
+        "ad_creative_bodies": [
+          "1955년, 한유라 교수님은 갑작스러운 사고로 세상을 떠났습니다. 😭 눈을 떠보니 70년 후, 놀랍게도 같은 이름을 가진 18세 여고생의 몸으로 환생했어요! 😮✨\n\n이제 그녀의 아들은 70세가 훌쩍 넘은 회장이 되었고, 잘생긴 증손자들까지 생겼답니다. 👨‍🦳👨‍👦‍👦 새로운 삶에 적응하며, 교수님은 특유의 지혜와 능력으로 말썽쟁이 증손자들을 휘어잡기 시작하는데... 과연 어떤 이야기가 펼쳐질까요? 🤔💖\n\n#환생 #타임슬립 #로맨스 #가족 #드라마 #웹툰추천 #인생2회차"
+        ],
+        "ad_creative_link_captions": [
+          "play.google.com"
+        ],
+        "ad_creation_time": "2026-01-26",
+        "ad_delivery_start_time": "2026-01-27",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=736482435888390&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "3895013650791411",
+        "page_id": "388943774313482",
+        "page_name": "FlickReels 6",
+        "ad_creative_bodies": [
+          "70년 전, 천재 교수가 갑자기 사라졌다?! 😱✨\n눈 떠보니 18살 여고생 몸으로 환생! 😮\n근데... 내 아들이 회장이 되고, 잘생긴 증손자까지?! 😳👴🏻\n이젠 지혜와 능력으로 꼬맹이 증손자들을 길들여볼까? 😉🔥\n#환생 #타임슬립 #로맨스 #코미디 #복수 #가족"
+        ],
+        "ad_creative_link_captions": [
+          "pages.farsunpteltd.com"
+        ],
+        "ad_creation_time": "2026-01-25",
+        "ad_delivery_start_time": "2026-01-26",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=3895013650791411&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "2405298503263519",
+        "page_id": "449046394958496",
+        "page_name": "FlickReels 10",
+        "ad_creative_bodies": [
+          "70년 전, 천재 교수가 갑자기 사라졌다?! 😱✨\n눈 떠보니 18살 여고생 몸으로 환생! 😮\n근데... 내 아들이 회장이 되고, 잘생긴 증손자까지?! 😳👴🏻\n이젠 지혜와 능력으로 꼬맹이 증손자들을 길들여볼까? 😉🔥"
+        ],
+        "ad_creative_link_captions": [
+          "pages.flickreels.net"
+        ],
+        "ad_creation_time": "2026-01-21",
+        "ad_delivery_start_time": "2026-01-21",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=2405298503263519&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "834476332737727",
+        "page_id": "350913194944188",
+        "page_name": "한율(Hanyul)",
+        "ad_creative_link_captions": [
+          "oliveyoung.co.kr",
+          "oliveyoung.co.kr",
+          "oliveyoung.co.kr"
+        ],
+        "ad_creation_time": "2026-01-01",
+        "ad_delivery_start_time": "2026-01-01",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=834476332737727&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "instagram"
+        ]
+      },
+      {
+        "id": "2962860447248903",
+        "page_id": "147495425113984",
+        "page_name": "GangWon Entertainment Land",
+        "ad_creative_bodies": [
+          "This ad was run by an account or Page we later disabled for not following our Advertising Standards."
+        ],
+        "ad_creative_link_captions": [
+          "This ad was run by an account or Page we later disabled for not following our Advertising Standards."
+        ],
+        "ad_creation_time": "2025-11-19",
+        "ad_delivery_start_time": "2025-11-19",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=2962860447248903&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger"
+        ]
+      },
+      {
+        "id": "1137143168594838",
+        "page_id": "542993942229526",
+        "page_name": "FlickReels 14",
+        "ad_creative_bodies": [
+          "🔥🔥1955년, 한유라 교수님은 뜻밖의 사고로 세상을 떠났다. 눈을 떠보니 70년 후, 같은 이름을 가진 18세 여고생 몸에 환생하였다. 지금 자기 아들은 70세 넘었으며, 회장이 되어 있고, 잘생긴 증손자들까지 생겼다. 새 삶에 적응하던 그녀는 지혜와 능력으로 문재쟁이 증손자를 다스리기 시작하는데...🔥🔥"
+        ],
+        "ad_creative_link_captions": [
+          "pages.farsunpteltd.com"
+        ],
+        "ad_creation_time": "2025-11-03",
+        "ad_delivery_start_time": "2025-11-03",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1137143168594838&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "1556394188869950",
+        "page_id": "542993942229526",
+        "page_name": "FlickReels 14",
+        "ad_creative_bodies": [
+          "🔥🔥1955년, 한유라 교수님은 뜻밖의 사고로 세상을 떠났다. 눈을 떠보니 70년 후, 같은 이름을 가진 18세 여고생 몸에 환생하였다. 지금 자기 아들은 70세 넘었으며, 회장이 되어 있고, 잘생긴 증손자들까지 생겼다. 새 삶에 적응하던 그녀는 지혜와 능력으로 문재쟁이 증손자를 다스리기 시작하는데...🔥🔥"
+        ],
+        "ad_creative_link_captions": [
+          "pages.farsunpteltd.com"
+        ],
+        "ad_creation_time": "2025-10-29",
+        "ad_delivery_start_time": "2025-10-29",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1556394188869950&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "1381670010246071",
+        "page_id": "542993942229526",
+        "page_name": "FlickReels 14",
+        "ad_creative_bodies": [
+          "🔥🔥1955년, 한유라 교수님은 뜻밖의 사고로 세상을 떠났다. 눈을 떠보니 70년 후, 같은 이름을 가진 18세 여고생 몸에 환생하였다. 지금 자기 아들은 70세 넘었으며, 회장이 되어 있고, 잘생긴 증손자들까지 생겼다. 새 삶에 적응하던 그녀는 지혜와 능력으로 문재쟁이 증손자를 다스리기 시작하는데...🔥🔥"
+        ],
+        "ad_creative_link_captions": [
+          "pages.farsunpteltd.com"
+        ],
+        "ad_creation_time": "2025-10-25",
+        "ad_delivery_start_time": "2025-10-25",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1381670010246071&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "799105326227911",
+        "page_id": "542993942229526",
+        "page_name": "FlickReels 14",
+        "ad_creative_bodies": [
+          "🔥🔥1955년, 한유라 교수님은 뜻밖의 사고로 세상을 떠났다. 눈을 떠보니 70년 후, 같은 이름을 가진 18세 여고생 몸에 환생하였다. 지금 자기 아들은 70세 넘었으며, 회장이 되어 있고, 잘생긴 증손자들까지 생겼다. 새 삶에 적응하던 그녀는 지혜와 능력으로 문재쟁이 증손자를 다스리기 시작하는데...🔥🔥"
+        ],
+        "ad_creative_link_captions": [
+          "pages.farsunpteltd.com"
+        ],
+        "ad_creation_time": "2025-10-25",
+        "ad_delivery_start_time": "2025-10-25",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=799105326227911&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "1515962343059224",
+        "page_id": "848975981626748",
+        "page_name": "Flick-pp",
+        "ad_creative_bodies": [
+          "🔥🔥1955년, 한유라 교수님은 뜻밖의 사고로 세상을 떠났다. 눈을 떠보니 70년 후, 같은 이름을 가진 18세 여고생 몸에 환생하였다. 지금 자기 아들은 70세 넘었으며, 회장이 되어 있고, 잘생긴 증손자들까지 생겼다. 새 삶에 적응하던 그녀는 지혜와 능력으로 문재쟁이 증손자를 다스리기 시작하는데...🔥🔥"
+        ],
+        "ad_creative_link_captions": [
+          "pages.farsunpteltd.com"
+        ],
+        "ad_creation_time": "2025-10-24",
+        "ad_delivery_start_time": "2025-10-24",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1515962343059224&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "1277569524143329",
+        "page_id": "814798825040771",
+        "page_name": "Flick-CC",
+        "ad_creative_bodies": [
+          "👵⚡1955年 죽은 천재 여교수가, 2025년 18살 여고생으로 환생했다?!\n눈앞에 펼쳐진 건 백발이 된 친아들과 버릇없는 증손자들… 이제 직접 나서서 ‘가르쳐줄 시간’이다! 💥"
+        ],
+        "ad_creative_link_captions": [
+          "pages.flickreels.net"
+        ],
+        "ad_creation_time": "2025-10-24",
+        "ad_delivery_start_time": "2025-10-24",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1277569524143329&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "828090519691904",
+        "page_id": "774896869047632",
+        "page_name": "Flick-DD",
+        "ad_creative_bodies": [
+          "1955년, 한유라 교수님은 갑작스러운 사고로 세상을 떠났어요. 😭 그런데 눈을 떠보니 70년 후, 놀랍게도 18세 여고생의 몸으로 환생했답니다! 😮\n지금 그녀의 아들은 70세가 훌쩍 넘었고, 회장이 되어 있으며, 잘생긴 증손자들까지 생겼어요. 👨‍👩‍👧‍👦 새로운 삶에 적응하며, 교수님의 지혜와 능력으로 말썽쟁이 증손자들을 길들이기 시작하는데... 과연 어떤 이야기가 펼쳐질까요? 🤔 지금 바로 확인해보세요! ✨"
+        ],
+        "ad_creative_link_captions": [
+          "pages.farsunpteltd.com"
+        ],
+        "ad_creation_time": "2025-10-22",
+        "ad_delivery_start_time": "2025-10-23",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=828090519691904&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "819215457164474",
+        "page_id": "542993942229526",
+        "page_name": "FlickReels 14",
+        "ad_creative_bodies": [
+          "🔥🔥1955년, 한유라 교수님은 뜻밖의 사고로 세상을 떠났다. 눈을 떠보니 70년 후, 같은 이름을 가진 18세 여고생 몸에 환생하였다. 지금 자기 아들은 70세 넘었으며, 회장이 되어 있고, 잘생긴 증손자들까지 생겼다. 새 삶에 적응하던 그녀는 지혜와 능력으로 문재쟁이 증손자를 다스리기 시작하는데...🔥🔥"
+        ],
+        "ad_creative_link_captions": [
+          "pages.farsunpteltd.com"
+        ],
+        "ad_creation_time": "2025-10-21",
+        "ad_delivery_start_time": "2025-10-21",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=819215457164474&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "797324953138156",
+        "page_id": "542993942229526",
+        "page_name": "FlickReels 14",
+        "ad_creative_bodies": [
+          "🔥🔥1955년, 한유라 교수님은 뜻밖의 사고로 세상을 떠났다. 눈을 떠보니 70년 후, 같은 이름을 가진 18세 여고생 몸에 환생하였다. 지금 자기 아들은 70세 넘었으며, 회장이 되어 있고, 잘생긴 증손자들까지 생겼다. 새 삶에 적응하던 그녀는 지혜와 능력으로 문재쟁이 증손자를 다스리기 시작하는데...🔥🔥"
+        ],
+        "ad_creative_link_captions": [
+          "pages.farsunpteltd.com"
+        ],
+        "ad_creation_time": "2025-10-21",
+        "ad_delivery_start_time": "2025-10-21",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=797324953138156&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "2205350173325591",
+        "page_id": "637626346103611",
+        "page_name": "FlickReels-kr",
+        "ad_creative_bodies": [
+          "1955년, 천재 교수 한유라 👩‍🏫… 갑자기 사망?! 😱\n눈 떠보니 70년 후, 18세 고등학생 소녀로 환생! 💫\n근데… 아들은 회장이 되어 있고, 잘생긴 증손자까지?! 😳\n과연 한유라는 불효 자손들을 참회시키고 새로운 삶을 찾을 수 있을까? 🤔\n지금 바로 확인하세요! 👇\n#타임슬립 #환생 #복수 #로맨스 #드라마 #웹툰추천 #인생역전"
+        ],
+        "ad_creative_link_captions": [
+          "pages.flickreels.net"
+        ],
+        "ad_creation_time": "2025-10-20",
+        "ad_delivery_start_time": "2025-10-20",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=2205350173325591&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "1343484847449227",
+        "page_id": "774896869047632",
+        "page_name": "Flick-DD",
+        "ad_creative_bodies": [
+          "1955년, 한유라 교수님은 갑작스러운 사고로 세상을 떠났어요. 😭 그런데 눈을 떠보니 70년 후, 놀랍게도 18세 여고생의 몸으로 환생했답니다! 😮\n지금 그녀의 아들은 70세가 훌쩍 넘었고, 회장이 되어 있으며, 잘생긴 증손자들까지 생겼어요. 👨‍👩‍👧‍👦 새로운 삶에 적응하며, 교수님의 지혜와 능력으로 말썽쟁이 증손자들을 길들이기 시작하는데... 과연 어떤 이야기가 펼쳐질까요? 🤔 지금 바로 확인해보세요! ✨"
+        ],
+        "ad_creative_link_captions": [
+          "pages.farsunpteltd.com"
+        ],
+        "ad_creation_time": "2025-10-12",
+        "ad_delivery_start_time": "2025-10-12",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1343484847449227&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "24823711143950958",
+        "page_id": "157290527459891",
+        "page_name": "DramaBox- movies and drama",
+        "ad_creative_bodies": [
+          "낄 자리와 빠질 자리를 알고,넘볼 수 있는 것과 그렇지 않은 것을 구별할 줄 아는 못생긴 대학생 노을.어느 날부터 학과의 여신으로 불리는 지우와 한솔, 두 사람으로 부터 분에 넘치는 관심을 받게 된다.도대체 이 얼굴의 노을을 좋아하는 두 사람의 진짜 속마음은 무엇일까?[STORYMATRIX PTE.LTD]"
+        ],
+        "ad_creative_link_captions": [
+          "fb.dramabox.com"
+        ],
+        "ad_creation_time": "2025-10-03",
+        "ad_delivery_start_time": "2025-10-03",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=24823711143950958&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network"
+        ]
+      },
+      {
+        "id": "681482118305381",
+        "page_id": "157290527459891",
+        "page_name": "DramaBox- movies and drama",
+        "ad_creative_bodies": [
+          "낄 자리와 빠질 자리를 알고,넘볼 수 있는 것과 그렇지 않은 것을 구별할 줄 아는 못생긴 대학생 노을.어느 날부터 학과의 여신으로 불리는 지우와 한솔, 두 사람으로 부터 분에 넘치는 관심을 받게 된다.도대체 이 얼굴의 노을을 좋아하는 두 사람의 진짜 속마음은 무엇일까?[STORYMATRIX PTE.LTD]"
+        ],
+        "ad_creative_link_captions": [
+          "fb.dramabox.com"
+        ],
+        "ad_creation_time": "2025-10-03",
+        "ad_delivery_start_time": "2025-10-03",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=681482118305381&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network"
+        ]
+      },
+      {
+        "id": "771023079132593",
+        "page_id": "102871639443028",
+        "page_name": "DramaBox- movies and drama2",
+        "ad_creative_bodies": [
+          "낄 자리와 빠질 자리를 알고,넘볼 수 있는 것과 그렇지 않은 것을 구별할 줄 아는 못생긴 대학생 노을.어느 날부터 학과의 여신으로 불리는 지우와 한솔, 두 사람으로 부터 분에 넘치는 관심을 받게 된다.도대체 이 얼굴의 노을을 좋아하는 두 사람의 진짜 속마음은 무엇일까?[STORYMATRIX PTE.LTD]"
+        ],
+        "ad_creative_link_captions": [
+          "fb.dramabox.com"
+        ],
+        "ad_creation_time": "2025-10-03",
+        "ad_delivery_start_time": "2025-10-03",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=771023079132593&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ]
+      },
+      {
+        "id": "784062361221836",
+        "page_id": "133474016526538",
+        "page_name": "DramaBox-Movies and drama",
+        "ad_creative_bodies": [
+          "낄 자리와 빠질 자리를 알고,넘볼 수 있는 것과 그렇지 않은 것을 구별할 줄 아는 못생긴 대학생 노을.어느 날부터 학과의 여신으로 불리는 지우와 한솔, 두 사람으로 부터 분에 넘치는 관심을 받게 된다.도대체 이 얼굴의 노을을 좋아하는 두 사람의 진짜 속마음은 무엇일까?"
+        ],
+        "ad_creative_link_captions": [
+          "fb.dramabox.com"
+        ],
+        "ad_creation_time": "2025-10-03",
+        "ad_delivery_start_time": "2025-10-03",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=784062361221836&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "1188170016480645",
+        "page_id": "133474016526538",
+        "page_name": "DramaBox-Movies and drama",
+        "ad_creative_bodies": [
+          "낄 자리와 빠질 자리를 알고,넘볼 수 있는 것과 그렇지 않은 것을 구별할 줄 아는 못생긴 대학생 노을.어느 날부터 학과의 여신으로 불리는 지우와 한솔, 두 사람으로 부터 분에 넘치는 관심을 받게 된다.도대체 이 얼굴의 노을을 좋아하는 두 사람의 진짜 속마음은 무엇일까?"
+        ],
+        "ad_creative_link_captions": [
+          "fb.dramabox.com"
+        ],
+        "ad_creation_time": "2025-10-03",
+        "ad_delivery_start_time": "2025-10-03",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1188170016480645&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "1715661982471768",
+        "page_id": "133474016526538",
+        "page_name": "DramaBox-Movies and drama",
+        "ad_creative_bodies": [
+          "낄 자리와 빠질 자리를 알고,넘볼 수 있는 것과 그렇지 않은 것을 구별할 줄 아는 못생긴 대학생 노을.어느 날부터 학과의 여신으로 불리는 지우와 한솔, 두 사람으로 부터 분에 넘치는 관심을 받게 된다.도대체 이 얼굴의 노을을 좋아하는 두 사람의 진짜 속마음은 무엇일까?"
+        ],
+        "ad_creative_link_captions": [
+          "fb.dramabox.com"
+        ],
+        "ad_creation_time": "2025-10-03",
+        "ad_delivery_start_time": "2025-10-03",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1715661982471768&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "1878183403111918",
+        "page_id": "102871639443028",
+        "page_name": "DramaBox- movies and drama2",
+        "ad_creative_bodies": [
+          "낄 자리와 빠질 자리를 알고,넘볼 수 있는 것과 그렇지 않은 것을 구별할 줄 아는 못생긴 대학생 노을.어느 날부터 학과의 여신으로 불리는 지우와 한솔, 두 사람으로 부터 분에 넘치는 관심을 받게 된다.도대체 이 얼굴의 노을을 좋아하는 두 사람의 진짜 속마음은 무엇일까?[STORYMATRIX PTE.LTD]"
+        ],
+        "ad_creative_link_captions": [
+          "fb.dramabox.com"
+        ],
+        "ad_creation_time": "2025-10-03",
+        "ad_delivery_start_time": "2025-10-03",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1878183403111918&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ]
+      },
+      {
+        "id": "757084116910098",
+        "page_id": "137493096106466",
+        "page_name": "카밍의아뜰리에",
+        "ad_creative_bodies": [
+          "#협찬\n유세린 일루미네이팅 세럼\n잡티 레이저 받고도 바르는 세럼(찐템)\n속은 촉촉, 겉은 산뜻 → 잡티 잡음\n\n구달 청귤 비타C 잡티 톤업세럼\n스킨케어 첫 스텝부터 비타민 팡팡!\n닦토·팩토 다 잘 받음 🍊\n\n한율 달빛유자 수면팩 튜브형\n귀차니스트 전용 비타민 케어 🌙\n바르고 자면 촉촉+톤업 확실\n\n미백은 진짜 꾸준함이 답이라서,\n아침저녁 이 루틴 2주만 해도 왜 이렇게 환해보여?소리 들음 확정이에요 ✨\n\n@eucerin_kr\n\n#골드올리브 #미백루틴 #환절기스킨케어 #유세린일루미네이팅 #잡티세럼 #올리브영세럼추천 #톤업"
+        ],
+        "ad_creative_link_captions": [
+          "instagram.com"
+        ],
+        "ad_creation_time": "2025-08-22",
+        "ad_delivery_start_time": "2025-08-22",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=757084116910098&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ]
+      },
+      {
+        "id": "1618761356245978",
+        "page_id": "165293213330295",
+        "page_name": "Short Tales for Free",
+        "ad_creative_bodies": [
+          "매일 업데이트되는 인기 단편 드라마! 로맨스부터 미스터리까지, 지금 바로 Dot Drama에서 즐겨보세요"
+        ],
+        "ad_creative_link_captions": [
+          "play.google.com"
+        ],
+        "ad_creation_time": "2025-08-15",
+        "ad_delivery_start_time": "2025-08-17",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1618761356245978&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger"
+        ]
+      },
+      {
+        "id": "1690076408318281",
+        "page_id": "677466098792467",
+        "page_name": "Nexshorttv",
+        "ad_creative_bodies": [
+          "핫한 드라마 놓치지 마세요! 여기 다 모아뒀고, 100% 무료예요!"
+        ],
+        "ad_creative_link_captions": [
+          "play.google.com"
+        ],
+        "ad_creation_time": "2025-08-11",
+        "ad_delivery_start_time": "2025-08-11",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1690076408318281&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger"
+        ]
+      },
+      {
+        "id": "1481837066186271",
+        "page_id": "453553681180647",
+        "page_name": "FlickReels 12",
+        "ad_creative_bodies": [
+          "1955년, 한유라 교수는 뜻밖에 사망했지만, 깨어나 보니 70년 후, 같은 이름을 가진 18세 고등학생 소녀로 빨려들어왔다. 아들은 회장이 되어 있고, 그녀에겐 잘생긴 증손자가 있다. 한유라는 지혜로 불효 자손들을 참회시키고, 새로운 생활에 적응하며 자신만의 아름다움을 찾아간다."
+        ],
+        "ad_creative_link_captions": [
+          "pages.farsunpteltd.com"
+        ],
+        "ad_creation_time": "2025-08-08",
+        "ad_delivery_start_time": "2025-08-08",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1481837066186271&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "1229874195548889",
+        "page_id": "453553681180647",
+        "page_name": "FlickReels 12",
+        "ad_creative_bodies": [
+          "1955년, 한유라 교수는 뜻밖에 사망했지만, 깨어나 보니 70년 후, 같은 이름을 가진 18세 고등학생 소녀로 빨려들어왔다. 아들은 회장이 되어 있고, 그녀에겐 잘생긴 증손자가 있다. 한유라는 지혜로 불효 자손들을 참회시키고, 새로운 생활에 적응하며 자신만의 아름다움을 찾아간다."
+        ],
+        "ad_creative_link_captions": [
+          "pages.farsunpteltd.com"
+        ],
+        "ad_creation_time": "2025-08-07",
+        "ad_delivery_start_time": "2025-08-07",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1229874195548889&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "1593748121603332",
+        "page_id": "449046394958496",
+        "page_name": "FlickReels 10",
+        "ad_creative_bodies": [
+          "1955년, 한유라 교수님은 뜻밖의 사고로 세상을 떠났다. 눈을 떠보니 70년 후, 같은 이름을 가진 18세 여고생 몸에 환생하였다. 지금 자기 아들은 70세 넘었으며, 회장이 되어 있고, 잘생긴 증손자들까지 생겼다. 새 삶에 적응하던 그녀는 지혜와 능력으로 문재쟁이 증손자를 다스리기 시작하는데..."
+        ],
+        "ad_creative_link_captions": [
+          "pages.farsunpteltd.com"
+        ],
+        "ad_creation_time": "2025-08-04",
+        "ad_delivery_start_time": "2025-08-04",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1593748121603332&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "785829170444147",
+        "page_id": "101366291344991",
+        "page_name": "kim.moo.n",
+        "ad_creative_bodies": [
+          "#광고 @hanyulofficial\n\n여름철 열 받은 피부를 진정시킬\n단 하나의 방법이 있다면?\n바로 한율 #5분트러블진정 쑥시카패드!\n쑥과 시카 두가지 성분으로\n빠르게 붉은기*,\n트러블**및 피부 컨디션 개선/완화를\n도와주기 때문에 여름철 열 받은\n피부 진정으로 딱이에요\n\n듀얼 양면패드로 수분&진정 내 피부에 딱 맞게\n관리할 수 있는데요!\n\n이번에 용기가 원터치 캡으로\n리뉴얼되고 집게도 내가 원하는 방향으로\n꽂을 수 있어서 더욱 위생적이고 편리한 사용이 가능해요\n이렇게 더 좋아진 한율 쑥시카패드를 이번 8월에\n더 좋은 혜택으로 만나보실 수 있는데요!\n\n✅8월 올리브영 프로모션 (8/1~8/21)\n한율 쑥시카 패드 (60매+추가 10매)\n29,000원 → 17,800원 (38% 할인)\n\n딱, 8월 한 달만 진행되는 올영혜택 절대 놓치지마세요!\n*외부 자극에 의한 일시적 붉은기\n**건조, 외부자극으로 인한 일시적 붉은기, 울퉁불퉁 피부 등\n\n#한율 #한율쑥시카 #쑥시카패드\n#어린쑥패드 #한율패드 #토너패드\n#트러블 #트러블진정 #올리브영추천템"
+        ],
+        "ad_creative_link_captions": [
+          "instagram.com"
+        ],
+        "ad_creation_time": "2025-08-01",
+        "ad_delivery_start_time": "2025-08-01",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=785829170444147&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "instagram"
+        ]
+      },
+      {
+        "id": "728235319977341",
+        "page_id": "607457275778642",
+        "page_name": "ReelPulse",
+        "ad_creative_bodies": [
+          "70대 회장님 아들, 잘생긴 증손자들까지 등장!💼👦💖\n지혜로 무장한 증조할머니가 문제아들을 갱생시킨다?!🔥\n🌀과거와 현재가 충돌하는 세기의 역전 드라마!"
+        ],
+        "ad_creative_link_captions": [
+          "pages.flickreels.net"
+        ],
+        "ad_creation_time": "2025-07-29",
+        "ad_delivery_start_time": "2025-07-29",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=728235319977341&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger"
+        ]
+      },
+      {
+        "id": "741933808574947",
+        "page_id": "607457275778642",
+        "page_name": "ReelPulse",
+        "ad_creative_bodies": [
+          "70대 회장님 아들, 잘생긴 증손자들까지 등장!💼👦💖\n지혜로 무장한 증조할머니가 문제아들을 갱생시킨다?!🔥\n🌀과거와 현재가 충돌하는 세기의 역전 드라마!"
+        ],
+        "ad_creative_link_captions": [
+          "pages.flickreels.net"
+        ],
+        "ad_creation_time": "2025-07-29",
+        "ad_delivery_start_time": "2025-07-29",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=741933808574947&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger"
+        ]
+      },
+      {
+        "id": "745618968244076",
+        "page_id": "607457275778642",
+        "page_name": "ReelPulse",
+        "ad_creative_bodies": [
+          "70대 회장님 아들, 잘생긴 증손자들까지 등장!💼👦💖\n지혜로 무장한 증조할머니가 문제아들을 갱생시킨다?!🔥\n🌀과거와 현재가 충돌하는 세기의 역전 드라마!"
+        ],
+        "ad_creative_link_captions": [
+          "pages.flickreels.net"
+        ],
+        "ad_creation_time": "2025-07-29",
+        "ad_delivery_start_time": "2025-07-29",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=745618968244076&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger"
+        ]
+      },
+      {
+        "id": "1110932660915734",
+        "page_id": "607457275778642",
+        "page_name": "ReelPulse",
+        "ad_creative_bodies": [
+          "70대 회장님 아들, 잘생긴 증손자들까지 등장!💼👦💖\n지혜로 무장한 증조할머니가 문제아들을 갱생시킨다?!🔥\n🌀과거와 현재가 충돌하는 세기의 역전 드라마!"
+        ],
+        "ad_creative_link_captions": [
+          "pages.flickreels.net"
+        ],
+        "ad_creation_time": "2025-07-29",
+        "ad_delivery_start_time": "2025-07-29",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1110932660915734&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger"
+        ]
+      },
+      {
+        "id": "1162895875875533",
+        "page_id": "607457275778642",
+        "page_name": "ReelPulse",
+        "ad_creative_bodies": [
+          "70대 회장님 아들, 잘생긴 증손자들까지 등장!💼👦💖\n지혜로 무장한 증조할머니가 문제아들을 갱생시킨다?!🔥\n🌀과거와 현재가 충돌하는 세기의 역전 드라마!"
+        ],
+        "ad_creative_link_captions": [
+          "pages.flickreels.net"
+        ],
+        "ad_creation_time": "2025-07-29",
+        "ad_delivery_start_time": "2025-07-29",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1162895875875533&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger"
+        ]
+      },
+      {
+        "id": "1167279274906417",
+        "page_id": "607457275778642",
+        "page_name": "ReelPulse",
+        "ad_creative_bodies": [
+          "70대 회장님 아들, 잘생긴 증손자들까지 등장!💼👦💖\n지혜로 무장한 증조할머니가 문제아들을 갱생시킨다?!🔥\n🌀과거와 현재가 충돌하는 세기의 역전 드라마!"
+        ],
+        "ad_creative_link_captions": [
+          "pages.flickreels.net"
+        ],
+        "ad_creation_time": "2025-07-29",
+        "ad_delivery_start_time": "2025-07-29",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1167279274906417&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger"
+        ]
+      },
+      {
+        "id": "1250318033505407",
+        "page_id": "607457275778642",
+        "page_name": "ReelPulse",
+        "ad_creative_bodies": [
+          "70대 회장님 아들, 잘생긴 증손자들까지 등장!💼👦💖\n지혜로 무장한 증조할머니가 문제아들을 갱생시킨다?!🔥\n🌀과거와 현재가 충돌하는 세기의 역전 드라마!"
+        ],
+        "ad_creative_link_captions": [
+          "pages.flickreels.net"
+        ],
+        "ad_creation_time": "2025-07-29",
+        "ad_delivery_start_time": "2025-07-29",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1250318033505407&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger"
+        ]
+      },
+      {
+        "id": "1258732595629232",
+        "page_id": "607457275778642",
+        "page_name": "ReelPulse",
+        "ad_creative_bodies": [
+          "70대 회장님 아들, 잘생긴 증손자들까지 등장!💼👦💖\n지혜로 무장한 증조할머니가 문제아들을 갱생시킨다?!🔥\n🌀과거와 현재가 충돌하는 세기의 역전 드라마!"
+        ],
+        "ad_creative_link_captions": [
+          "pages.flickreels.net"
+        ],
+        "ad_creation_time": "2025-07-29",
+        "ad_delivery_start_time": "2025-07-29",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1258732595629232&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger"
+        ]
+      },
+      {
+        "id": "1432775167963234",
+        "page_id": "637626346103611",
+        "page_name": "FlickReels-kr",
+        "ad_creative_bodies": [
+          "재수생 증손자 \"할머니가 18살? 개소리 집어쳐!\"\n그날 한유라가 칠판에 쓴 1955년 교수증 번호 📞\n\"전화해봐, 지금도 내 목소리 녹음됐을 거야\"\n5분 후... 90세 아들 회장님 전화 와서 \"엄마?\"\n📚 [에피소드1 링크] #타임슬립과외 #삼국지수학"
+        ],
+        "ad_creative_link_captions": [
+          "pages.farsunpteltd.com"
+        ],
+        "ad_creation_time": "2025-07-29",
+        "ad_delivery_start_time": "2025-07-29",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1432775167963234&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger",
+          "threads"
+        ]
+      },
+      {
+        "id": "1837371516879170",
+        "page_id": "607457275778642",
+        "page_name": "ReelPulse",
+        "ad_creative_bodies": [
+          "70대 회장님 아들, 잘생긴 증손자들까지 등장!💼👦💖\n지혜로 무장한 증조할머니가 문제아들을 갱생시킨다?!🔥\n🌀과거와 현재가 충돌하는 세기의 역전 드라마!"
+        ],
+        "ad_creative_link_captions": [
+          "pages.flickreels.net"
+        ],
+        "ad_creation_time": "2025-07-29",
+        "ad_delivery_start_time": "2025-07-29",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=1837371516879170&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "facebook",
+          "instagram",
+          "audience_network",
+          "messenger"
+        ]
+      }
+    ],
+    "paging": {
+      "cursors": {
+        "after": "c2NyYXBpbmdfY3Vyc29yOk1UYzFNemd6TXpZAd01Eb3hPRE0zTXpjeE5URTJPRGM1TVRjdwZDZD"
+      },
+      "next": "https://graph.facebook.com/v25.0/ads_archive?access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw&search_terms=%ED%95%9C%EC%9C%A8&ad_type=ALL&ad_reached_countries=[%27KR%27]&fields=id,page_id,page_name,ad_creative_bodies,ad_creative_link_captions,ad_creation_time,ad_delivery_start_time,ad_snapshot_url,impressions,spend,demographic_distribution,publisher_platforms&limit=40&after=c2NyYXBpbmdfY3Vyc29yOk1UYzFNemd6TXpZAd01Eb3hPRE0zTXpjeE5URTJPRGM1TVRjdwZDZD"
+    }
+  }
+}

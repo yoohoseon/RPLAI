@@ -1,0 +1,30 @@
+{
+  "request_url": "https://graph.facebook.com/v19.0/ads_archive?access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw&search_terms=%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8&ad_type=ALL&ad_reached_countries=['KR']&fields=id,page_id,page_name,ad_creative_bodies,ad_creative_link_captions,ad_creation_time,ad_delivery_start_time,ad_snapshot_url,impressions,spend,demographic_distribution,publisher_platforms&limit=40",
+  "response": {
+    "data": [
+      {
+        "id": "2384202802036056",
+        "page_id": "713429528818933",
+        "page_name": "알파카월드 대표 페이지",
+        "ad_creative_bodies": [
+          "#event #alpacagameworld #21\n[EVENT] 2025 알파카게임월드 연말정산 🧾🦙✨\n\n2025년 7월부터 꾸준히 달려온 alpacagameworld!\n어느덧 20회차까지 진행되었어요🦙🔥\n\n그동안 “받고 싶었는데 아쉽게 놓친” 경품을 모아봤는데요,\n2025년 한 해 모두에게 수고했다는 의미로 \n연말정산 이벤트 한 번 더 갑니다! 🎁\n===============================\n💎 압도적인 폼, 럭셔리 그 자체 [플렉스 부문]\n① 흑돼지대통령 식사권\n② 알파카 금목걸이\n③ 신세계 상품권\n\n🍰 디저트계 5대 천왕 [당충전 부문] \n① 공차 타로밀크티\n② 던킨도너츠 도넛+먼치킨 세트\n③ 배스킨라빈스 파인트\n④ 투썸플레이스 아박\n⑤ 메가커피 사과유자차\n\n🍗 든든한 지방을 책임진 [살크업 부문] \n① 교촌치킨 허니콤보+콜라 세트\n② 도미노피자 뉴욕오리진+콜라 세트\n③ 버거킹 와퍼 세트\n===============================\n✅ 이벤트 일정\n기간: 12월 29일 ~ 1월 4일\n발표: 1월 6일 (공개 추첨)\n\n✅ 참여 방법\n① 공식 계정 ‘팔로우’\n② 해당 피드에 ‘좋아요’\n③ 댓글에 ‘@친구소환 + 댓글’ 작성\n❗️하나라도 누락시 추첨대상에서 제외\n❗️1인 1회 참여 제한\n\n✅ 댓글 예시\n- 디저트 부문의 공차 타로밀크티요!\n- 플렉스 부문 + 신세계 상품권\n- 살크업 부문, 교촌치킨 세트 받고 싶어요.\n❗️댓글에 “부문명 + 경품명” 작성\n❗️부문명은 [플렉스 부문] / [당충전 부문] \n/ [살크업 부문] 중에서 정확히 작성\n\n🎲 당첨 방식(부문별 랜덤 / 2단계 랜덤)\n▶ 부문별 참여자 취합\n- 플렉스는 플렉스끼리 / 디저트는 디저트끼리 \n/ 살크업은 살크업끼리 댓글 취합\n\n▶ 각 부문에서 랜덤 추첨 2회 진행\n① 경품 랜덤 1회 (부문별 경품 선결정)\n② 당첨자 랜덤 1회 (그 부문 참여자 중 당첨자 선정)\n\n▶ 총 경품 랜덤 3회 + 당첨자 랜덤 3회로 최종 당첨자를 선정.\n⚠️ 그래서 어떤 경품이 최종 선정될지는 저희도 몰라요~ ALL 랜덤입니다🤫\n\n✅ (총 정리)이벤트 진행 순서\n1) 부문별 '참여자 수' 취합\n2) 부문별 ‘경품 랜덤’으로 지급 경품 확정\n3) 예산에 맞춰 부문별 '당첨 인원' 확정\n4) 부문별 '당첨자' 랜덤 추첨 진행\n\n🔥 여러분의 2025 원픽 부문은 어디인가요?\n\n✔️ 이벤트 제공 내역은 당사 사정에 따라 변경될 수 있습니다.\n✔️ 팔로우 미이행, 다중 계정 참여, 중간 팔로우 취소 시 당첨이 제외됩니다.\n✔️ 당첨 일정 및 인원은 운영 상황에 따라 조정될 수 있습니다.\n✔️ 이벤트 참여횟수는 1인 1회로 제한되며, 경품은 중복 수령이 불가합니다.\n✔️ 이벤트 경품은 카카오톡 선물하기를 통해 발송됩니다.\n\n***\n\n[EVENT] 2025 Alpaca Game World Year-End Giveaway 🧾🦙✨\nWe’ve been running alpacagameworld since July 2025—now celebrating Round 20!\nTo say “great job” for the year, we’re bringing back your most-wanted prizes.\n\nEvent Dates: Dec 29 – Jan 4\nWinners Announced: Jan 6 (public random draw)\n\n✅ How to Enter\n1. Follow our official account\n2. Like this post\n3. Comment: tag a friend + “Category + Prize name”\nMissing any step = not eligible.\n\n✅ Choose ONE category (write the category name exactly)\n[Flex Category] (Luxury)\n[Sugar Boost Category] (Desserts)\n[Bulk-Up Category] (Meals)\n\n✅ Winner Selection (100% random, 2-step per category)\nFor each category:\n▶ Prize is chosen at random\n▶ Winner is chosen at random from that category’s participants\n(3 categories → 3 prize draws + 3 winner draws)\n\nWhat’s your 2025 top pick? 🎁🔥"
+        ],
+        "ad_creative_link_captions": [
+          "instagram.com"
+        ],
+        "ad_creation_time": "2025-12-28",
+        "ad_delivery_start_time": "2025-12-28",
+        "ad_snapshot_url": "https://www.facebook.com/ads/archive/render_ad/?id=2384202802036056&access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw",
+        "publisher_platforms": [
+          "instagram"
+        ]
+      }
+    ],
+    "paging": {
+      "cursors": {
+        "after": "c2NyYXBpbmdfY3Vyc29yOk1UYzJOams0TWpZAeU16b3lNemcwTWpBeU9EQXlNRE0yTURVMgZDZD"
+      },
+      "next": "https://graph.facebook.com/v25.0/ads_archive?access_token=EAAXMCWaR9w4BQ90ECXJ6MrJtOZBdxcyCLnJuCRr3ClBovW8lz83YudcrBAMiojcCyhFsNMbZBOwGzEN536VVvLKpZB3fDPNwzkxhwafofJM30Rb7ZBrYS4jjTGQBBZAJjWOZBp2NyGAxhAl0PL8lBGQEa47uXSpuvXJWqsEdxNuGcJndsPkXHQa8rzbrJ9xJZClfP9J0NUVnQC01Cfw&search_terms=%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8&ad_type=ALL&ad_reached_countries=[%27KR%27]&fields=id,page_id,page_name,ad_creative_bodies,ad_creative_link_captions,ad_creation_time,ad_delivery_start_time,ad_snapshot_url,impressions,spend,demographic_distribution,publisher_platforms&limit=40&after=c2NyYXBpbmdfY3Vyc29yOk1UYzJOams0TWpZAeU16b3lNemcwTWpBeU9EQXlNRE0yTURVMgZDZD"
+    }
+  }
+}
