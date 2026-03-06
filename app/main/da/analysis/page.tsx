@@ -85,6 +85,20 @@ export default async function DaAnalysisPage(props: DaAnalysisPageProps) {
         url = _dbUrl || _inputParams?.url || '';
     }
 
+    // AI가 생성한 경쟁사 외에도, 사용자가 폼에 직접 입력한 경쟁사(또는 히스토리의 경쟁사)를 최우선으로 리스트에 강제 삽입
+    let finalCompetitors = competitors || [];
+    const compKws = competitorKeywords || _inputParams?.competitorKeywords || '';
+    if (compKws) {
+        // "마녀공장 퓨어 클렌징 오일" -> "마녀공장" 처럼 브랜드명 파싱
+        const parsedKws = compKws.split(',').map((k: string) => k.trim().split(' ')[0]).filter(Boolean);
+        parsedKws.forEach((kw: string) => {
+            if (!finalCompetitors.some((c: string) => c.includes(kw) || kw.includes(c))) {
+                finalCompetitors.unshift(kw);
+            }
+        });
+        finalCompetitors = Array.from(new Set(finalCompetitors)).slice(0, 5);
+    }
+
     return (
         <div className="flex flex-col flex-1 font-sans bg-transparent">
             <div className="sticky top-16 z-50 w-full bg-white/90 backdrop-blur-md shadow-sm border-none transition-all py-1">
@@ -117,7 +131,7 @@ export default async function DaAnalysisPage(props: DaAnalysisPageProps) {
                 <PersonaSidebar
                     initialPersonas={personas}
                     initialStage={initialStage}
-                    initialCompetitors={competitors || []}
+                    initialCompetitors={finalCompetitors}
                     initialMessages={messages}
                     brandContext={{ brandKor, brandEng, category, description, url }}
                 >

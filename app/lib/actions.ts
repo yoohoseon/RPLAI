@@ -615,14 +615,19 @@ export async function getCompetitorSpecificAdsAction(searchTerms: string, afterC
         await Promise.all(validAdsWithImages.map(async (ad: any) => {
             try {
                 const res = await fetch(ad.ad_snapshot_url);
-                if (res.ok) {
+                const contentType = res.headers.get('content-type');
+                if (res.ok && contentType && contentType.startsWith('image/')) {
                     const arrayBuffer = await res.arrayBuffer();
                     imageParts.push({
                         type: 'image',
                         image: Buffer.from(arrayBuffer)
                     });
+                } else {
+                    console.warn(`[Image Fetch] Invalid content type ${contentType} for URL ${ad.ad_snapshot_url}`);
                 }
-            } catch (e) { }
+            } catch (e) {
+                console.warn(`[Image Fetch Error] Failed to fetch image ${ad.ad_snapshot_url}:`, e);
+            }
         }));
 
         const { object } = await generateObject({
