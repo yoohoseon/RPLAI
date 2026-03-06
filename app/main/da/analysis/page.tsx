@@ -1,7 +1,8 @@
 import { generateDaAnalysis } from '@/app/lib/ai-da';
 import { auth } from '@/auth';
+import prisma from '@/lib/prisma';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserCircle2, Briefcase, MessageSquareText, AlertTriangle, Swords, BarChart3, TrendingUp, Search, Activity, Target, Zap, LayoutGrid, ChevronDown } from 'lucide-react';
+import { UserCircle2, Briefcase, MessageSquareText, AlertTriangle, Swords, BarChart3, TrendingUp, Search, Activity, Target, Zap, LayoutGrid, ChevronDown, ExternalLink } from 'lucide-react';
 import { PersonaSidebar } from '@/components/analysis/persona-sidebar';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -28,9 +29,21 @@ export default async function DaAnalysisPage(props: DaAnalysisPageProps) {
     let competitorKeywords = (searchParams.competitorKeywords as string) || '';
 
     let forceNew = searchParams.forceNew === "true";
+    let id = searchParams.id as string;
 
     const session = await auth();
     const userId = session?.user?.id;
+
+    if (id) {
+        const record = await (prisma as any).brandDatas.findUnique({ where: { id } });
+        if (record) {
+            brandKor = record.brandKor;
+            brandEng = record.brandEng;
+            category = record.category;
+            url = record.url;
+            description = record.description || '';
+        }
+    }
 
     let analysisData;
     let isError = false;
@@ -64,8 +77,13 @@ export default async function DaAnalysisPage(props: DaAnalysisPageProps) {
         );
     }
 
-    const { bm, persona, personas, cdj, trends, messages, dbPersona, recommendedStage, competitors } = analysisData as any;
+    const { bm, persona, personas, cdj, trends, messages, dbPersona, recommendedStage, competitors, _dbUrl, _inputParams } = analysisData as any;
     const initialStage = recommendedStage || 'awareness';
+
+    // DB에 저장된 URL이 있으면 URL을 덮어씁니다 (검색 파라미터가 비어있을 경우 등 히스토리/DB 값 복원)
+    if (!url) {
+        url = _dbUrl || _inputParams?.url || '';
+    }
 
     return (
         <div className="flex flex-col flex-1 font-sans bg-transparent">
@@ -78,6 +96,17 @@ export default async function DaAnalysisPage(props: DaAnalysisPageProps) {
                     </div>
 
                     <div className="flex items-center gap-3 w-full sm:w-auto mt-2 sm:mt-0">
+                        {url && (
+                            <a
+                                href={url.startsWith('http') ? url : `https://${url}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center gap-2 h-10 px-4 rounded-xl font-bold text-[14px] bg-[#F2F4F7] text-[#4E5968] hover:bg-[#E5E8EB] transition-colors active:scale-95"
+                            >
+                                <ExternalLink className="w-4 h-4" />
+                                공식 홈페이지 이동
+                            </a>
+                        )}
                         {/* Removed redundant "경쟁사 분석하기" button since it is now available in the sidebar */}
                     </div>
                 </div>

@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { UserCircle2, ChevronDown, ChevronLeft, ChevronRight, User, MapPin, Search, X, Loader2, Target, Zap, Activity, ImageIcon } from 'lucide-react';
-import { generateStagePersonasAction, getCompetitorAdsAction, getCompetitorSpecificAdsAction } from '@/app/lib/actions';
+import { UserCircle2, ChevronDown, ChevronLeft, ChevronRight, User, MapPin, Search, X, Loader2, Target, Zap, Activity, ImageIcon, MoreHorizontal, Clock } from 'lucide-react';
+import { generateStagePersonasAction, getCompetitorAdsAction, getCompetitorSpecificAdsAction, saveCompetitorAdLogAction, getCompetitorAdLogsAction, getCompetitorAdLogByIdAction } from '@/app/lib/actions';
 import { motion } from 'framer-motion';
 
 function AdImage({ mediaUrl, link }: { mediaUrl?: string, link: string }) {
@@ -52,6 +52,7 @@ export function PersonaSidebar({
     const [activeStage, setActiveStage] = useState<string>(initialStage);
     const [isLoadingStage, setIsLoadingStage] = useState<Record<string, boolean>>({});
     const [isMainAccordionOpen, setIsMainAccordionOpen] = useState<boolean>(true);
+    const [isOurBrandAccordionOpen, setIsOurBrandAccordionOpen] = useState<boolean>(false);
     const [isCompetitorAccordionOpen, setIsCompetitorAccordionOpen] = useState<boolean>(false);
     const [competitorAds, setCompetitorAds] = useState<any[]>([]);
     const [competitorList, setCompetitorList] = useState<string[]>(initialCompetitors || []);
@@ -65,8 +66,11 @@ export function PersonaSidebar({
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
     const [isVerifyingAds, setIsVerifyingAds] = useState<boolean>(false);
     const [invalidAdIds, setInvalidAdIds] = useState<Set<string>>(new Set());
+    const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false);
+    const [historyLogs, setHistoryLogs] = useState<any[]>([]);
+    const [isFetchingHistory, setIsFetchingHistory] = useState<boolean>(false);
 
-    const updateAndVerifyAds = async (fetchedAds: any[], keyword: string, isLoadMore = false) => {
+    const updateAndVerifyAds = async (fetchedAds: any[], keyword: string, isLoadMore = false, skipSave = false) => {
         if (isLoadMore) {
             setCompetitorAds(prev => [...prev, ...fetchedAds]);
         } else {
@@ -114,14 +118,53 @@ export function PersonaSidebar({
             setInvalidAdIds(invalidSet);
             // Wait another 0.8s for fade out animation
             await new Promise(resolve => setTimeout(resolve, 800));
-            setCompetitorAds(combinedAds.filter(ad => !invalidSet.has(ad.id)));
+            const finalAds = combinedAds.filter(ad => !invalidSet.has(ad.id));
+            setCompetitorAds(finalAds);
             setInvalidAdIds(new Set());
+
+            if (!isLoadMore && !skipSave && finalAds.length > 0) {
+                await saveCompetitorAdLogAction(brandContext.brandKor, keyword, finalAds);
+            }
         } else {
             // Quick delay just to let user read the message
             await new Promise(resolve => setTimeout(resolve, 800));
+
+            if (!isLoadMore && !skipSave && combinedAds.length > 0) {
+                await saveCompetitorAdLogAction(brandContext.brandKor, keyword, combinedAds);
+            }
         }
 
         setIsVerifyingAds(false);
+    };
+
+    const fetchHistoryLogs = async (competitor: string) => {
+        setIsFetchingHistory(true);
+        try {
+            const { success, logs } = await getCompetitorAdLogsAction(brandContext.brandKor, competitor);
+            if (success && logs) {
+                setHistoryLogs(logs);
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setIsFetchingHistory(false);
+        }
+    };
+
+    const loadHistoryLog = async (logId: string) => {
+        setIsLoadingSpecificAds(true);
+        setIsHistoryOpen(false);
+        try {
+            const { success, adsData } = await getCompetitorAdLogByIdAction(logId);
+            if (success && adsData) {
+                setCompetitorAds(adsData);
+                setNextAdCursor(null); // Can't load more on historical snapshot generally
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setIsLoadingSpecificAds(false);
+        }
     };
 
     const footerText = "© 2026 RPLAI. Powered by Goldenax. All rights reserved.";
@@ -311,6 +354,63 @@ export function PersonaSidebar({
                         <div className="flex flex-col gap-1 mb-6 mt-8">
                             <button
                                 className="flex items-center justify-between w-full text-left"
+                                onClick={() => setIsOurBrandAccordionOpen(!isOurBrandAccordionOpen)}
+                            >
+                                <h2 className="text-[17px] font-bold text-[#333333] flex items-center gap-2">
+                                    자사 소재 분석
+                                </h2>
+                                <ChevronDown className={`w-5 h-5 text-[#8B95A1] transition-transform duration-300 ${isOurBrandAccordionOpen ? '-rotate-180' : ''}`} />
+                            </button>
+                        </div>
+
+                        {isOurBrandAccordionOpen && (
+                            <div className="border-t border-[#E5E8EB] flex flex-col pt-6 pb-4 animate-in fade-in slide-in-from-top-4 duration-500">
+                                <button
+                                    onClick={async () => {
+                                        const brand = brandContext.brandKor;
+                                        setSelectedCompetitor(brand);
+                                        setSelectedPersona(null);
+                                        setIsLoadingSpecificAds(true);
+                                        setCompetitorAds([]);
+                                        setNextAdCursor(null);
+                                        try {
+                                            // Check DB history first
+                                            const { success, logs } = await getCompetitorAdLogsAction(brand, brand);
+                                            if (success && logs && logs.length > 0) {
+                                                const latestLogId = logs[0].id;
+                                                const { success: dataSuccess, adsData } = await getCompetitorAdLogByIdAction(latestLogId);
+                                                if (dataSuccess && adsData && adsData.length > 0) {
+                                                    setCompetitorAds(adsData);
+                                                    return;
+                                                }
+                                            }
+
+                                            // Fallback to scrape if no history found
+                                            const { ads, nextCursor } = await getCompetitorSpecificAdsAction(brand);
+                                            await updateAndVerifyAds(ads, brand);
+                                            setNextAdCursor(nextCursor);
+                                        } catch (e) {
+                                            console.error(e);
+                                        } finally {
+                                            setIsLoadingSpecificAds(false);
+                                        }
+                                    }}
+                                    className={`w-full text-left bg-white border ${selectedCompetitor === brandContext.brandKor ? 'border-[#0064FF] ring-1 ring-[#0064FF]' : 'border-[#E5E8EB]'} shadow-sm px-4 py-3 rounded-xl text-[14px] font-bold text-[#333333] hover:border-[#0064FF] transition-all`}
+                                >
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-[#03C75A]" />
+                                            {brandContext.brandKor}
+                                        </div>
+                                        <ChevronRight className="w-4 h-4 text-[#8B95A1]" />
+                                    </div>
+                                </button>
+                            </div>
+                        )}
+
+                        <div className="flex flex-col gap-1 mb-6 mt-8">
+                            <button
+                                className="flex items-center justify-between w-full text-left"
                                 onClick={handleToggleCompetitor}
                             >
                                 <h2 className="text-[17px] font-bold text-[#333333] flex items-center gap-2">
@@ -354,7 +454,7 @@ export function PersonaSidebar({
                                             <div className="flex items-center justify-between mb-2">
                                                 <h3 className="text-[15px] font-bold text-[#333333] flex items-center gap-1.5">
                                                     <div className="w-2 h-2 rounded-full bg-[#03C75A]" />
-                                                    메인 경쟁사 Top 5
+                                                    메인 경쟁사
                                                 </h3>
                                             </div>
                                             <div className="flex flex-col gap-2">
@@ -737,6 +837,57 @@ export function PersonaSidebar({
                                 <h2 className="text-3xl font-bold text-[#333333] mb-2">{selectedCompetitor} 주요 소재 분석</h2>
                                 <p className="text-[15px] text-[#4E5968]">AI와 Meta Ad Library 데이터를 융합하여 수집된 최근 광고 트렌드와 전략을 살펴봅니다.</p>
 
+                                {competitorAds.length > 0 && !isLoadingSpecificAds && (() => {
+                                    const activeCount = competitorAds.length;
+                                    let totalDays = 0;
+                                    let longRunningCount = 0;
+                                    const typeCount: Record<string, number> = {};
+
+                                    competitorAds.forEach(ad => {
+                                        const startTime = ad.startDate ? new Date(ad.startDate).getTime() : Date.now();
+                                        const daysActive = Math.max(0, Math.floor((Date.now() - startTime) / (1000 * 3600 * 24)));
+                                        totalDays += daysActive;
+                                        if (daysActive >= 30) {
+                                            longRunningCount++;
+                                        }
+
+                                        const type = ad.type2 || ad.type1 || '알 수 없음';
+                                        typeCount[type] = (typeCount[type] || 0) + 1;
+                                    });
+
+                                    const avgDays = activeCount > 0 ? Math.floor(totalDays / activeCount) : 0;
+                                    let mainType = '-';
+                                    let maxCount = 0;
+                                    Object.entries(typeCount).forEach(([type, count]) => {
+                                        if (count > maxCount) {
+                                            maxCount = count;
+                                            mainType = type;
+                                        }
+                                    });
+
+                                    return (
+                                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8 mb-2">
+                                            <div className="bg-white border flex flex-col justify-center border-[#E5E8EB] p-5 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+                                                <div className="text-[13px] font-bold text-[#8B95A1] mb-1">활성화된 소재</div>
+                                                <div className="text-[22px] font-black text-[#333333]">{activeCount}개</div>
+                                            </div>
+                                            <div className="bg-white border flex flex-col justify-center border-[#E5E8EB] p-5 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+                                                <div className="text-[13px] font-bold text-[#8B95A1] mb-1">가장 많은 유형</div>
+                                                <div className="text-[18px] font-black text-[#0064FF] truncate mt-1">{mainType}</div>
+                                            </div>
+                                            <div className="bg-white border flex flex-col justify-center border-[#E5E8EB] p-5 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+                                                <div className="text-[13px] font-bold text-[#8B95A1] mb-1">평균 게재 일수</div>
+                                                <div className="text-[22px] font-black text-[#333333]">{avgDays}일</div>
+                                            </div>
+                                            <div className="bg-white border flex flex-col justify-center border-[#E5E8EB] p-5 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+                                                <div className="text-[13px] font-bold text-[#8B95A1] mb-1">장기 소재 (30일+)</div>
+                                                <div className="text-[22px] font-black text-[#00A650]">{longRunningCount}건</div>
+                                            </div>
+                                        </div>
+                                    );
+                                })()}
+
+
                                 {isVerifyingAds && (
                                     <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 bg-rose-50 text-rose-500 rounded-full font-bold text-[13px] animate-pulse">
                                         <Loader2 className="w-4 h-4 animate-spin" />
@@ -744,9 +895,60 @@ export function PersonaSidebar({
                                     </div>
                                 )}
                             </div>
-                            <button onClick={() => setSelectedCompetitor(null)} className="w-10 h-10 rounded-full bg-white border border-[#E5E8EB] flex items-center justify-center text-[#8B95A1] hover:text-[#333333] hover:shadow-sm transition-all shadow-[0_2px_10px_rgba(0,0,0,0.02)] shrink-0">
-                                <X className="w-5 h-5" />
-                            </button>
+                            <div className="flex items-center gap-2 relative">
+                                <button
+                                    onClick={() => {
+                                        setIsHistoryOpen(!isHistoryOpen);
+                                        if (!isHistoryOpen && selectedCompetitor) fetchHistoryLogs(selectedCompetitor);
+                                    }}
+                                    className="w-10 h-10 rounded-full bg-white border border-[#E5E8EB] flex items-center justify-center text-[#8B95A1] hover:text-[#333333] hover:shadow-sm transition-all shadow-[0_2px_10px_rgba(0,0,0,0.02)] shrink-0 relative"
+                                    title="분석 히스토리 보기"
+                                >
+                                    <MoreHorizontal className="w-5 h-5" />
+                                </button>
+                                {isHistoryOpen && (
+                                    <div className="absolute top-12 right-12 w-80 bg-white rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-[#E5E8EB] overflow-hidden z-50">
+                                        <div className="px-5 py-4 border-b border-[#F2F4F6] flex items-center justify-between bg-[#F9FAFB]">
+                                            <h4 className="text-[14px] font-bold text-[#333333] flex items-center gap-2">
+                                                <Clock className="w-4 h-4 text-[#8B95A1]" />
+                                                최근 로드된 히스토리
+                                            </h4>
+                                        </div>
+                                        <div className="max-h-[300px] overflow-y-auto">
+                                            {isFetchingHistory ? (
+                                                <div className="py-8 flex justify-center">
+                                                    <Loader2 className="w-5 h-5 text-[#8B95A1] animate-spin" />
+                                                </div>
+                                            ) : historyLogs.length === 0 ? (
+                                                <div className="py-8 text-center text-[#8B95A1] text-[13px]">
+                                                    저장된 히스토리가 없습니다.
+                                                </div>
+                                            ) : (
+                                                <div className="flex flex-col">
+                                                    {historyLogs.map(log => {
+                                                        const date = new Date(log.createdAt);
+                                                        const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+                                                        return (
+                                                            <button
+                                                                key={log.id}
+                                                                onClick={() => loadHistoryLog(log.id)}
+                                                                className="px-5 py-4 hover:bg-[#F2F4F6] transition-colors border-b border-[#F2F4F6] flex flex-col items-start gap-1"
+                                                            >
+                                                                <span className="text-[13px] font-bold text-[#333333]">{dateStr}</span>
+                                                                <span className="text-[12px] text-[#8B95A1]">by {log.userName}</span>
+                                                            </button>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
+                                <button onClick={() => setSelectedCompetitor(null)} className="w-10 h-10 rounded-full bg-white border border-[#E5E8EB] flex items-center justify-center text-[#8B95A1] hover:text-[#333333] hover:shadow-sm transition-all shadow-[0_2px_10px_rgba(0,0,0,0.02)] shrink-0">
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
                         </div>
 
                         {isLoadingSpecificAds ? (

@@ -73,13 +73,13 @@ export default function DaMainPage() {
                             value={promptText}
                             onChange={(e) => setPromptText(e.target.value)}
                             placeholder={"분석하고 싶은 브랜드 혹은 제품명을 입력하세요.\n\n산업: 코스메틱\n타겟 국가: 한국\n브랜드명: 센카 (Senka)\n자사 브랜드 및 제품: 퍼펙트 휩, 퍼펙트 화이트 클레이, 센카 올 클리어 오일\n경쟁사 브랜드 및 제품: 마녀공장(퓨어 클렌징 오일), 해피바스(마이크로 미셀라), 비레디(딥 클렌징 폼)"}
-                            className="flex min-h-[260px] w-full rounded-2xl border-none bg-[#F2F4F7] px-5 py-5 text-[15px] font-bold transition-all focus:bg-[#E5E8EB] focus:outline-none placeholder:text-[#A4AEC0] text-[#333333] resize-none mb-4 leading-relaxed"
+                            className="flex min-h-[260px] w-full rounded-2xl border border-[#E5E8EB] bg-white px-5 py-5 text-[15px] font-bold transition-all focus:border-[#0064FF] focus:ring-1 focus:ring-[#0064FF] focus:outline-none placeholder:text-[#A4AEC0] text-[#333333] resize-none mb-4 leading-relaxed shadow-sm hover:border-[#D1D6DB]"
                         />
 
                         <button
                             onClick={handleSetPreset}
                             disabled={isParsing}
-                            className="w-[200px] mx-auto lg:mx-0 flex items-center justify-center gap-2 bg-[#E5E8EB] hover:bg-[#D1D6DB] text-[#333333] font-bold text-[15px] h-12 rounded-[20px] transition-colors active:scale-[0.98] disabled:opacity-50"
+                            className="w-[200px] mx-auto lg:mx-0 flex items-center justify-center gap-2 bg-[#0064FF] hover:bg-[#0052E0] text-white font-bold text-[15px] h-12 rounded-[20px] transition-colors active:scale-[0.98] disabled:opacity-50 shadow-md shadow-[#0064FF]/20"
                         >
                             {isParsing ? "AI 분석 중..." : "추천값으로 세팅"}
                         </button>

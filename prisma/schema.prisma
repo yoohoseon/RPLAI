@@ -20,8 +20,9 @@ model User {
   team          Team?     @relation(fields: [teamId], references: [id])
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  analyses      BrandAnalysis[]
-  brandDatas    BrandDatas[]
+  analyses        BrandAnalysis[]
+  brandDatas      BrandDatas[]
+  competitorAdLogs CompetitorAdLog[]
 }
 
 model BrandAnalysis {
@@ -91,4 +92,18 @@ model MetaPage {
   pageId    String
   pageName  String
   createdAt DateTime @default(now())
+}
+
+model CompetitorAdLog {
+  id             String   @id @default(cuid())
+  brandKor       String
+  competitorName String
+  adsData        String   // JSON string storing the fetched ads
+  userName       String?  // Who created it
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  createdAt      DateTime @default(now())
+
+  @@index([userId])
+  @@index([brandKor])
 }

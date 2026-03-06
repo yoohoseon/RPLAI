@@ -9,7 +9,7 @@ export function DaHistoryTableRow({ analysis }: { analysis: any }) {
     const router = useRouter();
 
     const handleRowClick = () => {
-        router.push(`/main/da/analysis?brandKor=${analysis.brandKor}&brandEng=${analysis.brandEng}&category=${analysis.category}&url=${analysis.url}`);
+        router.push(`/main/da/analysis?id=${analysis.id}`);
     };
 
     return (

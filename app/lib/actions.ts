@@ -664,3 +664,73 @@ export async function testMetaAdsApiDirectUrl(url: string) {
         return { error: error.message || "Failed to fetch from Meta API" };
     }
 }
+
+export async function saveCompetitorAdLogAction(brandKor: string, competitorName: string, adsData: any[]) {
+    try {
+        const session = await auth();
+        if (!session?.user?.id) {
+            throw new Error('Not authenticated');
+        }
+
+        const log = await prisma.competitorAdLog.create({
+            data: {
+                brandKor,
+                competitorName,
+                adsData: JSON.stringify(adsData),
+                userId: session.user.id,
+                userName: session.user.name || '알 수 없는 사용자',
+            }
+        });
+
+        return { success: true, logId: log.id, createdAt: log.createdAt };
+    } catch (e: any) {
+        console.error('Failed to save ad log:', e);
+        return { success: false, error: e.message };
+    }
+}
+
+export async function getCompetitorAdLogsAction(brandKor: string, competitorName: string) {
+    try {
+        const session = await auth();
+        if (!session?.user?.id) {
+            throw new Error('Not authenticated');
+        }
+
+        const logs = await prisma.competitorAdLog.findMany({
+            where: { brandKor, competitorName },
+            orderBy: { createdAt: 'desc' },
+            select: { id: true, createdAt: true, userName: true }
+        });
+
+        return {
+            success: true, logs: logs.map((l: any) => ({
+                id: l.id,
+                createdAt: l.createdAt.toISOString(),
+                userName: l.userName
+            }))
+        };
+    } catch (e: any) {
+        console.error('Failed to fetch ad logs:', e);
+        return { success: false, error: e.message };
+    }
+}
+
+export async function getCompetitorAdLogByIdAction(logId: string) {
+    try {
+        const session = await auth();
+        if (!session?.user?.id) {
+            throw new Error('Not authenticated');
+        }
+
+        const log = await prisma.competitorAdLog.findUnique({
+            where: { id: logId }
+        });
+
+        if (!log) throw new Error('Log not found');
+
+        return { success: true, adsData: JSON.parse(log.adsData) };
+    } catch (e: any) {
+        console.error('Failed to fetch ad log:', e);
+        return { success: false, error: e.message };
+    }
+}

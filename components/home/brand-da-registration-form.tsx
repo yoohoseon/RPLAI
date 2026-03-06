@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, X, Plus, Calendar } from "lucide-react";
+import { Loader2, X, Plus, Calendar, ChevronDown } from "lucide-react";
 import { getBrandCategoriesAction } from "@/app/lib/concept-actions";
 
 export function BrandDaRegistrationForm({ presetData }: { presetData?: any }) {
@@ -19,6 +19,9 @@ export function BrandDaRegistrationForm({ presetData }: { presetData?: any }) {
         categoryKeywords: string[];
         ourKeywords: string[];
         competitorKeywords: string[];
+        brandEng: string;
+        brandKor: string;
+        url: string;
     }>({
         industry: "코스메틱",
         country: "대한민국",
@@ -28,6 +31,9 @@ export function BrandDaRegistrationForm({ presetData }: { presetData?: any }) {
         categoryKeywords: [],
         ourKeywords: [],
         competitorKeywords: [],
+        brandEng: "",
+        brandKor: "",
+        url: "",
     });
 
     const [inputStates, setInputStates] = useState({
@@ -57,6 +63,9 @@ export function BrandDaRegistrationForm({ presetData }: { presetData?: any }) {
                 categoryKeywords: presetData.categoryKeywords || prev.categoryKeywords,
                 ourKeywords: presetData.ourKeywords || prev.ourKeywords,
                 competitorKeywords: presetData.competitorKeywords || prev.competitorKeywords,
+                brandEng: presetData.brandEng || prev.brandEng,
+                brandKor: presetData.brandKor || prev.brandKor,
+                url: presetData.url || prev.url,
             }));
         }
     }, [presetData]);
@@ -102,10 +111,19 @@ export function BrandDaRegistrationForm({ presetData }: { presetData?: any }) {
         params.set("categoryKeywords", formData.categoryKeywords.join(","));
         params.set("ourKeywords", formData.ourKeywords.join(","));
         params.set("competitorKeywords", formData.competitorKeywords.join(","));
+        if (formData.url) {
+            params.set("url", formData.url);
+        }
 
-        // Use the first outKeyword as brand name for backwards compatibility
-        if (formData.ourKeywords.length > 0) {
+        if (formData.brandKor) {
+            params.set("brandKor", formData.brandKor);
+        } else if (formData.ourKeywords.length > 0) {
             params.set("brandKor", formData.ourKeywords[0]);
+        }
+
+        if (formData.brandEng) {
+            params.set("brandEng", formData.brandEng);
+        } else if (formData.ourKeywords.length > 0) {
             params.set("brandEng", formData.ourKeywords[0]);
         }
 
@@ -114,44 +132,90 @@ export function BrandDaRegistrationForm({ presetData }: { presetData?: any }) {
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                    <label className="text-[13px] font-bold text-[#4E5968] block text-center">브랜드명(국문)</label>
+                    <input
+                        type="text"
+                        name="brandKor"
+                        value={formData.brandKor}
+                        onChange={handleChange}
+                        placeholder="예: 골드넥스"
+                        className="w-full text-center h-[48px] rounded-xl border border-[#E5E8EB] bg-[#F9FAFB] px-4 text-[14px] font-bold text-[#333333] focus:outline-none focus:ring-2 focus:ring-[#0064FF]"
+                    />
+                </div>
+                <div className="space-y-2">
+                    <label className="text-[13px] font-bold text-[#4E5968] block text-center">브랜드명(영문)</label>
+                    <input
+                        type="text"
+                        name="brandEng"
+                        value={formData.brandEng}
+                        onChange={handleChange}
+                        placeholder="예: GOLDENAX"
+                        className="w-full text-center h-[48px] rounded-xl border border-[#E5E8EB] bg-[#F9FAFB] px-4 text-[14px] font-bold text-[#333333] focus:outline-none focus:ring-2 focus:ring-[#0064FF]"
+                    />
+                </div>
+            </div>
+
+            <div className="space-y-2">
+                <label className="text-[13px] font-bold text-[#4E5968] block text-center">공식 홈페이지 URL</label>
+                <input
+                    type="url"
+                    name="url"
+                    value={formData.url}
+                    onChange={handleChange}
+                    placeholder="예: https://www.goldenax.com"
+                    className="w-full text-center h-[48px] rounded-xl border border-[#E5E8EB] bg-[#F9FAFB] px-4 text-[14px] font-bold text-[#333333] focus:outline-none focus:ring-2 focus:ring-[#0064FF]"
+                />
+            </div>
+
             <div className="grid md:grid-cols-3 gap-6">
                 <div className="space-y-2">
                     <label className="text-[13px] font-bold text-[#4E5968] block text-center">산업군 선택</label>
-                    <select
-                        name="industry"
-                        value={formData.industry}
-                        onChange={handleChange}
-                        className="w-full h-[48px] rounded-xl border border-[#E5E8EB] bg-[#F9FAFB] px-4 text-[14px] font-bold text-[#333333] focus:outline-none focus:ring-2 focus:ring-[#0064FF]"
-                    >
-                        {categories.map(cat => (
-                            <option key={cat} value={cat}>{cat}</option>
-                        ))}
-                    </select>
+                    <div className="relative">
+                        <select
+                            name="industry"
+                            value={formData.industry}
+                            onChange={handleChange}
+                            className="w-full h-[48px] rounded-xl border border-[#E5E8EB] bg-[#F9FAFB] pl-4 pr-10 appearance-none text-[14px] font-bold text-[#333333] focus:outline-none focus:ring-2 focus:ring-[#0064FF]"
+                        >
+                            {categories.map(cat => (
+                                <option key={cat} value={cat}>{cat}</option>
+                            ))}
+                        </select>
+                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A4AEC0] pointer-events-none" />
+                    </div>
                 </div>
                 <div className="space-y-2">
                     <label className="text-[13px] font-bold text-[#4E5968] block text-center">국가 선택</label>
-                    <select
-                        name="country"
-                        value={formData.country}
-                        onChange={handleChange}
-                        className="w-full h-[48px] rounded-xl border border-[#E5E8EB] bg-[#F9FAFB] px-4 text-[14px] font-bold text-[#333333] focus:outline-none focus:ring-2 focus:ring-[#0064FF]"
-                    >
-                        <option value="대한민국">대한민국</option>
-                        <option value="미국">미국</option>
-                        <option value="일본">일본</option>
-                    </select>
+                    <div className="relative">
+                        <select
+                            name="country"
+                            value={formData.country}
+                            onChange={handleChange}
+                            className="w-full h-[48px] rounded-xl border border-[#E5E8EB] bg-[#F9FAFB] pl-4 pr-10 appearance-none text-[14px] font-bold text-[#333333] focus:outline-none focus:ring-2 focus:ring-[#0064FF]"
+                        >
+                            <option value="대한민국">대한민국</option>
+                            <option value="미국">미국</option>
+                            <option value="일본">일본</option>
+                        </select>
+                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A4AEC0] pointer-events-none" />
+                    </div>
                 </div>
                 <div className="space-y-2">
                     <label className="text-[13px] font-bold text-[#4E5968] block text-center">출력 언어 선택</label>
-                    <select
-                        name="language"
-                        value={formData.language}
-                        onChange={handleChange}
-                        className="w-full h-[48px] rounded-xl border border-[#E5E8EB] bg-[#F9FAFB] px-4 text-[14px] font-bold text-[#333333] focus:outline-none focus:ring-2 focus:ring-[#0064FF]"
-                    >
-                        <option value="한국어">한국어</option>
-                        <option value="영어">영어</option>
-                    </select>
+                    <div className="relative">
+                        <select
+                            name="language"
+                            value={formData.language}
+                            onChange={handleChange}
+                            className="w-full h-[48px] rounded-xl border border-[#E5E8EB] bg-[#F9FAFB] pl-4 pr-10 appearance-none text-[14px] font-bold text-[#333333] focus:outline-none focus:ring-2 focus:ring-[#0064FF]"
+                        >
+                            <option value="한국어">한국어</option>
+                            <option value="영어">영어</option>
+                        </select>
+                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A4AEC0] pointer-events-none" />
+                    </div>
                 </div>
             </div>
 

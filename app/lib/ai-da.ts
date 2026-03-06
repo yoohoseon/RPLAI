@@ -56,7 +56,8 @@ const daAnalysisSchema = z.object({
         summary: z.string().describe("Overall search trend summary and key market movement"),
         serpIntent: z.string().describe("Search intent focus and recommended SERP (Search Engine Results Page) content strategy")
     }),
-    messages: daKeyMessageSchema
+    messages: daKeyMessageSchema,
+    competitors: z.array(z.string()).describe("List of Top 3 main competitors for this brand. If User provided competitors in keywords, use them plus any relevant ones.")
 });
 
 export async function generateDaAnalysis(
@@ -96,6 +97,7 @@ export async function generateDaAnalysis(
                 const parsed = JSON.parse(existing.content);
                 // Invalidate if the old data structure doesn't have 'cdj'
                 if (parsed.cdj) {
+                    parsed._dbUrl = existing.url;
                     return parsed;
                 }
             }
@@ -162,28 +164,50 @@ export async function generateDaAnalysis(
             (object as any).dbPersona = (object.personas as any)[0].dbPersona;
         }
 
+        // Save the form input params into the object so it stays in the DB history
+        (object as any)._inputParams = params;
+
         const analysisJson = JSON.stringify(object);
 
         // 4. Save to BrandDatas DB
-        // If user is not logged in, we might either skip saving or save to a default system user.
-        // Assuming userId is required for saving based on schema.
+        // Next.js Strict Mode runs server components twice concurrently. 
+        // This causes classic race conditions where findFirst -> create results in duplicate DB records.
+        // Solution: jitter sleep and deduplication sweep at save time.
         if (userId) {
-            const existingRecord = await prisma.brandDatas.findFirst({
+            // Jitter to desync perfectly concurrent Next.js developer mode calls
+            await new Promise(resolve => setTimeout(resolve, Math.random() * 1000));
+
+            const existingRecords = await (prisma as any).brandDatas.findMany({
                 where: { brandKor, brandEng, category, userId },
-                orderBy: { createdAt: 'desc' }
+                orderBy: { createdAt: 'desc' } // newest first
             });
 
-            if (existingRecord) {
-                await prisma.brandDatas.update({
-                    where: { id: existingRecord.id },
+            // Find if there's a record created within the last 5 minutes
+            // to treat as a Strict Mode duplicate
+            const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+            const recentDuplicates = existingRecords.filter((r: any) => new Date(r.createdAt) > fiveMinutesAgo);
+
+            if (recentDuplicates.length > 0) {
+                // Update the most recent one among the recent duplicates
+                const targetRecord = recentDuplicates[0];
+                await (prisma as any).brandDatas.update({
+                    where: { id: targetRecord.id },
                     data: {
                         content: analysisJson,
-                        url: url || existingRecord.url,
+                        url: url || targetRecord.url,
                         description: description,
                     }
                 });
+
+                // Sweep any accidental strict-mode extra duplicates created just now
+                if (recentDuplicates.length > 1) {
+                    const extraIds = recentDuplicates.slice(1).map((r: any) => r.id);
+                    await (prisma as any).brandDatas.deleteMany({
+                        where: { id: { in: extraIds } }
+                    });
+                }
             } else {
-                await prisma.brandDatas.create({
+                await (prisma as any).brandDatas.create({
                     data: {
                         brandKor,
                         brandEng,

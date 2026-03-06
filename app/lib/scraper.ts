@@ -31,8 +31,9 @@ export async function scrapeMetaAds(pageId: string, keyword: string = "") {
         // 광고 데이터가 로딩될 때까지 잠시 대기
         await new Promise(r => setTimeout(r, 5000));
 
-        // 여러 번 아래로 스크롤해서 데이터를 채움 (페이징 무식하게 긁기)
-        for (let i = 0; i < 5; i++) {
+        // 여러 번 아래로 스크롤해서 데이터를 채움 (기존 5번 -> 12번으로 늘려서 더 많이 가져옴)
+        // 스크롤 횟수가 늘어날수록 가져오는 양은 많아지지만, 로딩 시간도 함께 늘어납니다.
+        for (let i = 0; i < 12; i++) {
             await page.evaluate(() => window.scrollBy(0, 3000));
             await new Promise(r => setTimeout(r, 2000));
         }
@@ -150,7 +151,6 @@ export async function scrapeMetaAds(pageId: string, keyword: string = "") {
                 lines = lines.slice(8);
             }
 
-            // "지금 구매하기", "더 알아보기", "OY.RUN" 같은 버튼 텍스트도 마지막 3~4줄에 붙으므로 제거
             lines = lines.filter((t: string) =>
                 !t.includes('지금 구매하기') &&
                 !t.includes('더 알아보기') &&
@@ -158,14 +158,24 @@ export async function scrapeMetaAds(pageId: string, keyword: string = "") {
                 !t.includes('OY.RUN')
             );
 
+            // 게재 시작일 텍스트에서 날짜만 정규식으로 추출 (예: 2023. 11. 14. 또는 2023년 11월 14일)
+            let extractedDate = new Date().toISOString().split('T')[0];
+            const dateMatch = adsData[i].text.match(/(\d{4})\s*[년. \-]\s*(\d{1,2})\s*[월. \-]\s*(\d{1,2})/);
+            if (dateMatch) {
+                const y = dateMatch[1];
+                const m = dateMatch[2].padStart(2, '0');
+                const d = dateMatch[3].padStart(2, '0');
+                extractedDate = `${y}-${m}-${d}`;
+            }
+
             formattedAds.push({
                 id: adsData[i].id, // 이것이 바로 라이브러리 고유 ID입니다.
                 page_id: pageId || "키워드검색", // 페이지ID는 브랜드 고유 번호입니다.
                 page_name: extractedPageName,
                 ad_creative_bodies: [lines.join('\n')],
                 ad_creative_link_captions: [],
-                ad_creation_time: new Date().toISOString().split('T')[0],
-                ad_delivery_start_time: new Date().toISOString().split('T')[0],
+                ad_creation_time: extractedDate,
+                ad_delivery_start_time: extractedDate,
                 ad_snapshot_url: adsData[i].video || adsData[i].img || "https://via.placeholder.com/300?text=No+Media",
                 profile_logo_url: adsData[i].profile || "",
                 impressions: "스크래핑 감지됨",
