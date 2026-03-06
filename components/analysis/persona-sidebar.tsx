@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { UserCircle2, ChevronDown, ChevronLeft, ChevronRight, User, MapPin, Search, X, Loader2, Target, Zap, Activity, ImageIcon, MoreHorizontal, Clock } from 'lucide-react';
-import { generateStagePersonasAction, getCompetitorAdsAction, getCompetitorSpecificAdsAction, saveCompetitorAdLogAction, getCompetitorAdLogsAction, getCompetitorAdLogByIdAction } from '@/app/lib/actions';
+import { UserCircle2, ChevronDown, ChevronLeft, ChevronRight, User, MapPin, Search, X, Loader2, Target, Zap, Activity, ImageIcon, MoreHorizontal, Clock, CheckCircle2 } from 'lucide-react';
+import { generateStagePersonasAction, getCompetitorAdsAction, getCompetitorSpecificAdsAction, saveCompetitorAdLogAction, getCompetitorAdLogsAction, getCompetitorAdLogByIdAction, generateFinalAnalysisSummaryAction, saveFinalStrategySummaryAction, getFinalStrategySummaryAction } from '@/app/lib/actions';
 import { motion } from 'framer-motion';
 
 function AdImage({ mediaUrl, link }: { mediaUrl?: string, link: string }) {
@@ -32,6 +32,41 @@ function AdImage({ mediaUrl, link }: { mediaUrl?: string, link: string }) {
     );
 }
 
+function verifyAndFilterAds(ads: any[], keyword: string) {
+    if (!ads || ads.length === 0) return ads;
+    const countMap: Record<string, number> = {};
+    ads.forEach(ad => {
+        const name = ad.pageName || "";
+        countMap[name] = (countMap[name] || 0) + 1;
+    });
+
+    let bestName = "";
+    let maxScore = -1;
+
+    for (const [name, count] of Object.entries(countMap)) {
+        let score = count;
+        const lowerName = name.toLowerCase();
+        const lowerKeyword = keyword.toLowerCase();
+
+        if (lowerName.includes(lowerKeyword) || lowerKeyword.includes(lowerName)) {
+            score += 1000;
+        } else {
+            // Check word intersections for extra robustness
+            const nameWords = lowerName.split(' ');
+            const kwWords = lowerKeyword.split(' ');
+            const matchCount = nameWords.filter(w => kwWords.includes(w)).length;
+            score += (matchCount * 100);
+        }
+
+        if (score > maxScore) {
+            maxScore = score;
+            bestName = name;
+        }
+    }
+
+    return ads.filter(ad => (ad.pageName || "") === bestName);
+}
+
 export function PersonaSidebar({
     initialPersonas,
     initialStage,
@@ -54,6 +89,7 @@ export function PersonaSidebar({
     const [isMainAccordionOpen, setIsMainAccordionOpen] = useState<boolean>(true);
     const [isOurBrandAccordionOpen, setIsOurBrandAccordionOpen] = useState<boolean>(false);
     const [isCompetitorAccordionOpen, setIsCompetitorAccordionOpen] = useState<boolean>(false);
+    const [isSummaryAccordionOpen, setIsSummaryAccordionOpen] = useState<boolean>(true);
     const [competitorAds, setCompetitorAds] = useState<any[]>([]);
     const [competitorList, setCompetitorList] = useState<string[]>(initialCompetitors || []);
     const [selectedCompetitor, setSelectedCompetitor] = useState<string | null>(null);
@@ -69,12 +105,27 @@ export function PersonaSidebar({
     const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false);
     const [historyLogs, setHistoryLogs] = useState<any[]>([]);
     const [isFetchingHistory, setIsFetchingHistory] = useState<boolean>(false);
+    const [aiInsight, setAiInsight] = useState<string>('');
+    const [finalSummary, setFinalSummary] = useState<string>('');
+    const [isGeneratingSummary, setIsGeneratingSummary] = useState<boolean>(false);
+    const [progressLog, setProgressLog] = useState<string>('');
+    const [showSummary, setShowSummary] = useState<boolean>(false);
 
-    const updateAndVerifyAds = async (fetchedAds: any[], keyword: string, isLoadMore = false, skipSave = false) => {
+    useEffect(() => {
+        // Load existing summary if any
+        getFinalStrategySummaryAction(brandContext.brandKor).then(res => {
+            if (res.success && res.summary) {
+                setFinalSummary(res.summary);
+            }
+        });
+    }, [brandContext.brandKor]);
+
+    const updateAndVerifyAds = async (fetchedAds: any[], keyword: string, isLoadMore = false, skipSave = false, insight = '') => {
         if (isLoadMore) {
             setCompetitorAds(prev => [...prev, ...fetchedAds]);
         } else {
             setCompetitorAds(fetchedAds);
+            if (insight) setAiInsight(insight);
         }
 
         if (fetchedAds.length === 0) return;
@@ -123,14 +174,14 @@ export function PersonaSidebar({
             setInvalidAdIds(new Set());
 
             if (!isLoadMore && !skipSave && finalAds.length > 0) {
-                await saveCompetitorAdLogAction(brandContext.brandKor, keyword, finalAds);
+                await saveCompetitorAdLogAction(brandContext.brandKor, keyword, finalAds, insight);
             }
         } else {
             // Quick delay just to let user read the message
             await new Promise(resolve => setTimeout(resolve, 800));
 
             if (!isLoadMore && !skipSave && combinedAds.length > 0) {
-                await saveCompetitorAdLogAction(brandContext.brandKor, keyword, combinedAds);
+                await saveCompetitorAdLogAction(brandContext.brandKor, keyword, combinedAds, insight);
             }
         }
 
@@ -155,9 +206,10 @@ export function PersonaSidebar({
         setIsLoadingSpecificAds(true);
         setIsHistoryOpen(false);
         try {
-            const { success, adsData } = await getCompetitorAdLogByIdAction(logId);
+            const { success, adsData, insight } = await getCompetitorAdLogByIdAction(logId);
             if (success && adsData) {
                 setCompetitorAds(adsData);
+                setAiInsight(insight || '');
                 setNextAdCursor(null); // Can't load more on historical snapshot generally
             }
         } catch (e) {
@@ -310,6 +362,7 @@ export function PersonaSidebar({
                                                                         onClick={() => {
                                                                             setSelectedPersona({ ...p, index: i, stageId: stage.id });
                                                                             setSelectedCompetitor(null);
+                                                                            setShowSummary(false);
                                                                         }}
                                                                         className={`flex flex-col gap-4 p-5 rounded-[1.25rem] transition-all cursor-pointer group/card ${selectedPersona?.stageId === stage.id && selectedPersona?.index === i ? 'bg-[#F2F8FF] border-[2px] border-[#0064FF] shadow-sm transform scale-[1.01]' : 'bg-white border border-[#E5E8EB] hover:border-[#0064FF]/30 hover:shadow-md'}`}
                                                                     >
@@ -370,6 +423,7 @@ export function PersonaSidebar({
                                         const brand = brandContext.brandKor;
                                         setSelectedCompetitor(brand);
                                         setSelectedPersona(null);
+                                        setShowSummary(false);
                                         setIsLoadingSpecificAds(true);
                                         setCompetitorAds([]);
                                         setNextAdCursor(null);
@@ -378,16 +432,17 @@ export function PersonaSidebar({
                                             const { success, logs } = await getCompetitorAdLogsAction(brand, brand);
                                             if (success && logs && logs.length > 0) {
                                                 const latestLogId = logs[0].id;
-                                                const { success: dataSuccess, adsData } = await getCompetitorAdLogByIdAction(latestLogId);
+                                                const { success: dataSuccess, adsData, insight } = await getCompetitorAdLogByIdAction(latestLogId);
                                                 if (dataSuccess && adsData && adsData.length > 0) {
                                                     setCompetitorAds(adsData);
+                                                    setAiInsight(insight || '');
                                                     return;
                                                 }
                                             }
 
                                             // Fallback to scrape if no history found
-                                            const { ads, nextCursor } = await getCompetitorSpecificAdsAction(brand);
-                                            await updateAndVerifyAds(ads, brand);
+                                            const { ads, nextCursor, insight } = await getCompetitorSpecificAdsAction(brand);
+                                            await updateAndVerifyAds(ads, brand, false, false, insight);
                                             setNextAdCursor(nextCursor);
                                         } catch (e) {
                                             console.error(e);
@@ -464,12 +519,25 @@ export function PersonaSidebar({
                                                         onClick={async () => {
                                                             setSelectedCompetitor(comp);
                                                             setSelectedPersona(null);
+                                                            setShowSummary(false);
                                                             setIsLoadingSpecificAds(true);
                                                             setCompetitorAds([]);
                                                             setNextAdCursor(null);
                                                             try {
-                                                                const { ads, nextCursor } = await getCompetitorSpecificAdsAction(comp);
-                                                                await updateAndVerifyAds(ads, comp);
+                                                                const brandKor = brandContext.brandKor;
+                                                                const compLogs = await getCompetitorAdLogsAction(brandKor, comp);
+                                                                if (compLogs.success && compLogs.logs && compLogs.logs.length > 0) {
+                                                                    const latestLogId = compLogs.logs[0].id;
+                                                                    const { success: dataSuccess, adsData, insight } = await getCompetitorAdLogByIdAction(latestLogId);
+                                                                    if (dataSuccess && adsData && adsData.length > 0) {
+                                                                        setCompetitorAds(adsData);
+                                                                        setAiInsight(insight || '');
+                                                                        return;
+                                                                    }
+                                                                }
+
+                                                                const { ads, nextCursor, insight } = await getCompetitorSpecificAdsAction(comp);
+                                                                await updateAndVerifyAds(ads, comp, false, false, insight);
                                                                 setNextAdCursor(nextCursor);
                                                             } catch (e) {
                                                                 console.error(e);
@@ -531,6 +599,268 @@ export function PersonaSidebar({
                             </div>
                         )}
 
+                        <div className="flex flex-col gap-1 mb-6 mt-8">
+                            <button
+                                className="flex items-center justify-between w-full text-left"
+                                onClick={() => setIsSummaryAccordionOpen(!isSummaryAccordionOpen)}
+                            >
+                                <h2 className="text-[18px] font-bold text-[#333333] flex items-center gap-2">
+                                    마케팅 전략 마스터플랜
+                                </h2>
+                                <ChevronDown className={`w-5 h-5 text-[#8B95A1] transition-transform duration-300 ${isSummaryAccordionOpen ? '-rotate-180' : ''}`} />
+                            </button>
+                        </div>
+
+                        {isSummaryAccordionOpen && (
+                            <div className="border-t border-[#E5E8EB] pt-6 flex flex-col gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
+                                {!finalSummary ? (
+                                    <button
+                                        onClick={async () => {
+                                            if (isGeneratingSummary) return;
+                                            setIsGeneratingSummary(true);
+                                            setFinalSummary('');
+                                            setShowSummary(true);
+                                            setSelectedCompetitor(null);
+                                            setSelectedPersona(null);
+                                            setProgressLog('페르소나 분석 데이터를 점검하고 있습니다...');
+
+                                            try {
+                                                // 1. Check Stage Personas
+                                                const allStages = ['awareness', 'consideration', 'purchase', 'postPurchase'];
+                                                const gatheredPersonas: Record<string, any[]> = { ...stagePersonas };
+                                                for (const s of allStages) {
+                                                    if (!gatheredPersonas[s] || gatheredPersonas[s].length === 0) {
+                                                        setProgressLog(`[${s}] 단계 페르소나 분석 중...`);
+                                                        const res = await generateStagePersonasAction(s, brandContext);
+                                                        if (res && Array.isArray(res)) {
+                                                            gatheredPersonas[s] = res;
+                                                            setStagePersonas(prev => ({ ...prev, [s]: res }));
+                                                        }
+                                                    }
+                                                }
+
+                                                // 2. Check Our Brand Ads
+                                                setProgressLog('자사 브랜드의 최신 광고 소재 데이터를 분석 중입니다...');
+                                                await new Promise(resolve => setTimeout(resolve, 2000));
+                                                let ourBrandData = null;
+                                                const brand = brandContext.brandKor;
+                                                const ourLogs = await getCompetitorAdLogsAction(brand, brand);
+                                                if (ourLogs.success && ourLogs.logs && ourLogs.logs.length > 0) {
+                                                    const { success, adsData, insight } = await getCompetitorAdLogByIdAction(ourLogs.logs[0].id);
+                                                    if (success && adsData) {
+                                                        ourBrandData = { ads: adsData, insight: insight || '' };
+                                                    }
+                                                }
+                                                if (!ourBrandData) {
+                                                    const { ads, insight } = await getCompetitorSpecificAdsAction(brand);
+                                                    const verifiedAds = verifyAndFilterAds(ads, brand);
+                                                    ourBrandData = { ads: verifiedAds, insight: insight || '' };
+                                                    if (verifiedAds.length > 0) {
+                                                        await saveCompetitorAdLogAction(brand, brand, verifiedAds, insight);
+                                                    }
+                                                }
+
+                                                // 3. Check Competitor Ads
+                                                const competitorData: Record<string, { ads: any[], insight: string }> = {};
+                                                for (const comp of competitorList) {
+                                                    setProgressLog(`경쟁사 [${comp}]의 활성화된 크리에이티브 분석 중...`);
+                                                    await new Promise(resolve => setTimeout(resolve, 2000));
+
+                                                    const compLogs = await getCompetitorAdLogsAction(brand, comp);
+                                                    if (compLogs.success && compLogs.logs && compLogs.logs.length > 0) {
+                                                        const { success, adsData, insight } = await getCompetitorAdLogByIdAction(compLogs.logs[0].id);
+                                                        if (success && adsData) {
+                                                            competitorData[comp] = { ads: adsData, insight: insight || '' };
+                                                        }
+                                                    } else {
+                                                        setProgressLog(`[${comp}] Meta 광고 라이브러리 집중 탐색 중...`);
+                                                        await new Promise(resolve => setTimeout(resolve, 1500));
+                                                        const { ads, insight } = await getCompetitorSpecificAdsAction(comp);
+
+                                                        setProgressLog(`[${comp}] 데이터 노이즈 필터링 및 2차 검증 중...`);
+                                                        await new Promise(resolve => setTimeout(resolve, 1500));
+                                                        const verifiedAds = verifyAndFilterAds(ads, comp);
+                                                        competitorData[comp] = { ads: verifiedAds, insight: insight || '' };
+                                                        if (verifiedAds.length > 0) {
+                                                            await saveCompetitorAdLogAction(brand, comp, verifiedAds, insight);
+                                                        }
+                                                    }
+                                                }
+
+                                                setProgressLog('모든 데이터를 종합하여 전략 요약본을 작성 중입니다...');
+                                                const payload = {
+                                                    brandKor: brandContext.brandKor,
+                                                    brandEng: brandContext.brandEng,
+                                                    category: brandContext.category,
+                                                    stagePersonas: gatheredPersonas,
+                                                    ourBrandData,
+                                                    competitorData
+                                                };
+
+                                                const summaryRes = await generateFinalAnalysisSummaryAction(payload);
+                                                if (summaryRes.success && summaryRes.report) {
+                                                    setFinalSummary(summaryRes.report);
+                                                    // Save to DB
+                                                    await saveFinalStrategySummaryAction(payload.brandKor, payload.brandEng, summaryRes.report);
+                                                } else {
+                                                    setFinalSummary('최종 분석 요약 생성에 실패했습니다.');
+                                                }
+                                            } catch (err) {
+                                                console.error(err);
+                                                setFinalSummary('분석 중 오류가 발생했습니다.');
+                                            } finally {
+                                                setIsGeneratingSummary(false);
+                                                setProgressLog('');
+                                            }
+                                        }}
+                                        disabled={isGeneratingSummary}
+                                        className={`w-full py-4 rounded-xl flex items-center justify-center gap-2 font-bold text-[15px] transition-all ${isGeneratingSummary
+                                            ? 'bg-[#F2F4F6] text-[#8B95A1] cursor-not-allowed border border-[#E5E8EB]'
+                                            : 'bg-[#1C1C1E] hover:bg-[#2C2C2E] text-white shadow-lg active:scale-[0.98]'
+                                            }`}
+                                    >
+                                        {isGeneratingSummary ? (
+                                            <>
+                                                <Loader2 className="w-5 h-5 animate-spin" />
+                                                <span>AI 종합 분석 진행 중...</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Target className="w-5 h-5 text-[#0064FF]" />
+                                                <span>최종 전략 마스터플랜 도출하기</span>
+                                            </>
+                                        )}
+                                    </button>
+                                ) : (
+                                    <div className="flex flex-col gap-3">
+                                        <button
+                                            onClick={() => {
+                                                setShowSummary(true);
+                                                setSelectedCompetitor(null);
+                                                setSelectedPersona(null);
+                                            }}
+                                            className="w-full py-4 rounded-xl flex items-center justify-center gap-2 font-bold text-[15px] bg-[#0064FF] hover:bg-[#0052D4] text-white shadow-md active:scale-[0.98] transition-all"
+                                        >
+                                            <Target className="w-5 h-5" />
+                                            <span>최종 도출본 보기</span>
+                                        </button>
+                                        <button
+                                            onClick={async () => {
+                                                if (isGeneratingSummary) return;
+                                                setIsGeneratingSummary(true);
+                                                setFinalSummary('');
+                                                setShowSummary(true);
+                                                setSelectedCompetitor(null);
+                                                setSelectedPersona(null);
+                                                setProgressLog('새로운 전략 도출을 위해 데이터를 재점검하고 있습니다...');
+
+                                                try {
+                                                    // 1. Check Stage Personas
+                                                    const allStages = ['awareness', 'consideration', 'purchase', 'postPurchase'];
+                                                    const gatheredPersonas: Record<string, any[]> = { ...stagePersonas };
+                                                    for (const s of allStages) {
+                                                        if (!gatheredPersonas[s] || gatheredPersonas[s].length === 0) {
+                                                            setProgressLog(`[${s}] 단계 페르소나 분석 중...`);
+                                                            const res = await generateStagePersonasAction(s, brandContext);
+                                                            if (res && Array.isArray(res)) {
+                                                                gatheredPersonas[s] = res;
+                                                                setStagePersonas(prev => ({ ...prev, [s]: res }));
+                                                            }
+                                                        }
+                                                    }
+
+                                                    // 2. Check Our Brand Ads
+                                                    setProgressLog('자사 브랜드의 최신 광고 소재 데이터를 분석 중입니다...');
+                                                    await new Promise(resolve => setTimeout(resolve, 2000));
+                                                    let ourBrandData = null;
+                                                    const brand = brandContext.brandKor;
+                                                    const ourLogs = await getCompetitorAdLogsAction(brand, brand);
+                                                    if (ourLogs.success && ourLogs.logs && ourLogs.logs.length > 0) {
+                                                        const { success, adsData, insight } = await getCompetitorAdLogByIdAction(ourLogs.logs[0].id);
+                                                        if (success && adsData) {
+                                                            ourBrandData = { ads: adsData, insight: insight || '' };
+                                                        }
+                                                    }
+                                                    if (!ourBrandData) {
+                                                        const { ads, insight } = await getCompetitorSpecificAdsAction(brand);
+                                                        const verifiedAds = verifyAndFilterAds(ads, brand);
+                                                        ourBrandData = { ads: verifiedAds, insight: insight || '' };
+                                                        if (verifiedAds.length > 0) {
+                                                            await saveCompetitorAdLogAction(brand, brand, verifiedAds, insight);
+                                                        }
+                                                    }
+
+                                                    // 3. Check Competitor Ads
+                                                    const competitorData: Record<string, { ads: any[], insight: string }> = {};
+                                                    for (const comp of competitorList) {
+                                                        setProgressLog(`경쟁사 [${comp}]의 활성화된 크리에이티브 분석 중...`);
+                                                        await new Promise(resolve => setTimeout(resolve, 2000));
+
+                                                        const compLogs = await getCompetitorAdLogsAction(brand, comp);
+                                                        if (compLogs.success && compLogs.logs && compLogs.logs.length > 0) {
+                                                            const { success, adsData, insight } = await getCompetitorAdLogByIdAction(compLogs.logs[0].id);
+                                                            if (success && adsData) {
+                                                                competitorData[comp] = { ads: adsData, insight: insight || '' };
+                                                            }
+                                                        } else {
+                                                            setProgressLog(`[${comp}] Meta 광고 라이브러리 집중 탐색 중...`);
+                                                            await new Promise(resolve => setTimeout(resolve, 1500));
+                                                            const { ads, insight } = await getCompetitorSpecificAdsAction(comp);
+
+                                                            setProgressLog(`[${comp}] 데이터 노이즈 필터링 및 2차 검증 중...`);
+                                                            await new Promise(resolve => setTimeout(resolve, 1500));
+                                                            const verifiedAds = verifyAndFilterAds(ads, comp);
+                                                            competitorData[comp] = { ads: verifiedAds, insight: insight || '' };
+                                                            if (verifiedAds.length > 0) {
+                                                                await saveCompetitorAdLogAction(brand, comp, verifiedAds, insight);
+                                                            }
+                                                        }
+                                                    }
+
+                                                    setProgressLog('모든 데이터를 종합하여 전략 요약본을 재작성 중입니다...');
+                                                    const payload = {
+                                                        brandKor: brandContext.brandKor,
+                                                        brandEng: brandContext.brandEng,
+                                                        category: brandContext.category,
+                                                        stagePersonas: gatheredPersonas,
+                                                        ourBrandData,
+                                                        competitorData
+                                                    };
+
+                                                    const summaryRes = await generateFinalAnalysisSummaryAction(payload);
+                                                    if (summaryRes.success && summaryRes.report) {
+                                                        setFinalSummary(summaryRes.report);
+                                                        await saveFinalStrategySummaryAction(payload.brandKor, payload.brandEng, summaryRes.report);
+                                                    } else {
+                                                        setFinalSummary('최종 분석 요약 생성에 실패했습니다.');
+                                                    }
+                                                } catch (err) {
+                                                    console.error(err);
+                                                    setFinalSummary('분석 중 오류가 발생했습니다.');
+                                                } finally {
+                                                    setIsGeneratingSummary(false);
+                                                    setProgressLog('');
+                                                }
+                                            }}
+                                            disabled={isGeneratingSummary}
+                                            className="w-full py-4 rounded-xl flex items-center justify-center gap-2 font-bold text-[14px] bg-white border border-[#E5E8EB] hover:border-[#0064FF] text-[#4E5968] hover:text-[#0064FF] active:scale-[0.98] transition-all"
+                                        >
+                                            {isGeneratingSummary ? (
+                                                <Loader2 className="w-4 h-4 animate-spin text-[#0064FF]" />
+                                            ) : null}
+                                            <span>다시 도출하기</span>
+                                        </button>
+                                    </div>
+                                )}
+
+                                {isGeneratingSummary && progressLog && (
+                                    <p className="text-center text-[13px] font-medium text-[#0064FF] animate-pulse mt-2">
+                                        {progressLog}
+                                    </p>
+                                )}
+                            </div>
+                        )}
+
                         <div className="mt-20 flex justify-center pb-24">
                             <motion.p
                                 className="text-center text-[#8B95A1] text-[13px] font-normal"
@@ -551,7 +881,39 @@ export function PersonaSidebar({
             </div>
 
             {
-                selectedPersona && !selectedCompetitor ? (
+                showSummary ? (
+                    <div className="flex-1 min-w-0 py-10 px-4 sm:px-8 lg:px-12 xl:px-16 space-y-8 bg-[#F2F4F7] h-[calc(100vh-144px)] overflow-y-auto">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-3xl font-bold text-[#333333] flex items-center gap-3">
+                                마케팅 전략 마스터플랜
+                            </h2>
+                            <button onClick={() => setShowSummary(false)} className="w-10 h-10 rounded-full bg-white border border-[#E5E8EB] flex items-center justify-center text-[#8B95A1] hover:text-[#333333] hover:shadow-sm transition-all shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                        {isGeneratingSummary ? (
+                            <div className="bg-white rounded-[2rem] p-16 shadow-sm border border-[#E5E8EB] flex flex-col items-center justify-center min-h-[500px]">
+                                <Loader2 className="w-12 h-12 text-[#0064FF] animate-spin mb-6" />
+                                <h3 className="text-xl font-bold text-[#333333] mb-2">AI가 최종 분석을 진행 중입니다</h3>
+                                <p className="text-[#8B95A1]">{progressLog}</p>
+                                {/* Skeleton text */}
+                                <div className="w-full max-w-2xl mt-10 space-y-4">
+                                    <div className="h-4 bg-gray-100 rounded w-3/4 animate-pulse"></div>
+                                    <div className="h-4 bg-gray-100 rounded w-full animate-pulse"></div>
+                                    <div className="h-4 bg-gray-100 rounded w-5/6 animate-pulse"></div>
+                                </div>
+                            </div>
+                        ) : finalSummary ? (
+                            <div className="bg-white rounded-[2rem] p-8 lg:p-12 shadow-sm border border-[#E5E8EB]">
+                                <div className="prose prose-lg max-w-none break-keep whitespace-pre-wrap text-[#4E5968] leading-[1.8] prose-headings:text-[#333333] prose-headings:font-black prose-h1:text-3xl prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:pb-2 prose-h2:border-b prose-h2:border-[#E5E8EB] prose-strong:text-[#0064FF] prose-strong:font-bold prose-p:mb-6 prose-ul:my-4 prose-li:my-2 marker:text-[#0064FF]">
+                                    {finalSummary.replace(/##/g, '').replace(/\*/g, '').split('\n').map((line, i) => (
+                                        line.trim() ? <div key={i} className="mb-3 relative pl-4 lg:pl-6">{line.startsWith('-') ? <span className="absolute left-0 top-3 w-[6px] h-[6px] rounded-full bg-[#0064FF]"></span> : ''}<span className={line.startsWith('-') ? 'ml-2 block' : 'font-black text-[#1C1C1E] block mb-2 text-[20px] mt-8 tracking-tight'}>{line.replace(/^- /, '')}</span></div> : null
+                                    ))}
+                                </div>
+                            </div>
+                        ) : null}
+                    </div>
+                ) : selectedPersona && !selectedCompetitor ? (
                     <div className="flex-1 min-w-0 py-10 px-4 sm:px-8 lg:px-12 xl:px-16 space-y-8 bg-[#F2F4F7]" >
                         <div className="flex items-center justify-between">
                             <h2 className="text-3xl font-bold text-[#333333]">타겟 페르소나 상세 정보</h2>
@@ -836,65 +1198,8 @@ export function PersonaSidebar({
                             <div>
                                 <h2 className="text-3xl font-bold text-[#333333] mb-2">{selectedCompetitor} 주요 소재 분석</h2>
                                 <p className="text-[15px] text-[#4E5968]">AI와 Meta Ad Library 데이터를 융합하여 수집된 최근 광고 트렌드와 전략을 살펴봅니다.</p>
-
-                                {competitorAds.length > 0 && !isLoadingSpecificAds && (() => {
-                                    const activeCount = competitorAds.length;
-                                    let totalDays = 0;
-                                    let longRunningCount = 0;
-                                    const typeCount: Record<string, number> = {};
-
-                                    competitorAds.forEach(ad => {
-                                        const startTime = ad.startDate ? new Date(ad.startDate).getTime() : Date.now();
-                                        const daysActive = Math.max(0, Math.floor((Date.now() - startTime) / (1000 * 3600 * 24)));
-                                        totalDays += daysActive;
-                                        if (daysActive >= 30) {
-                                            longRunningCount++;
-                                        }
-
-                                        const type = ad.type2 || ad.type1 || '알 수 없음';
-                                        typeCount[type] = (typeCount[type] || 0) + 1;
-                                    });
-
-                                    const avgDays = activeCount > 0 ? Math.floor(totalDays / activeCount) : 0;
-                                    let mainType = '-';
-                                    let maxCount = 0;
-                                    Object.entries(typeCount).forEach(([type, count]) => {
-                                        if (count > maxCount) {
-                                            maxCount = count;
-                                            mainType = type;
-                                        }
-                                    });
-
-                                    return (
-                                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8 mb-2">
-                                            <div className="bg-white border flex flex-col justify-center border-[#E5E8EB] p-5 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
-                                                <div className="text-[13px] font-bold text-[#8B95A1] mb-1">활성화된 소재</div>
-                                                <div className="text-[22px] font-black text-[#333333]">{activeCount}개</div>
-                                            </div>
-                                            <div className="bg-white border flex flex-col justify-center border-[#E5E8EB] p-5 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
-                                                <div className="text-[13px] font-bold text-[#8B95A1] mb-1">가장 많은 유형</div>
-                                                <div className="text-[18px] font-black text-[#0064FF] truncate mt-1">{mainType}</div>
-                                            </div>
-                                            <div className="bg-white border flex flex-col justify-center border-[#E5E8EB] p-5 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
-                                                <div className="text-[13px] font-bold text-[#8B95A1] mb-1">평균 게재 일수</div>
-                                                <div className="text-[22px] font-black text-[#333333]">{avgDays}일</div>
-                                            </div>
-                                            <div className="bg-white border flex flex-col justify-center border-[#E5E8EB] p-5 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
-                                                <div className="text-[13px] font-bold text-[#8B95A1] mb-1">장기 소재 (30일+)</div>
-                                                <div className="text-[22px] font-black text-[#00A650]">{longRunningCount}건</div>
-                                            </div>
-                                        </div>
-                                    );
-                                })()}
-
-
-                                {isVerifyingAds && (
-                                    <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 bg-rose-50 text-rose-500 rounded-full font-bold text-[13px] animate-pulse">
-                                        <Loader2 className="w-4 h-4 animate-spin" />
-                                        검색어 유사도 기반 2차 노이즈 제거 분석 중...
-                                    </div>
-                                )}
                             </div>
+
                             <div className="flex items-center gap-2 relative">
                                 <button
                                     onClick={() => {
@@ -950,6 +1255,88 @@ export function PersonaSidebar({
                                 </button>
                             </div>
                         </div>
+
+                        {competitorAds.length > 0 && !isLoadingSpecificAds && (() => {
+                            const activeCount = competitorAds.length;
+                            let totalDays = 0;
+                            let longRunningCount = 0;
+                            const typeCount: Record<string, number> = {};
+
+                            competitorAds.forEach(ad => {
+                                const startTime = ad.startDate ? new Date(ad.startDate).getTime() : Date.now();
+                                const daysActive = Math.max(0, Math.floor((Date.now() - startTime) / (1000 * 3600 * 24)));
+                                totalDays += daysActive;
+                                if (daysActive >= 30) {
+                                    longRunningCount++;
+                                }
+
+                                const type = ad.type2 || ad.type1 || '알 수 없음';
+                                typeCount[type] = (typeCount[type] || 0) + 1;
+                            });
+
+                            const avgDays = activeCount > 0 ? Math.floor(totalDays / activeCount) : 0;
+                            let mainType = '-';
+                            let maxCount = 0;
+                            Object.entries(typeCount).forEach(([type, count]) => {
+                                if (count > maxCount) {
+                                    maxCount = count;
+                                    mainType = type;
+                                }
+                            });
+
+                            return (
+                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mt-8 mb-2">
+                                    <div className="lg:col-span-4 grid grid-cols-2 gap-3">
+                                        <div className="bg-white border flex flex-col justify-center border-[#E5E8EB] p-5 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+                                            <div className="text-[12px] font-bold text-[#8B95A1] mb-1 break-keep">활성화된 소재</div>
+                                            <div className="text-[20px] font-black text-[#333333]">{activeCount}개</div>
+                                        </div>
+                                        <div className="bg-white border flex flex-col justify-center border-[#E5E8EB] p-5 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+                                            <div className="text-[12px] font-bold text-[#8B95A1] mb-1 break-keep">가장 많은 유형</div>
+                                            <div className="text-[16px] font-black text-[#0064FF] truncate mt-1">{mainType}</div>
+                                        </div>
+                                        <div className="bg-white border flex flex-col justify-center border-[#E5E8EB] p-5 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+                                            <div className="text-[12px] font-bold text-[#8B95A1] mb-1 break-keep">평균 게재 일수</div>
+                                            <div className="text-[20px] font-black text-[#333333]">{avgDays}일</div>
+                                        </div>
+                                        <div className="bg-white border flex flex-col justify-center border-[#E5E8EB] p-5 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+                                            <div className="text-[12px] font-bold text-[#8B95A1] mb-1 break-keep">장기 소재 (30일+)</div>
+                                            <div className="text-[20px] font-black text-[#00A650]">{longRunningCount}건</div>
+                                        </div>
+                                    </div>
+
+                                    <div className="lg:col-span-8 bg-white border border-[#E5E8EB] p-6 lg:p-8 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex flex-col justify-center relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#0064FF]/5 to-transparent rounded-bl-full pointer-events-none" />
+                                        <div className="flex items-center gap-2 mb-3 relative z-10">
+                                            <div className="w-8 h-8 rounded-full bg-[#E8F3FF] flex items-center justify-center">
+                                                <Zap className="w-4 h-4 text-[#0064FF]" />
+                                            </div>
+                                            <h3 className="text-[15px] font-bold text-[#333333]">AI 빠른 분석 인사이트</h3>
+                                        </div>
+                                        <p className="text-[14.5px] leading-[1.6] text-[#4E5968] break-keep relative z-10 font-medium">
+                                            현재 활성화된 소재들은 주로 <strong className="text-[#333333]">{mainType}</strong> 위주의 형식을 띄고 있으며, 소재 변경 테스트는 평균적으로 <strong className="text-[#333333]">{avgDays}일</strong> 주기로 일어나고 있습니다.
+                                            {aiInsight ? aiInsight : (() => {
+                                                if (longRunningCount > 0) {
+                                                    return `특히 30일 이상 라이브 중인 ${longRunningCount}건의 장기 소재가 핵심 타겟을 안정적으로 방어하며 꾸준한 성과(위닝 소재)를 내고 있는 것으로 보입니다. 이를 레퍼런스로 유사 컨셉 확장을 고려해볼 수 있습니다.`;
+                                                } else if (avgDays < 7) {
+                                                    return `현재 평균 게재 일수가 ${avgDays}일로 매우 짧아, 성과를 낼 위닝 소재를 찾기 위해 급진적이고 다양한 A/B 테스트가 집중적으로 이루어지고 있는 치열한 상황입니다.`;
+                                                } else {
+                                                    return `소재의 생명 주기가 평균 ${avgDays}일로 순환하고 있으며, 뚜렷한 압도적 효율의 위닝 소재보다는 ${mainType} 중심의 여러 변형 소재들로 타겟 피로도에 기민하게 대응하고 있습니다.`;
+                                                }
+                                            })()}
+                                        </p>
+                                    </div>
+                                </div>
+                            );
+                        })()}
+
+
+                        {isVerifyingAds && (
+                            <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 bg-rose-50 text-rose-500 rounded-full font-bold text-[13px] animate-pulse">
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                검색어 유사도 기반 2차 노이즈 제거 분석 중...
+                            </div>
+                        )}
 
                         {isLoadingSpecificAds ? (
                             <div className="w-full py-32 flex flex-col items-center justify-center gap-4 bg-white rounded-[2rem] border border-[#E5E8EB]">

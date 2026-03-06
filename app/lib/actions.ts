@@ -445,7 +445,54 @@ export async function resetUserPassword(prevState: any, formData: FormData) {
 }
 
 export async function generateStagePersonasAction(stage: string, brandContext: any) {
-    return await generateStagePersonas(stage, brandContext);
+    const session = await auth();
+    const userId = session?.user?.id;
+    if (!userId) {
+        return await generateStagePersonas(stage, brandContext);
+    }
+
+    try {
+        // Find existing analysis for this brand
+        const existing = await (prisma as any).brandDatas.findFirst({
+            where: { brandKor: brandContext.brandKor, userId: userId },
+            orderBy: { createdAt: 'desc' }
+        });
+
+        if (existing && existing.content) {
+            const content = JSON.parse(existing.content);
+            // Awareness level personas are typically generated first in the DA process as 'content.personas'
+            if (stage === 'awareness' && content.personas && content.personas.length > 0) {
+                return content.personas;
+            }
+            // Check if mapped into stagePersonas object
+            if (content.stagePersonas && content.stagePersonas[stage] && content.stagePersonas[stage].length > 0) {
+                return content.stagePersonas[stage];
+            }
+        }
+
+        // Generate brand new via AI
+        const personas = await generateStagePersonas(stage, brandContext);
+
+        // Save it to database for future toggles
+        if (existing && personas && Array.isArray(personas)) {
+            const content = JSON.parse(existing.content || "{}");
+            if (stage === 'awareness') {
+                content.personas = personas;
+            } else {
+                content.stagePersonas = content.stagePersonas || {};
+                content.stagePersonas[stage] = personas;
+            }
+            await (prisma as any).brandDatas.update({
+                where: { id: existing.id },
+                data: { content: JSON.stringify(content) }
+            });
+        }
+
+        return personas;
+    } catch (e) {
+        console.error("Error generating stage personas:", e);
+        return await generateStagePersonas(stage, brandContext);
+    }
 }
 
 export async function getCompetitorAdsAction(brandContext: any) {
@@ -456,17 +503,17 @@ export async function getCompetitorAdsAction(brandContext: any) {
         // 1. Find competitors via AI(상위 경쟁 브랜드 5가지 검색 gemini-2.5-flash 기반)
         const { object } = await generateObject({
             model: google('gemini-2.5-flash'),
-            system: 'You are an expert digital marketer. Identify top 5 primary real-world competitors for the given brand. Return their names in Korean where appropriate.',
-            prompt: `Brand: ${brandName}\nCategory: ${brandCategory}\nWhat are the top 5 competitors?`,
+            system: 'You are an expert digital marketer. Identify top 5 primary real-world competitor BRANDS for the given brand. Return ONLY the exact brand name in Korean (e.g., "마녀공장", "해피바스", "비레디"). CRITICAL: DO NOT include any product names, modifiers, or descriptions (e.g., DO NOT return "마녀공장 퓨어 클렌징 오일", JUST "마녀공장").',
+            prompt: `Brand: ${brandName}\nCategory: ${brandCategory}\nWhat are the top 5 competitor brands? Return EXACTLY the brand name only.`,
             schema: z.object({
-                competitors: z.array(z.string()).max(5)
+                competitors: z.array(z.string().describe("The exact name of the competitor brand without any product names.")).max(5)
             })
         });
 
         // Save competitors to DB asynchronously
         if (brandName && brandName !== '테스트 브랜드') {
             try {
-                const latestBrandData = await prisma.brandDatas.findFirst({
+                const latestBrandData = await (prisma as any).brandDatas.findFirst({
                     where: {
                         OR: [
                             { brandKor: brandName },
@@ -480,7 +527,7 @@ export async function getCompetitorAdsAction(brandContext: any) {
                     const parsedContent = JSON.parse(latestBrandData.content || '{}');
                     parsedContent.competitors = object.competitors;
 
-                    await prisma.brandDatas.update({
+                    await (prisma as any).brandDatas.update({
                         where: { id: latestBrandData.id },
                         data: { content: JSON.stringify(parsedContent) }
                     });
@@ -564,16 +611,17 @@ export async function getCompetitorSpecificAdsAction(searchTerms: string, afterC
 
         const { object } = await generateObject({
             model: google('gemini-2.5-flash'),
-            system: 'Categorize the following real ad copies into specific marketing tags.',
+            system: 'Categorize the following real ad copies into specific marketing tags and provide a core analytical insight. **CRITICAL: OUTPUT EVERYTHING STRICTLY IN KOREAN (한국어), including the insight and targetGroup.**',
             prompt: `Categorize these ${adsForAi.length} ads. 
 Ads data: ${JSON.stringify(adsForAi)}`,
             schema: z.object({
                 categorized: z.array(z.object({
                     index: z.number(),
                     type1: z.enum(['프로모션', '리뷰/UGC', '일반형']),
-                    type2: z.string().describe('Detailed type (e.g., 이미지, 숏폼 비디오, 캐러셀)'),
-                    targetGroup: z.string().describe('Likely target audience (e.g., 2030 여성, 피부 민감러)')
-                }))
+                    type2: z.string().describe('Detailed type (e.g., 이미지, 숏폼 비디오, 캐러셀) in Korean'),
+                    targetGroup: z.string().describe('Likely target audience (e.g., 2030 여성, 피부 민감러) in Korean')
+                })),
+                insight: z.string().describe("Analyze the ad copies and provide a 2-3 sentence deep marketing insight. e.g., Point out specific collaborations, main selling points, target emotions, or creative trends. **MUST BE WRITTEN IN PERFECT KOREAN (한국어).**")
             })
         });
 
@@ -612,7 +660,7 @@ Ads data: ${JSON.stringify(adsForAi)}`,
 
         // The scraper doesn't support pagination easily initially, so we just set null. 
         // If it supports loading more via DOM tricks, we'd adjust it.
-        return { ads: finalAds, nextCursor: null };
+        return { ads: finalAds, insight: object.insight, nextCursor: null };
 
     } catch (error) {
         console.error("Failed to fetch specific ads:", error);
@@ -665,18 +713,18 @@ export async function testMetaAdsApiDirectUrl(url: string) {
     }
 }
 
-export async function saveCompetitorAdLogAction(brandKor: string, competitorName: string, adsData: any[]) {
+export async function saveCompetitorAdLogAction(brandKor: string, competitorName: string, adsData: any[], insight?: string) {
     try {
         const session = await auth();
         if (!session?.user?.id) {
             throw new Error('Not authenticated');
         }
 
-        const log = await prisma.competitorAdLog.create({
+        const log = await (prisma as any).competitorAdLog.create({
             data: {
                 brandKor,
                 competitorName,
-                adsData: JSON.stringify(adsData),
+                adsData: JSON.stringify({ ads: adsData, insight: insight || '' }),
                 userId: session.user.id,
                 userName: session.user.name || '알 수 없는 사용자',
             }
@@ -696,7 +744,7 @@ export async function getCompetitorAdLogsAction(brandKor: string, competitorName
             throw new Error('Not authenticated');
         }
 
-        const logs = await prisma.competitorAdLog.findMany({
+        const logs = await (prisma as any).competitorAdLog.findMany({
             where: { brandKor, competitorName },
             orderBy: { createdAt: 'desc' },
             select: { id: true, createdAt: true, userName: true }
@@ -722,15 +770,113 @@ export async function getCompetitorAdLogByIdAction(logId: string) {
             throw new Error('Not authenticated');
         }
 
-        const log = await prisma.competitorAdLog.findUnique({
+        const log = await (prisma as any).competitorAdLog.findUnique({
             where: { id: logId }
         });
 
         if (!log) throw new Error('Log not found');
 
-        return { success: true, adsData: JSON.parse(log.adsData) };
+        const parsed = JSON.parse(log.adsData);
+        let returnAds = [];
+        let returnInsight = '';
+
+        if (Array.isArray(parsed)) {
+            // Backwards compatibility for old saved array logs
+            returnAds = parsed;
+        } else {
+            returnAds = parsed.ads || [];
+            returnInsight = parsed.insight || '';
+        }
+
+        return { success: true, adsData: returnAds, insight: returnInsight };
     } catch (e: any) {
         console.error('Failed to fetch ad log:', e);
+        return { success: false, error: e.message };
+    }
+}
+
+export async function generateFinalAnalysisSummaryAction(payload: {
+    brandKor: string;
+    brandEng: string;
+    category: string;
+    stagePersonas: any;
+    ourBrandData: { ads: any[], insight: string } | null;
+    competitorData: Record<string, { ads: any[], insight: string }>;
+}) {
+    try {
+        const { object } = await generateObject({
+            model: google('gemini-2.5-pro'), // Using pro for comprehensive synthesis
+            system: 'You are an elite digital marketing strategist summarizing a brand and competitor ad analysis into a comprehensive, highly insightful markdown report.',
+            prompt: `
+            Please synthesize the following data into a 'Final Strategic Summary' report in Korean.
+            Focus on actionable insights, differences in ad creative strategies, and overall strategic direction based on the provided personas and ad copies.
+
+            Brand: ${payload.brandKor} (${payload.brandEng})
+            Category: ${payload.category}
+
+            [Stage Personas Data]
+            ${JSON.stringify(payload.stagePersonas, null, 2)}
+
+            [Our Brand Ad Data & Insight]
+            ${JSON.stringify(payload.ourBrandData, null, 2)}
+
+            [Competitor Ad Data & Insight]
+            ${JSON.stringify(payload.competitorData, null, 2)}
+            `,
+            schema: z.object({
+                markdownReport: z.string().describe("Comprehensive markdown report including headers, bullet points, and actionable strategies based on the analysis. Keep it professional, data-centric, and structured like a premium consulting summary.")
+            })
+        });
+
+        return { success: true, report: object.markdownReport };
+    } catch (error: any) {
+        console.error("Failed to generate final summary:", error);
+        return { success: false, error: error.message };
+    }
+}
+
+export async function saveFinalStrategySummaryAction(brandKor: string, brandEng: string, summary: string) {
+    try {
+        const session = await auth();
+        if (!session?.user?.id) {
+            throw new Error('Not authenticated');
+        }
+
+        const log = await (prisma as any).brandStrategySummary.create({
+            data: {
+                brandKor,
+                brandEng,
+                summary,
+                userId: session.user.id,
+            }
+        });
+
+        return { success: true, logId: log.id, createdAt: log.createdAt };
+    } catch (e: any) {
+        console.error('Failed to save strategy summary:', e);
+        return { success: false, error: e.message };
+    }
+}
+
+export async function getFinalStrategySummaryAction(brandKor: string) {
+    try {
+        const session = await auth();
+        if (!session?.user?.id) {
+            throw new Error('Not authenticated');
+        }
+
+        const log = await (prisma as any).brandStrategySummary.findFirst({
+            where: { brandKor, userId: session.user.id },
+            orderBy: { createdAt: 'desc' },
+        });
+
+        if (!log) {
+            return { success: true, summary: null };
+        }
+
+        return { success: true, summary: log.summary, createdAt: log.createdAt };
+    } catch (e: any) {
+        console.error('Failed to fetch strategy summary:', e);
         return { success: false, error: e.message };
     }
 }

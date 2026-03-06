@@ -23,6 +23,7 @@ model User {
   analyses        BrandAnalysis[]
   brandDatas      BrandDatas[]
   competitorAdLogs CompetitorAdLog[]
+  brandStrategySummaries BrandStrategySummary[]
 }
 
 model BrandAnalysis {
@@ -103,6 +104,19 @@ model CompetitorAdLog {
   userId         String
   user           User     @relation(fields: [userId], references: [id])
   createdAt      DateTime @default(now())
+
+  @@index([userId])
+  @@index([brandKor])
+}
+
+model BrandStrategySummary {
+  id        String   @id @default(cuid())
+  brandKor  String
+  brandEng  String
+  summary   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 
   @@index([userId])
   @@index([brandKor])
