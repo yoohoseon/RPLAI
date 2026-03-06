@@ -386,7 +386,8 @@ export async function saveAnalysis(prevState: any, formData: FormData) {
         console.log('[saveAnalysis] Attempting to create DB record...');
         await prisma.brandAnalysis.create({
             data: {
-                brand,
+                brandKor: brand,
+                brandEng: '',
                 url,
                 category,
                 target,
@@ -609,11 +610,33 @@ export async function getCompetitorSpecificAdsAction(searchTerms: string, afterC
             copy: ad.ad_creative_bodies?.[0] || '이미지/영상 소재',
         }));
 
+        const validAdsWithImages = realAds.filter((ad: any) => ad.ad_snapshot_url && !ad.ad_snapshot_url.includes('No+Media')).slice(0, 3);
+        const imageParts: any[] = [];
+        await Promise.all(validAdsWithImages.map(async (ad: any) => {
+            try {
+                const res = await fetch(ad.ad_snapshot_url);
+                if (res.ok) {
+                    const arrayBuffer = await res.arrayBuffer();
+                    imageParts.push({
+                        type: 'image',
+                        image: Buffer.from(arrayBuffer)
+                    });
+                }
+            } catch (e) { }
+        }));
+
         const { object } = await generateObject({
             model: google('gemini-2.5-flash'),
-            system: 'Categorize the following real ad copies into specific marketing tags and provide a core analytical insight. **CRITICAL: OUTPUT EVERYTHING STRICTLY IN KOREAN (한국어), including the insight and targetGroup.**',
-            prompt: `Categorize these ${adsForAi.length} ads. 
-Ads data: ${JSON.stringify(adsForAi)}`,
+            system: 'You are an elite creative director and data analyst. Analyze the following real ad copies AND their visual elements (images if provided) to provide deep, actionable insights. **CRITICAL: OUTPUT EVERYTHING STRICTLY IN KOREAN (한국어).**',
+            messages: [
+                {
+                    role: 'user',
+                    content: [
+                        { type: 'text', text: `Here are ${adsForAi.length} ads with copy texts. Please categorize them and provide a deep, multi-dimensional insight.\nAds data: ${JSON.stringify(adsForAi)}` },
+                        ...imageParts
+                    ]
+                }
+            ],
             schema: z.object({
                 categorized: z.array(z.object({
                     index: z.number(),
@@ -621,7 +644,7 @@ Ads data: ${JSON.stringify(adsForAi)}`,
                     type2: z.string().describe('Detailed type (e.g., 이미지, 숏폼 비디오, 캐러셀) in Korean'),
                     targetGroup: z.string().describe('Likely target audience (e.g., 2030 여성, 피부 민감러) in Korean')
                 })),
-                insight: z.string().describe("Analyze the ad copies and provide a 2-3 sentence deep marketing insight. e.g., Point out specific collaborations, main selling points, target emotions, or creative trends. **MUST BE WRITTEN IN PERFECT KOREAN (한국어).**")
+                insight: z.string().describe("Provide a comprehensive markdown-formatted insight including: 1. 🖋️ 카피라이팅 기조 (Main focus of text), 2. 🎨 비주얼 시각화 전략 (What do the images/videos visually emphasize?), 3. 🎯 핵심 타겟팅 의도. Return it as a structured markdown string. **MUST BE WRITTEN IN PERFECT KOREAN.**")
             })
         });
 
@@ -800,35 +823,147 @@ export async function generateFinalAnalysisSummaryAction(payload: {
     brandEng: string;
     category: string;
     stagePersonas: any;
+    messages?: any;
     ourBrandData: { ads: any[], insight: string } | null;
     competitorData: Record<string, { ads: any[], insight: string }>;
 }) {
     try {
-        const { object } = await generateObject({
-            model: google('gemini-2.5-pro'), // Using pro for comprehensive synthesis
-            system: 'You are an elite digital marketing strategist summarizing a brand and competitor ad analysis into a comprehensive, highly insightful markdown report.',
-            prompt: `
-            Please synthesize the following data into a 'Final Strategic Summary' report in Korean.
-            Focus on actionable insights, differences in ad creative strategies, and overall strategic direction based on the provided personas and ad copies.
-
+        const sharedPromptContext = `
             Brand: ${payload.brandKor} (${payload.brandEng})
             Category: ${payload.category}
+            [Stage Personas Data]: ${JSON.stringify(payload.stagePersonas)}
+            [Brand Initial Key Copy & Communication Messages]: ${JSON.stringify(payload.messages)}
+            [Our Brand Ad Data]: ${JSON.stringify(payload.ourBrandData)}
+            [Competitor Ad Data]: ${JSON.stringify(payload.competitorData)}
 
-            [Stage Personas Data]
-            ${JSON.stringify(payload.stagePersonas, null, 2)}
+            CRITICAL NEGATIVE GUIDELINE: 절대로 '자사(Our Brand)'가 과거에 진행했던 특정 캐릭터 IP 콜라보레이션(예: 시나모롤 등)이나 경쟁사의 흔한 콜라보 패턴을 미래의 메인 전략으로 단순히 재탕하거나 예시로 제안하지 마세요. 기존에 의존했던 캐릭터/굿즈 부록 중심의 단기적이고 뻔한 기획에서 완전히 벗어나, 제품의 본질적인 효능 가치, 압도적인 기능성, 타겟의 라이프스타일, 그리고 독보적인 메시지에 집중하는 새롭고 근본적인 브랜드 차별화 기획을 도출해야 합니다.
+        `;
 
-            [Our Brand Ad Data & Insight]
-            ${JSON.stringify(payload.ourBrandData, null, 2)}
-
-            [Competitor Ad Data & Insight]
-            ${JSON.stringify(payload.competitorData, null, 2)}
-            `,
+        // 1. Keyword & Core Analysis
+        const keywordCall = generateObject({
+            model: google('gemini-2.5-flash'),
+            system: 'You are a data-driven digital marketer. Analyze the provided ad data and extract key advertising copy keywords and strategic statistics.',
+            prompt: `Based on the brand and competitor ads, extract the top keywords used in creatives and summarize the core keyword strategy. CRITICALLY IMPORTANT: You must use the '[Brand Initial Key Copy & Communication Messages]' as the foundation. The Catchphrase you create here must be a direct enhancement or highly aligned version of the 'mainCopy' from the initial messages, not an entirely random new thought.\n${sharedPromptContext}`,
             schema: z.object({
-                markdownReport: z.string().describe("Comprehensive markdown report including headers, bullet points, and actionable strategies based on the analysis. Keep it professional, data-centric, and structured like a premium consulting summary.")
+                catchphrase: z.string().describe("마스터플랜을 관통하는 매우 매력적이고 압도적인 1줄 핵심 슬로건 카피 (탑 티어 카피라이터가 쓴 것처럼 세련되고 트렌디하며 직관적인 타격감이 있는 문장이어야 함. 기획 단계의 'Hero Copy'를 더욱 고도화하여 작성할 것)"),
+                keywords: z.array(z.object({
+                    word: z.string().describe("핵심 키워드 (예: '무자극', '할인', '비건')"),
+                    weight: z.number().describe("중요도 비중 (10~100 사이의 수치)"),
+                    type: z.enum(["blue", "red", "basic"]).describe("블루오션(전략적 차별화 추천), 레드오션(경쟁 치열/지양), 기본(카테고리 필수 소구점) 중 택1")
+                })).length(30).describe("시장 분석을 기반으로 마케팅에 활용될 핵심 키워드를 최대한 많이(정확히 30개) 폭넓게 뽑고 각각의 상태(좋은것/나쁜것)를 분류해주세요."),
+                keywordInsight: z.string().describe("블루오션 키워드를 어떻게 활용해야 하며, 레드오션 키워드를 왜 피해야 하는지에 대한 전략적 분석 요약")
             })
         });
 
-        return { success: true, report: object.markdownReport };
+        // 2. Media Channel Strategy
+        const mediaCall = generateObject({
+            model: google('gemini-2.5-flash'),
+            system: 'You are a media planning expert. Allocate budget and channel strategy based on the target persona and category data.',
+            prompt: `Recommend the optimal media channel mix (e.g. Meta, YouTube, Search, etc.) and deep targeting strategy for this brand.\n${sharedPromptContext}`,
+            schema: z.object({
+                channels: z.array(z.object({
+                    name: z.string().describe("미디어 채널명 (예: 'Instagram 스폰서드', 'YouTube Shorts', '네이버 검색광고')"),
+                    percentage: z.number().describe("예산 투여 비중 (총합 100%)"),
+                    role: z.string().describe("해당 채널의 주요 역할 (예: '초기 인지도 확산 및 후킹')"),
+                    targeting: z.string().describe("상세 타겟팅 기법 (예: '2030 뷰티 관심사 기반, 리타겟팅 등')")
+                })).length(3).describe("가장 핵심적인 3가지 미디어 채널 믹스")
+            })
+        });
+
+        // Extract valid media from competitor data to enrich the creative approaches context
+        const validMediaUrls: { url: string, type: 'video' | 'image' }[] = [];
+        if (payload.competitorData) {
+            Object.values(payload.competitorData).forEach((comp: any) => {
+                if (comp.ads && Array.isArray(comp.ads)) {
+                    comp.ads.forEach((ad: any) => {
+                        if (ad.mediaUrl && ad.mediaUrl !== 'No+Media') {
+                            const isVid = ad.mediaUrl.includes('.mp4') || ad.mediaUrl.includes('.webm');
+                            validMediaUrls.push({ url: ad.mediaUrl, type: isVid ? 'video' : 'image' });
+                        }
+                    });
+                }
+            });
+        }
+
+        // Ensure unique URLs
+        const uniqueMediaMap = new Map<string, 'video' | 'image'>();
+        validMediaUrls.forEach(m => uniqueMediaMap.set(m.url, m.type));
+        const uniqueMedia = Array.from(uniqueMediaMap.entries()).map(([url, type]) => ({ url, type }));
+
+        const topMedia = uniqueMedia.length > 0 ? uniqueMedia : [{ url: '', type: 'image' }, { url: '', type: 'image' }, { url: '', type: 'image' }];
+        const mediaPromptCtx = `\nCRITICAL: You are providing exactly 3 approaches. The competitor references we have collected for these 3 approaches are as follows:` +
+            `\n- Approach 1 Reference Type: ${topMedia[0]?.type || topMedia[0 % topMedia.length]?.type || 'image'}` +
+            `\n- Approach 2 Reference Type: ${topMedia[1]?.type || topMedia[1 % topMedia.length]?.type || 'image'}` +
+            `\n- Approach 3 Reference Type: ${topMedia[2]?.type || topMedia[2 % topMedia.length]?.type || 'image'}` +
+            `\nYou MUST tailor the 'format' field for each approach to match its corresponding reference type (if it's 'video', suggest a Reels/TikTok video format. If it's 'image', suggest an Image Carousel or Static Image banner).`;
+
+        // 3. Creative & Content Strategy
+        const creativeCall = generateObject({
+            model: google('gemini-2.5-flash'),
+            system: 'You are an elite creative director. Propose compelling content formats and visual strategies to beat competitors.',
+            prompt: `Develop specific content themes, ad formats, and an A/B test strategy based on the ad data and personas.\n${sharedPromptContext}${mediaPromptCtx}`,
+            schema: z.object({
+                approaches: z.array(z.object({
+                    theme: z.string().describe("콘텐츠 테마명 (예: '성분 강조형', '가성비/프로모션형')"),
+                    format: z.string().describe("추천 포맷 (예: '이미지 캐러셀', '15초 숏폼 비디오') *반드시 Reference Type과 일치해야함*"),
+                    direction: z.string().describe("구체적인 시각적/카피라이팅 연출 방향"),
+                    pinterestKeyword: z.string().describe("이 컨셉/무드를 시각적으로 찾기 좋은 영문 핀터레스트 검색어 (예: 'clean cosmetics aesthetic', 'foam cleanser texture')")
+                })).length(3).describe("경쟁사를 이길 수 있는 3가지 주요 크리에이티브 어프로치"),
+                abTest: z.string().describe("가장 추천하는 A/B 테스트 전략 시나리오 (예: 'A: 전문성 강조 vs B: 인플루언서 리뷰')")
+            })
+        });
+
+        // 4. Action Masterplan
+        const masterplanCall = generateObject({
+            model: google('gemini-2.5-pro'),
+            system: 'You are a master strategist. Create a phased execution roadmap using the provided context.',
+            prompt: `Synthesize the data into a step-by-step master execution plan (phases) with expected outcomes.\n${sharedPromptContext}`,
+            schema: z.object({
+                masterplan: z.array(z.object({
+                    phase: z.string().describe("작업 단계명 (예: 'Phase 1. 시장 침투 및 반응 테스트')"),
+                    strategy: z.string().describe("구체적 실행 내용 및 전략 요약"),
+                    expectedOutcome: z.string().describe("성공 시 기대되는 정량적/정성적 효과"),
+                    pinterestKeyword: z.string().describe("해당 단계의 마케팅 무드, 타겟, 혹은 비주얼 전략을 보여주는 영문 핀터레스트 키워드 (예: 'campaign billboard aesthetic', 'instagram beauty feed')")
+                })).length(3).describe("단기, 중기, 장기 (혹은 연속된 3단계) 로드맵")
+            })
+        });
+
+        // 5. Strategic Differentiated Directions
+        const strategyCall = generateObject({
+            model: google('gemini-2.5-pro'),
+            system: 'You are a top-tier brand strategist. Analyze competitors and find 3 DISTINCT, highly differentiated strategic pivot angles. Do not blindly copy competitor tactics (e.g. if they use character collabs, suggest an authentic product-focused route, or a different paradigm). Provide actionable diversification.',
+            prompt: `Based on the competitor trends and persona data, develop 3 distinct strategic marketing directions that offer an alternative or superior approach to current market norms.\n${sharedPromptContext}`,
+            schema: z.object({
+                strategicDirections: z.array(z.object({
+                    title: z.string().describe("차별화 전략명 (예: '본질 집중: 진정성 기반 성분 어필', '탈-캐릭터: 프로페셔널 더마 코스메틱 포지셔닝')"),
+                    rationale: z.string().describe("왜 이 방향이 유효한지? (경쟁사의 흔한 패턴과 비교하여 요즘 소비 트렌드를 반영한 차별점)"),
+                    coreUsp: z.string().describe("이 방향에서의 핵심 USP (Unique Selling Proposition)"),
+                    coreTarget: z.string().describe("이 전략이 가장 강력하게 작용할 핵심 타겟 (페르소나 기반)"),
+                    coreValue: z.string().describe("소비자에게 전달할 핵심 가치 (Core Value)")
+                })).length(3).describe("경쟁사와 직관적으로 대비되는 3가지 다양한 관점의 시장 공략 방향")
+            })
+        });
+
+        const [keywordRes, mediaRes, creativeRes, masterplanRes, strategyRes] = await Promise.all([
+            keywordCall, mediaCall, creativeCall, masterplanCall, strategyCall
+        ]);
+
+        const mergedReport = {
+            ...keywordRes.object,
+            ...mediaRes.object,
+            ...creativeRes.object,
+            ...masterplanRes.object,
+            ...strategyRes.object
+        };
+
+        if (mergedReport.approaches && Array.isArray(mergedReport.approaches)) {
+            mergedReport.approaches.forEach((app: any, idx: number) => {
+                const img = uniqueMedia[idx]?.url || uniqueMedia[idx % uniqueMedia.length]?.url;
+                app.competitorMediaUrl = img || null;
+            });
+        }
+
+        return { success: true, report: JSON.stringify(mergedReport) };
     } catch (error: any) {
         console.error("Failed to generate final summary:", error);
         return { success: false, error: error.message };

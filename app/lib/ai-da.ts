@@ -103,7 +103,7 @@ export async function generateDaAnalysis(
             }
         }
 
-        // 2. Fetch all 32 personas from DB so AI knows what to pick
+        // 2. Fetch all available personas from DB so AI knows what to pick
         const allPersonas = await prisma.persona.findMany();
         const personaListString = allPersonas.map(p =>
             `[ID: ${p.id}] ${p.ageGroup}대 ${p.gender === 'M' ? '남성' : '여성'} - 타입 ${p.type} (${p.name})`

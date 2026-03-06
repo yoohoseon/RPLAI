@@ -5,6 +5,73 @@ import Image from 'next/image';
 import { UserCircle2, ChevronDown, ChevronLeft, ChevronRight, User, MapPin, Search, X, Loader2, Target, Zap, Activity, ImageIcon, MoreHorizontal, Clock, CheckCircle2 } from 'lucide-react';
 import { generateStagePersonasAction, getCompetitorAdsAction, getCompetitorSpecificAdsAction, saveCompetitorAdLogAction, getCompetitorAdLogsAction, getCompetitorAdLogByIdAction, generateFinalAnalysisSummaryAction, saveFinalStrategySummaryAction, getFinalStrategySummaryAction } from '@/app/lib/actions';
 import { motion } from 'framer-motion';
+import * as XLSX from 'xlsx-js-style';
+
+function PinterestMoodboard({ keyword, cachedImages, onImagesFetched }: { keyword?: string, cachedImages?: string[], onImagesFetched?: (imgs: string[]) => void }) {
+    const [images, setImages] = useState<string[]>(cachedImages || []);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (!keyword || (cachedImages && cachedImages.length > 0)) {
+            if (cachedImages && cachedImages.length > 0) setImages(cachedImages);
+            return;
+        }
+        setLoading(true);
+        fetch(`/api/pinterest?q=${encodeURIComponent(keyword)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.images) {
+                    const imgs = data.images.slice(0, 3);
+                    setImages(imgs);
+                    if (onImagesFetched) onImagesFetched(imgs);
+                }
+            })
+            .catch(e => console.error("Moodboard fetch err", e))
+            .finally(() => setLoading(false));
+    }, [keyword]);
+
+    if (!keyword) return null;
+
+    return (
+        <div className="mt-3 relative w-full flex flex-col gap-2">
+            {loading ? (
+                <div className="flex gap-2 h-20 opacity-50">
+                    <div className="w-20 h-20 bg-[#F2F4F6] rounded-xl animate-pulse"></div>
+                    <div className="w-20 h-20 bg-[#F2F4F6] rounded-xl animate-pulse delay-75"></div>
+                    <div className="w-20 h-20 bg-[#F2F4F6] rounded-xl animate-pulse delay-150"></div>
+                </div>
+            ) : null}
+
+            {!loading && images.length > 0 && (
+                <div className="flex gap-2 pb-2 mt-1">
+                    {images.map((img, i) => (
+                        <div
+                            key={i}
+                            className="w-20 h-20 shrink-0 rounded-xl shadow-sm border border-[#E5E8EB] cursor-pointer transition-all duration-300 hover:scale-[1.8] hover:z-50 hover:shadow-2xl origin-bottom relative bg-white"
+                            onClick={() => window.open(img, '_blank', 'noopener,noreferrer')}
+                        >
+                            <img src={img} alt="mood" className="w-full h-full object-cover rounded-xl" />
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {!loading && keyword && (
+                <div className="flex flex-wrap gap-1.5 mt-1">
+                    {keyword.split(',').map((kw, i) => {
+                        const cleanKw = kw.trim().replace(/^['"]|['"]$/g, '');
+                        if (!cleanKw) return null;
+                        return (
+                            <span key={i} className="text-[10px] font-bold text-[#8B95A1] bg-[#F2F4F6] border border-[#E5E8EB] px-2 py-0.5 rounded-md shadow-sm">
+                                #{cleanKw}
+                            </span>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    );
+}
 
 function AdImage({ mediaUrl, link }: { mediaUrl?: string, link: string }) {
     if (!mediaUrl || mediaUrl.includes('No+Media')) {
@@ -71,12 +138,14 @@ export function PersonaSidebar({
     initialPersonas,
     initialStage,
     initialCompetitors,
+    initialMessages,
     brandContext,
     children
 }: {
     initialPersonas: any[],
     initialStage: string,
     initialCompetitors?: string[],
+    initialMessages?: any,
     brandContext: any,
     children?: React.ReactNode
 }) {
@@ -110,6 +179,7 @@ export function PersonaSidebar({
     const [isGeneratingSummary, setIsGeneratingSummary] = useState<boolean>(false);
     const [progressLog, setProgressLog] = useState<string>('');
     const [showSummary, setShowSummary] = useState<boolean>(false);
+    const [isExporting, setIsExporting] = useState<boolean>(false);
 
     useEffect(() => {
         // Load existing summary if any
@@ -693,6 +763,7 @@ export function PersonaSidebar({
                                                     brandEng: brandContext.brandEng,
                                                     category: brandContext.category,
                                                     stagePersonas: gatheredPersonas,
+                                                    messages: initialMessages,
                                                     ourBrandData,
                                                     competitorData
                                                 };
@@ -903,15 +974,491 @@ export function PersonaSidebar({
                                     <div className="h-4 bg-gray-100 rounded w-5/6 animate-pulse"></div>
                                 </div>
                             </div>
-                        ) : finalSummary ? (
-                            <div className="bg-white rounded-[2rem] p-8 lg:p-12 shadow-sm border border-[#E5E8EB]">
-                                <div className="prose prose-lg max-w-none break-keep whitespace-pre-wrap text-[#4E5968] leading-[1.8] prose-headings:text-[#333333] prose-headings:font-black prose-h1:text-3xl prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:pb-2 prose-h2:border-b prose-h2:border-[#E5E8EB] prose-strong:text-[#0064FF] prose-strong:font-bold prose-p:mb-6 prose-ul:my-4 prose-li:my-2 marker:text-[#0064FF]">
-                                    {finalSummary.replace(/##/g, '').replace(/\*/g, '').split('\n').map((line, i) => (
-                                        line.trim() ? <div key={i} className="mb-3 relative pl-4 lg:pl-6">{line.startsWith('-') ? <span className="absolute left-0 top-3 w-[6px] h-[6px] rounded-full bg-[#0064FF]"></span> : ''}<span className={line.startsWith('-') ? 'ml-2 block' : 'font-black text-[#1C1C1E] block mb-2 text-[20px] mt-8 tracking-tight'}>{line.replace(/^- /, '')}</span></div> : null
-                                    ))}
+                        ) : finalSummary ? (() => {
+                            let parsed: any = null;
+                            try {
+                                parsed = JSON.parse(finalSummary);
+                            } catch (e) { }
+
+                            if (!parsed) {
+                                // Fallback just in case previous data was saved as Markdown
+                                return (
+                                    <div className="bg-white rounded-[2rem] p-8 lg:p-12 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-[#E5E8EB]">
+                                        <div className="prose prose-lg max-w-none break-keep whitespace-pre-wrap text-[#4E5968] leading-[1.8] marker:text-[#0064FF]">
+                                            {finalSummary.replace(/##/g, '').replace(/\*/g, '').split('\n').map((line, i) => (
+                                                line.trim() ? <div key={i} className="mb-3">{line}</div> : null
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            }
+
+                            return (
+                                <div className="space-y-6 pb-20">
+                                    {/* Catchphrase Hero */}
+                                    <div className="bg-gradient-to-br from-[#0064FF] to-[#0052D4] rounded-[2rem] p-10 lg:p-14 shadow-lg text-white text-center relative overflow-hidden">
+                                        <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
+                                        <h3 className="text-[14px] font-bold text-white/80 uppercase tracking-widest mb-4 relative z-10">최종 마스터플랜 슬로건</h3>
+                                        <p className="text-3xl lg:text-4xl font-black leading-snug break-keep relative z-10">"{parsed.catchphrase}"</p>
+                                    </div>
+
+                                    {/* 100% Width: Keyword Strategy */}
+                                    <div className="bg-white rounded-[2rem] p-8 lg:p-10 shadow-[0_4px_30px_rgba(0,0,0,0.03)] border border-[#E5E8EB] mb-6">
+                                        <h4 className="text-[20px] font-bold text-[#333333] mb-6 flex items-center gap-2">
+                                            <Target className="w-6 h-6 text-[#E57A00]" />
+                                            마켓 핵심 키워드 전략
+                                        </h4>
+                                        <div className="flex flex-col lg:flex-row gap-6 items-stretch">
+                                            <div className="flex-1 min-h-[400px] bg-[#FAFAFA] rounded-2xl border border-[#F2F4F6] relative overflow-hidden flex items-center justify-center p-8">
+                                                {/* Background circular grid */}
+                                                <svg className="absolute inset-0 w-full h-full opacity-[0.15]">
+                                                    <g stroke="#E57A00" strokeWidth="1" strokeDasharray="4 4" fill="none">
+                                                        <circle cx="50%" cy="50%" r="20%" />
+                                                        <circle cx="50%" cy="50%" r="35%" />
+                                                        <circle cx="50%" cy="50%" r="50%" />
+                                                        <line x1="50%" y1="0%" x2="50%" y2="100%" />
+                                                        <line x1="0%" y1="50%" x2="100%" y2="50%" />
+                                                    </g>
+                                                </svg>
+
+                                                {/* Keyword Nodes */}
+                                                {parsed.keywords?.map((kw: any, idx: number) => {
+                                                    const type = kw.type || 'basic';
+                                                    let colorScheme = "bg-[#F3E8FF] text-[#8638EA] border border-[#D8B4FE]"; // basic fallback
+                                                    let badge = "기본소구";
+
+                                                    if (type === 'blue') {
+                                                        colorScheme = "bg-[#E8FFF0] text-[#00A650] border-2 border-[#16A34A]";
+                                                        badge = "✨ 추천(블루오션)";
+                                                    } else if (type === 'red') {
+                                                        colorScheme = "bg-[#FFF1F2] text-[#E11D48] border-2 border-[#E11D48]";
+                                                        badge = "⚠️ 지양(레드오션)";
+                                                    } else {
+                                                        colorScheme = "bg-[#E8F3FF] text-[#0064FF] border border-[#BFDBFE]";
+                                                        badge = "🎯 기본(필수)";
+                                                    }
+
+                                                    const total = parsed.keywords.length;
+
+                                                    // Use a Golden Spiral distribution to cleanly pack 30+ items without heavy overlap 
+                                                    const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // ~137.5 degrees
+                                                    const angle = idx * goldenAngle;
+
+                                                    // Start further out so center isn't too clustered, spread gracefully
+                                                    const radiusRatio = Math.sqrt(idx + 1) / Math.sqrt(total);
+                                                    const baseRadius = 10 + (radiusRatio * 38); // Distribute between 10% to 48% radius
+
+                                                    const x = 50 + baseRadius * Math.cos(angle);
+                                                    const y = 50 + baseRadius * Math.sin(angle);
+
+                                                    const boundedX = Math.max(12, Math.min(88, x));
+                                                    const boundedY = Math.max(12, Math.min(88, y));
+
+                                                    return (
+                                                        <div
+                                                            key={idx}
+                                                            className="absolute -translate-x-1/2 -translate-y-1/2 z-20 transition-all duration-1000 ease-out flex flex-col items-center justify-center gap-0.5"
+                                                            style={{ top: `${boundedY}%`, left: `${boundedX}%` }}
+                                                        >
+                                                            <div className={`flex flex-col items-center justify-center px-3 py-1.5 font-bold text-[12px] rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.06)] whitespace-nowrap transition-transform hover:scale-110 hover:-translate-y-1 hover:shadow-md cursor-default border ${colorScheme}`}>
+                                                                <span className="text-[9px] font-bold opacity-75 mb-0.5">{badge}</span>
+                                                                <span className="leading-none">{kw.word}</span>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                })}
+                                            </div>
+                                            <div className="w-full lg:w-1/3 min-w-[300px] bg-[#F9FAFB] p-6 lg:p-8 rounded-2xl border border-[#E5E8EB] flex flex-col justify-center">
+                                                <h6 className="text-[14px] font-bold text-[#8B95A1] mb-4 uppercase flex items-center gap-1.5"><Search className="w-4 h-4" /> 키워드 인사이트 요약</h6>
+                                                <p className="text-[15.5px] text-[#4E5968] font-medium leading-[1.8] break-keep">{parsed.keywordInsight}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* 100% Width: Differentiated Strategic Directions (Pivots) */}
+                                    {parsed.strategicDirections && parsed.strategicDirections.length > 0 && (
+                                        <div className="bg-white rounded-[2rem] p-8 lg:p-10 shadow-[0_4px_30px_rgba(0,0,0,0.03)] border border-[#E5E8EB] mb-6">
+                                            <h4 className="text-[20px] font-bold text-[#333333] mb-8 flex items-center gap-2">
+                                                <Zap className="w-6 h-6 text-[#0064FF]" />
+                                                차별화 핵심 전략 방향 (Strategic Pivots)
+                                            </h4>
+
+                                            <div className="grid lg:grid-cols-3 gap-6">
+                                                {parsed.strategicDirections.map((strat: any, idx: number) => (
+                                                    <div key={idx} className="bg-white border border-[#E5E8EB] rounded-2xl p-6 flex flex-col h-full shadow-[0_2px_10px_rgba(0,0,0,0.02)] transition-transform hover:-translate-y-1 hover:shadow-lg">
+                                                        <div className="flex items-center gap-2 mb-4">
+                                                            <div className="w-8 h-8 rounded-full bg-[#E8F3FF] text-[#0064FF] flex items-center justify-center font-bold text-sm shrink-0">
+                                                                {idx + 1}
+                                                            </div>
+                                                            <h5 className="text-[16px] font-bold text-[#333333] leading-snug break-keep">{strat.title}</h5>
+                                                        </div>
+                                                        <p className="text-[14px] text-[#4E5968] font-medium leading-[1.6] break-keep mb-6 flex-1">
+                                                            {strat.rationale}
+                                                        </p>
+
+                                                        <div className="space-y-3 pt-5 border-t border-[#F2F4F6] mt-auto">
+                                                            <div className="flex flex-col gap-1">
+                                                                <span className="text-[11px] font-bold text-[#8B95A1] uppercase">핵심 USP</span>
+                                                                <span className="text-[13px] text-[#333333] font-bold break-keep">{strat.coreUsp}</span>
+                                                            </div>
+                                                            <div className="flex flex-col gap-1">
+                                                                <span className="text-[11px] font-bold text-[#8B95A1] uppercase">핵심 타겟</span>
+                                                                <span className="text-[13px] text-[#0064FF] font-medium break-keep">{strat.coreTarget}</span>
+                                                            </div>
+                                                            <div className="flex flex-col gap-1">
+                                                                <span className="text-[11px] font-bold text-[#8B95A1] uppercase">제공 가치 (Core Value)</span>
+                                                                <span className="text-[13px] text-[#E57A00] font-medium break-keep">{strat.coreValue}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* 100% Width: Creative Strategy */}
+                                    <div className="bg-white rounded-[2rem] p-8 lg:p-10 shadow-[0_4px_30px_rgba(0,0,0,0.03)] border border-[#E5E8EB] mb-6">
+                                        <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
+                                            <h4 className="text-[20px] font-bold text-[#333333] flex items-center gap-2">
+                                                <ImageIcon className="w-6 h-6 text-[#E11D48]" />
+                                                공격적 크리에이티브 시안 제안
+                                            </h4>
+                                            <div className="bg-[#FFF1F2] border border-[#FFE4E6] p-4 rounded-xl flex-1 max-w-lg md:max-w-xl">
+                                                <h6 className="text-[12px] font-bold text-[#E11D48] mb-1.5 uppercase flex items-center gap-1"><Activity className="w-3.5 h-3.5" /> 시나리오</h6>
+                                                <p className="text-[13px] text-[#4E5968] font-medium leading-relaxed break-keep">{parsed.abTest}</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid lg:grid-cols-3 gap-6">
+                                            {parsed.approaches?.map((app: any, idx: number) => {
+                                                const validAdImages = competitorAds?.filter((ad: any) => ad.mediaUrl && ad.mediaUrl !== 'No+Media') || [];
+                                                const fallbackImage = validAdImages[idx]?.mediaUrl || validAdImages[idx % validAdImages.length]?.mediaUrl;
+                                                const adImage = app.competitorMediaUrl || fallbackImage;
+
+                                                return (
+                                                    <div key={idx} className="bg-[#F9FAFB] border border-[#F2F4F6] rounded-2xl p-6 flex flex-col h-full">
+                                                        <div className="flex flex-col flex-1 mb-8">
+                                                            <div className="flex flex-col items-start gap-2 mb-4">
+                                                                <span className="bg-[#FFF1F2] text-[#E11D48] text-[11px] font-bold px-2 py-0.5 rounded-md">{app.format}</span>
+                                                                <h5 className="text-[17px] font-bold text-[#333333] leading-snug break-keep">{app.theme}</h5>
+                                                            </div>
+                                                            <p className="text-[14px] text-[#4E5968] font-medium leading-[1.6] break-keep">
+                                                                {app.direction}
+                                                            </p>
+                                                        </div>
+                                                        <div className="flex flex-col mt-auto w-full">
+                                                            {adImage && (
+                                                                <div className="flex flex-col gap-1.5 mb-5">
+                                                                    <span className="text-[11px] font-bold text-[#8B95A1] uppercase flex items-center gap-1">
+                                                                        <ImageIcon className="w-3.5 h-3.5 text-[#E11D48]" />
+                                                                        수집된 경쟁사 레퍼런스
+                                                                    </span>
+                                                                    <div
+                                                                        className="w-full aspect-square shrink-0 rounded-xl shadow-sm border border-[#E5E8EB] bg-[#111111] cursor-pointer transition-all duration-300 hover:scale-[1.6] hover:z-50 hover:shadow-2xl origin-center relative"
+                                                                        onClick={() => window.open(adImage, '_blank', 'noopener,noreferrer')}
+                                                                    >
+                                                                        {(adImage.includes('.mp4') || adImage.includes('.webm')) ? (
+                                                                            <video src={adImage} autoPlay muted loop playsInline className="w-full h-full object-cover rounded-xl" />
+                                                                        ) : (
+                                                                            <img src={adImage} alt="Competitor Reference" className="w-full h-full object-cover rounded-xl" />
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                            {app.pinterestKeyword && (
+                                                                <div className="flex flex-col gap-1.5 pt-4 mt-auto border-t border-[#E5E8EB]">
+                                                                    <span className="text-[11px] font-bold text-[#8B95A1] uppercase flex items-center gap-1">
+                                                                        <Search className="w-3.5 h-3.5 text-[#E57A00]" />
+                                                                        확장 무드보드 (Pinterest)
+                                                                    </span>
+                                                                    <PinterestMoodboard keyword={app.pinterestKeyword} cachedImages={app.pinterestImages} onImagesFetched={(imgs) => {
+                                                                        app.pinterestImages = imgs;
+                                                                        saveFinalStrategySummaryAction(brandContext.brandKor, brandContext.brandEng, JSON.stringify(parsed));
+                                                                    }} />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+
+                                    {/* Media Strategy Grid */}
+                                    <div className="bg-white rounded-[2rem] p-8 lg:p-10 shadow-[0_4px_30px_rgba(0,0,0,0.03)] border border-[#E5E8EB]">
+                                        <h4 className="text-[20px] font-bold text-[#333333] mb-8 flex items-center gap-2">
+                                            <CheckCircle2 className="w-6 h-6 text-[#16A34A]" />
+                                            최적화 미디어(채널) 스플릿 전략
+                                        </h4>
+                                        <div className="grid md:grid-cols-3 gap-6">
+                                            {parsed.channels?.map((ch: any, idx: number) => (
+                                                <div key={idx} className="bg-[#F0FDF4] rounded-2xl p-6 border border-[#DCFCE7] flex flex-col h-full relative overflow-hidden">
+                                                    <div className="absolute top-0 right-0 p-4 opacity-5">
+                                                        <CheckCircle2 className="w-24 h-24" />
+                                                    </div>
+                                                    <div className="relative z-10">
+                                                        <div className="flex items-end gap-2 mb-4">
+                                                            <h5 className="text-[22px] font-black text-[#16A34A]">{ch.percentage}%</h5>
+                                                            <span className="text-[14px] font-bold text-[#16A34A]/80 mb-1">{ch.name}</span>
+                                                        </div>
+                                                        <div className="space-y-4">
+                                                            <div>
+                                                                <h6 className="text-[11px] font-bold text-[#16A34A]/60 mb-1">매체 역할 기대치 (Role)</h6>
+                                                                <p className="text-[13px] text-[#4E5968] font-medium leading-relaxed break-keep">{ch.role}</p>
+                                                            </div>
+                                                            <div>
+                                                                <h6 className="text-[11px] font-bold text-[#16A34A]/60 mb-1">최적화 타겟팅</h6>
+                                                                <p className="text-[13px] text-[#333333] font-bold leading-relaxed break-keep">{ch.targeting}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Action Plan Grid */}
+                                    <div className="bg-white rounded-[2rem] p-8 lg:p-10 shadow-[0_4px_30px_rgba(0,0,0,0.03)] border border-[#E5E8EB]">
+                                        <h4 className="text-[20px] font-bold text-[#333333] mb-8 flex items-center gap-2">
+                                            <Zap className="w-6 h-6 text-amber-500" />
+                                            단계별 실행 로드맵 (Masterplan)
+                                        </h4>
+                                        <div className="space-y-4">
+                                            {parsed.masterplan?.map((plan: any, idx: number) => (
+                                                <div key={idx} className="grid grid-cols-1 lg:grid-cols-4 gap-6 p-6 rounded-2xl border border-[#F2F4F6] bg-white group hover:shadow-md transition-all">
+                                                    <div className="lg:col-span-1 border-b lg:border-b-0 lg:border-r border-[#F2F4F6] pb-4 lg:pb-0 lg:pr-6">
+                                                        <div className="text-[12px] font-bold text-[#0064FF] mb-1">Step {idx + 1}</div>
+                                                        <h5 className="text-[16px] font-bold text-[#333333] break-keep">{plan.phase}</h5>
+                                                    </div>
+                                                    <div className="lg:col-span-2">
+                                                        <h6 className="text-[12px] font-bold text-[#8B95A1] mb-2 uppercase">실행 전략 요약</h6>
+                                                        <p className="text-[14px] text-[#4E5968] font-medium leading-relaxed break-keep">{plan.strategy}</p>
+                                                    </div>
+                                                    <div className="lg:col-span-1 bg-[#F9FAFB] p-5 rounded-xl border border-[#E5E8EB]">
+                                                        <h6 className="text-[12px] font-bold text-[#8B95A1] mb-2 uppercase flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> 기대 효과</h6>
+                                                        <p className="text-[13px] text-[#333333] font-bold leading-relaxed break-keep">{plan.expectedOutcome}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Excel Export Button */}
+                                    <div className="flex justify-end pt-4">
+                                        <button
+                                            disabled={isExporting}
+                                            onClick={async () => {
+                                                if (!parsed || isExporting) return;
+                                                setIsExporting(true);
+
+                                                try {
+                                                    const wb = XLSX.utils.book_new();
+
+                                                    const applyHeaderStyle = (ws: any) => {
+                                                        const range = XLSX.utils.decode_range(ws['!ref']);
+                                                        for (let C = range.s.c; C <= range.e.c; ++C) {
+                                                            const cellAddress = XLSX.utils.encode_cell({ c: C, r: 0 });
+                                                            if (!ws[cellAddress]) continue;
+                                                            ws[cellAddress].s = {
+                                                                fill: { fgColor: { rgb: "0064FF" } },
+                                                                font: { bold: true, color: { rgb: "FFFFFF" } },
+                                                                alignment: { vertical: "center", horizontal: "center" },
+                                                                border: {
+                                                                    top: { style: "thin", color: { rgb: "CCCCCC" } },
+                                                                    bottom: { style: "thin", color: { rgb: "CCCCCC" } },
+                                                                    left: { style: "thin", color: { rgb: "CCCCCC" } },
+                                                                    right: { style: "thin", color: { rgb: "CCCCCC" } }
+                                                                }
+                                                            };
+                                                        }
+
+                                                        // 모든 셀의 테두리 및 줄바꿈 적용
+                                                        for (let R = range.s.r + 1; R <= range.e.r; ++R) {
+                                                            for (let C = range.s.c; C <= range.e.c; ++C) {
+                                                                const cellAddress = XLSX.utils.encode_cell({ c: C, r: R });
+                                                                if (!ws[cellAddress]) continue;
+                                                                ws[cellAddress].s = {
+                                                                    ...ws[cellAddress].s,
+                                                                    alignment: { vertical: "top", wrapText: true },
+                                                                    border: {
+                                                                        top: { style: "thin", color: { rgb: "E5E8EB" } },
+                                                                        bottom: { style: "thin", color: { rgb: "E5E8EB" } },
+                                                                        left: { style: "thin", color: { rgb: "E5E8EB" } },
+                                                                        right: { style: "thin", color: { rgb: "E5E8EB" } }
+                                                                    }
+                                                                };
+                                                            }
+                                                        }
+                                                    };
+
+                                                    // 0. 타겟 페르소나 Sheet
+                                                    const personaRows: any[] = [];
+                                                    Object.entries(stagePersonas).forEach(([stage, pList]) => {
+                                                        pList.forEach(p => {
+                                                            let stageName = stage;
+                                                            if (stage === 'awareness') stageName = '인지 (Awareness)';
+                                                            if (stage === 'consideration') stageName = '유입/고려 (Consideration)';
+                                                            if (stage === 'purchase') stageName = '구매 (Purchase)';
+                                                            if (stage === 'postPurchase') stageName = '구매 후 (Post Purchase)';
+
+                                                            personaRows.push({
+                                                                'CDJ 단계': stageName,
+                                                                '페르소나명': p.name,
+                                                                '성별/연령': `${p.dbPersona?.gender === 'M' ? '남성' : '여성'} / ${p.dbPersona?.ageGroup}대`,
+                                                                '라이프스타일 및 행동': p.behavior
+                                                            });
+                                                        });
+                                                    });
+
+                                                    if (personaRows.length > 0) {
+                                                        const wsPersona = XLSX.utils.json_to_sheet(personaRows);
+                                                        wsPersona['!cols'] = [{ wch: 25 }, { wch: 25 }, { wch: 15 }, { wch: 80 }];
+                                                        applyHeaderStyle(wsPersona);
+                                                        XLSX.utils.book_append_sheet(wb, wsPersona, "타겟 페르소나");
+                                                    }
+
+                                                    // 0-1. 자사 및 경쟁사 광고소재 현황 Sheet 
+                                                    // 자사 데이터
+                                                    let allAdRows: any[] = [];
+                                                    const brandLogs = await getCompetitorAdLogsAction(brandContext.brandKor, brandContext.brandKor);
+                                                    if (brandLogs?.success && brandLogs.logs && brandLogs.logs.length > 0) {
+                                                        const bData = await getCompetitorAdLogByIdAction(brandLogs.logs[0].id);
+                                                        if (bData.success && bData.adsData) {
+                                                            bData.adsData.forEach((ad: any) => {
+                                                                allAdRows.push({
+                                                                    '구분': '자사',
+                                                                    '브랜드명': brandContext.brandKor,
+                                                                    '분류 카테고리 (Type1)': ad.type1 || '-',
+                                                                    '세부 카테고리 (Type2)': ad.type2 || '-',
+                                                                    '타겟 그룹': ad.targetGroup || '-',
+                                                                    '광고 기본 카피': ad.pageName || '-',
+                                                                    '광고 상세 내용': ad.copy || '-',
+                                                                    '광고 소재 URL': ad.link || '-',
+                                                                });
+                                                            });
+                                                        }
+                                                    }
+
+                                                    // 경쟁사 데이터
+                                                    for (const comp of competitorList) {
+                                                        const compLogs = await getCompetitorAdLogsAction(brandContext.brandKor, comp);
+                                                        if (compLogs?.success && compLogs.logs && compLogs.logs.length > 0) {
+                                                            const cData = await getCompetitorAdLogByIdAction(compLogs.logs[0].id);
+                                                            if (cData.success && cData.adsData) {
+                                                                cData.adsData.forEach((ad: any) => {
+                                                                    allAdRows.push({
+                                                                        '구분': '경쟁사',
+                                                                        '브랜드명': comp,
+                                                                        '분류 카테고리 (Type1)': ad.type1 || '-',
+                                                                        '세부 카테고리 (Type2)': ad.type2 || '-',
+                                                                        '타겟 그룹': ad.targetGroup || '-',
+                                                                        '광고 기본 카피': ad.pageName || '-',
+                                                                        '광고 상세 내용': ad.copy || '-',
+                                                                        '광고 소재 URL': ad.link || '-',
+                                                                    });
+                                                                });
+                                                            }
+                                                        }
+                                                    }
+
+                                                    if (allAdRows.length > 0) {
+                                                        const wsAds = XLSX.utils.json_to_sheet(allAdRows);
+                                                        wsAds['!cols'] = [{ wch: 10 }, { wch: 15 }, { wch: 20 }, { wch: 20 }, { wch: 25 }, { wch: 25 }, { wch: 80 }, { wch: 60 }];
+                                                        applyHeaderStyle(wsAds);
+                                                        XLSX.utils.book_append_sheet(wb, wsAds, "광고 소재 분석 현황");
+                                                    }
+
+                                                    // 1. Keyword Strategy Sheet
+                                                    if (parsed.keywords) {
+                                                        const ws = XLSX.utils.json_to_sheet(parsed.keywords.map((k: any) => ({
+                                                            '키워드': k.word,
+                                                            '구분': k.type === 'blue' ? '✨ 추천(블루오션)' : k.type === 'red' ? '⚠️ 지양(레드오션)' : '🎯 기본(필수)',
+                                                            '중요도(%)': k.weight
+                                                        })));
+                                                        ws['!cols'] = [{ wch: 20 }, { wch: 25 }, { wch: 15 }];
+                                                        applyHeaderStyle(ws);
+                                                        XLSX.utils.book_append_sheet(wb, ws, "키워드 전략");
+                                                    }
+
+                                                    // 2. Strategic Directions Sheet
+                                                    if (parsed.strategicDirections) {
+                                                        const ws2 = XLSX.utils.json_to_sheet(parsed.strategicDirections.map((s: any) => ({
+                                                            '전략명': s.title,
+                                                            '핵심방향성': s.rationale,
+                                                            '핵심 USP': s.coreUsp,
+                                                            '핵심 타겟': s.coreTarget,
+                                                            'Core Value': s.coreValue
+                                                        })));
+                                                        ws2['!cols'] = [{ wch: 30 }, { wch: 60 }, { wch: 30 }, { wch: 30 }, { wch: 30 }];
+                                                        applyHeaderStyle(ws2);
+                                                        XLSX.utils.book_append_sheet(wb, ws2, "차별화 전략");
+                                                    }
+
+                                                    // 3. Creative Approaches Sheet
+                                                    if (parsed.approaches) {
+                                                        const ws3 = XLSX.utils.json_to_sheet(parsed.approaches.map((a: any) => ({
+                                                            '콘텐츠 테마': a.theme,
+                                                            '추천 포맷': a.format,
+                                                            '시각적 연출 방향': a.direction,
+                                                            '핀터레스트 검색어': a.pinterestKeyword
+                                                        })));
+                                                        ws3['!cols'] = [{ wch: 30 }, { wch: 20 }, { wch: 60 }, { wch: 25 }];
+                                                        applyHeaderStyle(ws3);
+                                                        XLSX.utils.book_append_sheet(wb, ws3, "크리에이티브 안");
+                                                    }
+
+                                                    // 4. Media Mix Sheet
+                                                    if (parsed.channels) {
+                                                        const ws4 = XLSX.utils.json_to_sheet(parsed.channels.map((c: any) => ({
+                                                            '미디어 채널': c.name,
+                                                            '예산 비중(%)': c.percentage,
+                                                            '역할 기대치': c.role,
+                                                            '최적화 타겟팅': c.targeting
+                                                        })));
+                                                        ws4['!cols'] = [{ wch: 20 }, { wch: 15 }, { wch: 50 }, { wch: 50 }];
+                                                        applyHeaderStyle(ws4);
+                                                        XLSX.utils.book_append_sheet(wb, ws4, "미디어 스플릿");
+                                                    }
+
+                                                    // 5. Master Plan RoadMap Sheet
+                                                    if (parsed.masterplan) {
+                                                        const ws5 = XLSX.utils.json_to_sheet(parsed.masterplan.map((p: any) => ({
+                                                            '진행 단계': p.phase,
+                                                            '실행 전략 내용': p.strategy,
+                                                            '기대 효과': p.expectedOutcome
+                                                        })));
+                                                        ws5['!cols'] = [{ wch: 25 }, { wch: 60 }, { wch: 50 }];
+                                                        applyHeaderStyle(ws5);
+                                                        XLSX.utils.book_append_sheet(wb, ws5, "마스터플랜 로드맵");
+                                                    }
+
+                                                    XLSX.writeFile(wb, `${brandContext.brandKor}_마스터플랜_전략데이터.xlsx`);
+                                                } catch (err) {
+                                                    console.error("Export Error:", err);
+                                                } finally {
+                                                    setIsExporting(false);
+                                                }
+                                            }}
+                                            className={`px-6 py-3 font-bold text-[14px] rounded-xl shadow-sm transition-all flex items-center gap-2 ${isExporting ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200' : 'bg-[#03C75A] hover:bg-[#02A84B] text-white hover:shadow-md'}`}
+                                        >
+                                            {isExporting ? (
+                                                <>
+                                                    <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
+                                                    데이터 추출 중... (잠시만 기다려주세요)
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                    </svg>
+                                                    모든 전략 데이터 엑셀 다운로드
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        ) : null}
+                            );
+                        })() : null}
                     </div>
                 ) : selectedPersona && !selectedCompetitor ? (
                     <div className="flex-1 min-w-0 py-10 px-4 sm:px-8 lg:px-12 xl:px-16 space-y-8 bg-[#F2F4F7]" >
@@ -1313,18 +1860,23 @@ export function PersonaSidebar({
                                             </div>
                                             <h3 className="text-[15px] font-bold text-[#333333]">AI 빠른 분석 인사이트</h3>
                                         </div>
-                                        <p className="text-[14.5px] leading-[1.6] text-[#4E5968] break-keep relative z-10 font-medium">
+                                        <div className="text-[14.5px] leading-[1.6] text-[#4E5968] break-keep relative z-10 font-medium">
                                             현재 활성화된 소재들은 주로 <strong className="text-[#333333]">{mainType}</strong> 위주의 형식을 띄고 있으며, 소재 변경 테스트는 평균적으로 <strong className="text-[#333333]">{avgDays}일</strong> 주기로 일어나고 있습니다.
-                                            {aiInsight ? aiInsight : (() => {
-                                                if (longRunningCount > 0) {
-                                                    return `특히 30일 이상 라이브 중인 ${longRunningCount}건의 장기 소재가 핵심 타겟을 안정적으로 방어하며 꾸준한 성과(위닝 소재)를 내고 있는 것으로 보입니다. 이를 레퍼런스로 유사 컨셉 확장을 고려해볼 수 있습니다.`;
-                                                } else if (avgDays < 7) {
-                                                    return `현재 평균 게재 일수가 ${avgDays}일로 매우 짧아, 성과를 낼 위닝 소재를 찾기 위해 급진적이고 다양한 A/B 테스트가 집중적으로 이루어지고 있는 치열한 상황입니다.`;
-                                                } else {
-                                                    return `소재의 생명 주기가 평균 ${avgDays}일로 순환하고 있으며, 뚜렷한 압도적 효율의 위닝 소재보다는 ${mainType} 중심의 여러 변형 소재들로 타겟 피로도에 기민하게 대응하고 있습니다.`;
-                                                }
-                                            })()}
-                                        </p>
+                                            <div className="mt-4 pt-4 border-t border-[#F2F4F6] space-y-3 prose prose-sm max-w-none text-[#4E5968] marker:text-[#0064FF] prose-strong:text-[#333333]">
+                                                {aiInsight ? (
+                                                    aiInsight.replace(/##/g, '').split('\n').map((line, i) => (
+                                                        line.trim() ? <div key={i} className="mb-2" dangerouslySetInnerHTML={{ __html: line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} /> : null
+                                                    ))
+                                                ) : (() => {
+                                                    if (longRunningCount > 0) {
+                                                        return `특히 30일 이상 라이브 중인 ${longRunningCount}건의 장기 소재가 핵심 타겟을 안정적으로 방어하며 꾸준한 성과(위닝 소재)를 내고 있는 것으로 보입니다. 이를 레퍼런스로 유사 컨셉 확장을 고려해볼 수 있습니다.`;
+                                                    } else if (avgDays < 7) {
+                                                        return `현재 평균 게재 일수가 ${avgDays}일로 매우 짧아, 성과를 낼 위닝 소재를 찾기 위해 급진적이고 다양한 A/B 테스트가 집중적으로 이루어지고 있는 치열한 상황입니다.`;
+                                                    }
+                                                    return `전체적으로 무난한 교체 주기를 보이며, 주력 상품을 중심으로 안정적인 타겟 마케팅을 전개하는 것으로 분석됩니다.`;
+                                                })()}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             );

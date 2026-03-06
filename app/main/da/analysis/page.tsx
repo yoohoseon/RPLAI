@@ -118,6 +118,7 @@ export default async function DaAnalysisPage(props: DaAnalysisPageProps) {
                     initialPersonas={personas}
                     initialStage={initialStage}
                     initialCompetitors={competitors || []}
+                    initialMessages={messages}
                     brandContext={{ brandKor, brandEng, category, description, url }}
                 >
 
@@ -162,13 +163,13 @@ export default async function DaAnalysisPage(props: DaAnalysisPageProps) {
                                                         </div>
                                                         <div>
                                                             <h4 className="text-[12px] font-bold text-[#8B95A1] uppercase mb-1.5">인사이트 ({data.insightTitle})</h4>
-                                                            <p className="text-[13px] text-[#4E5968] font-medium leading-relaxed break-keep line-clamp-3">
+                                                            <p className="text-[13px] text-[#4E5968] font-medium leading-relaxed break-keep">
                                                                 {data.insightDetail}
                                                             </p>
                                                         </div>
                                                         <div>
                                                             <h4 className="text-[12px] font-bold text-[#8B95A1] uppercase mb-1.5">소비자 행동</h4>
-                                                            <p className="text-[13px] text-[#4E5968] font-medium leading-relaxed break-keep line-clamp-2">
+                                                            <p className="text-[13px] text-[#4E5968] font-medium leading-relaxed break-keep">
                                                                 {data.consumerAction}
                                                             </p>
                                                         </div>

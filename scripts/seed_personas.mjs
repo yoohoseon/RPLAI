@@ -32,8 +32,10 @@ async function main() {
         const personas = [
             { gender: 'M', type: 1, name: row.m1 },
             { gender: 'M', type: 2, name: row.m2 },
+            ...[3, 4, 5, 6].map(t => ({ gender: 'M', type: t, name: `${age}대 남성 (타입 ${t})` })),
             { gender: 'F', type: 1, name: row.f1 },
             { gender: 'F', type: 2, name: row.f2 },
+            ...[3, 4, 5, 6].map(t => ({ gender: 'F', type: t, name: `${age}대 여성 (타입 ${t})` }))
         ];
 
         for (const p of personas) {
